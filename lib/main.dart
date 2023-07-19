@@ -1,15 +1,43 @@
+import 'dart:io';
+
 import 'package:creative_blogger_app/screens/loading.dart';
+import 'package:creative_blogger_app/screens/login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+}
+
+enum ConnectionStatus {
+  loading,
+  connected,
+  notConnected,
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  Future<ConnectionStatus> getConnectionStatus() async {
+    String? token = await storage.read(key: "token");
+    if (token == null) {
+      return ConnectionStatus.notConnected;
+    } else if (token.trim().isEmpty) {
+      return ConnectionStatus.notConnected;
+    } else {
+      var res = await http.get(Uri.parse("https://api.creativeblogger.org/@me"), headers: {"Authorization": "Bearer $token"});
+      if (res.statusCode == HttpStatus.ok) {
+        return ConnectionStatus.connected;
+      } else if (res.statusCode == HttpStatus.unauthorized) {
+        return ConnectionStatus.notConnected;
+      }
+      return  ConnectionStatus.connected;
+    }
+  }
 
   // This widget is the root of your application.
   @override
@@ -37,21 +65,25 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      home: const LoadingScreen()
+      home: FutureBuilder(future: getConnectionStatus(),
+      builder: (BuildContext context, AsyncSnapshot<ConnectionStatus> snapshot) {
+        return !snapshot.hasData ? const LoadingScreen() : snapshot.data == ConnectionStatus.notConnected ? const LoginScreen() : const HomeScreen(title: "Creative Blogger");
+        }
+      )
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
