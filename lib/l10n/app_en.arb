@@ -1,0 +1,6 @@
+{
+    "loading": "Loading...",
+    "@loading": {
+        "description": "Loading text"
+    }
+}
