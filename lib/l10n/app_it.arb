@@ -1,3 +1,8 @@
 {
-    "loading": "Caricamento..."
+    "loading": "Caricamento...",
+    "welcome_back": "Bentornato/a",
+    "welcome": "Benvenuto/a",
+    "username_or_email": "Nome utente o email",
+    "password": "Password",
+    "login": "Autenticati"
 }

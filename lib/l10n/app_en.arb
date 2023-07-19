@@ -2,5 +2,25 @@
     "loading": "Loading...",
     "@loading": {
         "description": "Loading text"
+    },
+    "welcome_back": "Welcome back",
+    "@welcome_back": {
+        "description": "Welcome back message"
+    },
+    "welcome": "Welcome",
+    "@welcome": {
+        "description": "Welcome message"
+    },
+    "username_or_email": "Username or email",
+    "@username_or_email": {
+        "description": "Username or email label text"
+    },
+    "password": "Password",
+    "@password": {
+        "description": "Password label text"
+    },
+    "login": "Login",
+    "@login": {
+        "description": "Login text"
     }
 }

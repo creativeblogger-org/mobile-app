@@ -1,3 +1,8 @@
 {
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "welcome_back": "Content de te revoir",
+    "welcome": "Bienvenue",
+    "username_or_email": "Nom d'utilisateur ou email",
+    "password": "Mot de passe",
+    "login": "Se connecter"
 }
