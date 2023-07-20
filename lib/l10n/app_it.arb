@@ -4,5 +4,16 @@
     "welcome": "Benvenuto/a",
     "username_or_email": "Nome utente o email",
     "password": "Password",
-    "login": "Autenticati"
+    "login": "Autenticati",
+    "invalid_username": "Il nome utente deve contenere solo lettere, numeri e underscore, deve iniziare con una lettera e contenere almeno 3 caratteri",
+    "password_too_short": "La password deve essere lungo almeno 8 caratteri",
+    "invalid_email_address": "Indirizzo email non valido",
+    "error": "Errore",
+    "incorrect_credentials": "Credenziali non corrette",
+    "ok": "Ok",
+    "confirm": "Confermare",
+    "do_you_really_want_to_log_out": "Sei sicuro che vuoi ti disconnettere ?",
+    "yes": "Sì",
+    "cancel": "Annulla",
+    "log_out": "Si disconnettere"
 }

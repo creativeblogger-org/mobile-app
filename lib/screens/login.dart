@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:creative_blogger_app/main.dart';
+import 'package:creative_blogger_app/screens/home.dart';
+import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -10,20 +15,36 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-var validCharacters = RegExp(r'^[a-zA-Z0-9]+$');
+var usernameValidCharacters = RegExp(r'^[a-zA-Z][\w]{2,}$');
+var emailRegex = RegExp(
+    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
-bool is_username_valid(String username) {
-  if (validCharacters.hasMatch(username) &&
-      RegExp(r'^[a-zA-Z]+$').hasMatch(username[0])) {
-    return true;
+String? isUsernameValid(String username, BuildContext context) {
+  if (usernameValidCharacters.hasMatch(username)) {
+    return null;
   }
-  return false;
+  return AppLocalizations.of(context)!.invalid_username;
+}
+
+String? isEmailValid(String email, BuildContext context) {
+  if (emailRegex.hasMatch(email)) {
+    return null;
+  }
+  return AppLocalizations.of(context)!.invalid_email_address;
 }
 
 class _LoginScreenState extends State<LoginScreen> {
   bool passwordVisible = false;
-  final _username = TextEditingController();
-  String? _username_error;
+  final _usernameOrEmail = TextEditingController();
+  String? _usernameOrEmailError;
+  final _password = TextEditingController();
+  String? _passwordError;
+
+  @override
+  void dispose() {
+    _usernameOrEmail.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,35 +68,42 @@ class _LoginScreenState extends State<LoginScreen> {
                         BorderSide(color: Theme.of(context).primaryColor),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  errorText: _username_error,
+                  errorText: _usernameOrEmailError,
+                  errorMaxLines: 5,
                 ),
-                controller: _username,
+                controller: _usernameOrEmail,
                 onChanged: (_) {
-                  setState(() {
-                    if (_username.text.length < 3) {
-                      _username_error = "Erreur 1";
-                    }
-                    if (is_username_valid(_username.text)) {
-                      _username_error = "Erreur 2";
-                    }
-                    _username_error = null;
-                  });
+                  setState(
+                    () => _usernameOrEmailError =
+                        _usernameOrEmail.text.contains("@")
+                            ? isEmailValid(_usernameOrEmail.text, context)
+                            : isUsernameValid(_usernameOrEmail.text, context),
+                  );
                 },
               ),
               const SizedBox(height: 16),
               TextField(
                 obscureText: !passwordVisible,
                 decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                        onPressed: () =>
-                            setState(() => passwordVisible = !passwordVisible),
-                        icon: const Icon(Icons.remove_red_eye)),
-                    suffixIconColor: passwordVisible ? Colors.red : Colors.grey,
-                    labelText: AppLocalizations.of(context)!.password,
-                    border: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Theme.of(context).primaryColor),
-                        borderRadius: BorderRadius.circular(12))),
+                  suffixIcon: IconButton(
+                      onPressed: () =>
+                          setState(() => passwordVisible = !passwordVisible),
+                      icon: const Icon(Icons.remove_red_eye)),
+                  suffixIconColor: passwordVisible ? Colors.red : Colors.grey,
+                  labelText: AppLocalizations.of(context)!.password,
+                  border: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  errorText: _passwordError,
+                  errorMaxLines: 5,
+                ),
+                controller: _password,
+                onChanged: (_) => setState(() => _password.text.length < 8
+                    ? _passwordError =
+                        AppLocalizations.of(context)!.password_too_short
+                    : _passwordError = null),
               ),
               const SizedBox(height: 10),
               Container(
@@ -87,14 +115,63 @@ class _LoginScreenState extends State<LoginScreen> {
                       Color.fromRGBO(99, 102, 241, 1)
                     ])),
                 child: ElevatedButton(
-                  onPressed: () {
-                    http.get(Uri.parse("$API_URL/login")).then((res) {});
-                  },
+                  onPressed: _usernameOrEmailError == null &&
+                          _passwordError == null &&
+                          _usernameOrEmail.text.isNotEmpty &&
+                          _password.text.isNotEmpty
+                      ? () {
+                          http.post(Uri.parse("$API_URL/auth/login"),
+                              body: jsonEncode({
+                                "username": _usernameOrEmail.text,
+                                "password": _password.text
+                              }),
+                              headers: {
+                                "Content-Type": "application/json"
+                              }).then((res) {
+                            if (res.statusCode == HttpStatus.unauthorized) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                        AppLocalizations.of(context)!.error),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .incorrect_credentials),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                            AppLocalizations.of(context)!.ok),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              return;
+                            }
+                            if (res.statusCode == HttpStatus.ok) {
+                              String token = jsonDecode(res.body)["token"];
+                              storage
+                                  .write(key: "token", value: token)
+                                  .then((_) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              });
+                            }
+                          });
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40),
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                  ),
+                      minimumSize: const Size.fromHeight(40),
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      disabledBackgroundColor: Colors.grey),
                   child: Ink(
                     child: Text(AppLocalizations.of(context)!.login),
                   ),

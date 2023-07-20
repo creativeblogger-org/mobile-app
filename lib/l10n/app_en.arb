@@ -22,5 +22,28 @@
     "login": "Login",
     "@login": {
         "description": "Login text"
-    }
+    },
+    "invalid_username": "The username must contain only letters, numbers and underscores, must begin by a letter and be at least 3 characters long.",
+    "@invalid_username": {
+        "description": "Invalid username error message"
+    },
+    "password_too_short": "The password must be at least 8 characters long",
+    "@password_too_short": {
+        "description": "Password too short error message"
+    },
+    "invalid_email_address": "Invalid email address",
+    "@invalid_email_address": {
+        "description": "Invalid email address error message"
+    },
+    "error": "Error",
+    "incorrect_credentials": "Incorrect credentials",
+    "@incorrect_credentials": {
+        "description": "Incorrect credentials error message"
+    },
+    "ok": "Ok",
+    "confirm": "Confirm",
+    "do_you_really_want_to_log_out": "Do you really want to log out ?",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "log_out": "Log out"
 }
