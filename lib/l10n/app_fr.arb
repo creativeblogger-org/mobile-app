@@ -15,5 +15,6 @@
     "do_you_really_want_to_log_out": "Êtes-vous sûr de vouloir vous déconnecter ?",
     "yes": "Oui",
     "cancel": "Annuler",
-    "log_out": "Se déconnecter"
+    "log_out": "Se déconnecter",
+    "internet_error": "Une erreur est survenue, veuillez vérifier votre connexion Internet"
 }

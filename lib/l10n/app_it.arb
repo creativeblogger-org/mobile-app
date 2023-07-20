@@ -12,8 +12,9 @@
     "incorrect_credentials": "Credenziali non corrette",
     "ok": "Ok",
     "confirm": "Confermare",
-    "do_you_really_want_to_log_out": "Sei sicuro che vuoi ti disconnettere ?",
+    "do_you_really_want_to_log_out": "Sei sicuro che vuoi disconnetterti ?",
     "yes": "Sì",
     "cancel": "Annulla",
-    "log_out": "Si disconnettere"
+    "log_out": "Si disconnettere",
+    "internet_error": "Un'errore si è verificata, controlla la tua connessione Internet."
 }

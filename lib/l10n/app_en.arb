@@ -45,5 +45,6 @@
     "do_you_really_want_to_log_out": "Do you really want to log out ?",
     "yes": "Yes",
     "cancel": "Cancel",
-    "log_out": "Log out"
+    "log_out": "Log out",
+    "internet_error": "An error occured, please check your Internet connection"
 }

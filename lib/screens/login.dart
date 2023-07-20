@@ -39,11 +39,64 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _usernameOrEmailError;
   final _password = TextEditingController();
   String? _passwordError;
+  bool connecting = false;
 
   @override
   void dispose() {
     _usernameOrEmail.dispose();
     super.dispose();
+  }
+
+  void onLoginButtonPressed() {
+    setState(() => connecting = true);
+    http.post(Uri.parse("$API_URL/auth/login"),
+        body: jsonEncode(
+            {"username": _usernameOrEmail.text, "password": _password.text}),
+        headers: {"Content-Type": "application/json"}).then((res) {
+      if (res.statusCode == HttpStatus.unauthorized) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.error),
+              content:
+                  Text(AppLocalizations.of(context)!.incorrect_credentials),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.ok,
+                  ),
+                ),
+              ],
+              actionsAlignment: MainAxisAlignment.center,
+            );
+          },
+        ).then(
+          (_) => setState(() => connecting = false),
+        );
+        return;
+      }
+      if (res.statusCode == HttpStatus.ok) {
+        String token = jsonDecode(res.body)["token"];
+        storage.write(key: "token", value: token).then((_) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+          setState(() => connecting = false);
+        });
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.internet_error)));
+      setState(() => connecting = false);
+    });
   }
 
   @override
@@ -55,10 +108,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(AppLocalizations.of(context)!.welcome_back,
-                  style: TextStyle(
-                      fontSize:
-                          Theme.of(context).textTheme.headlineSmall!.fontSize)),
+              Text(
+                AppLocalizations.of(context)!.welcome_back,
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                ),
+              ),
               const SizedBox(height: 16),
               TextField(
                 decoration: InputDecoration(
@@ -100,10 +155,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   errorMaxLines: 5,
                 ),
                 controller: _password,
-                onChanged: (_) => setState(() => _password.text.length < 8
-                    ? _passwordError =
-                        AppLocalizations.of(context)!.password_too_short
-                    : _passwordError = null),
+                onChanged: (_) => setState(
+                  () => _password.text.length < 8
+                      ? _passwordError =
+                          AppLocalizations.of(context)!.password_too_short
+                      : _passwordError = null,
+                ),
               ),
               const SizedBox(height: 10),
               Container(
@@ -118,60 +175,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _usernameOrEmailError == null &&
                           _passwordError == null &&
                           _usernameOrEmail.text.isNotEmpty &&
-                          _password.text.isNotEmpty
-                      ? () {
-                          http.post(Uri.parse("$API_URL/auth/login"),
-                              body: jsonEncode({
-                                "username": _usernameOrEmail.text,
-                                "password": _password.text
-                              }),
-                              headers: {
-                                "Content-Type": "application/json"
-                              }).then((res) {
-                            if (res.statusCode == HttpStatus.unauthorized) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        AppLocalizations.of(context)!.error),
-                                    content: Text(AppLocalizations.of(context)!
-                                        .incorrect_credentials),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                            AppLocalizations.of(context)!.ok),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                              return;
-                            }
-                            if (res.statusCode == HttpStatus.ok) {
-                              String token = jsonDecode(res.body)["token"];
-                              storage
-                                  .write(key: "token", value: token)
-                                  .then((_) {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomeScreen(),
-                                  ),
-                                );
-                              });
-                            }
-                          });
-                        }
+                          _password.text.isNotEmpty &&
+                          !connecting
+                      ? onLoginButtonPressed
                       : null,
                   style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(40),
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      disabledBackgroundColor: Colors.grey),
+                    minimumSize: const Size.fromHeight(40),
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    disabledBackgroundColor:
+                        const Color.fromRGBO(158, 158, 158, 0.5),
+                  ),
                   child: Ink(
                     child: Text(AppLocalizations.of(context)!.login),
                   ),

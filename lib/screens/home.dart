@@ -23,43 +23,44 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(AppLocalizations.of(context)!.confirm),
-                      content: Text(AppLocalizations.of(context)!
-                          .do_you_really_want_to_log_out),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(AppLocalizations.of(context)!.cancel),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            storage.delete(key: "token").then((_) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
-                            });
-                          },
-                          child: Text(AppLocalizations.of(context)!.yes),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                child: const Text("Se déconnecter"))
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(AppLocalizations.of(context)!.confirm),
+                    content: Text(AppLocalizations.of(context)!
+                        .do_you_really_want_to_log_out),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(AppLocalizations.of(context)!.cancel),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          storage.delete(key: "token").then((_) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          });
+                        },
+                        child: Text(AppLocalizations.of(context)!.yes),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Text(AppLocalizations.of(context)!.log_out),
+            )
           ],
         ),
       ),
       floatingActionButton: const FloatingActionButton(
         onPressed: null,
-        tooltip: 'Increment',
+        tooltip: 'Post',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
