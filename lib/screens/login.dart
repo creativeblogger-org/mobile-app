@@ -49,10 +49,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onLoginButtonPressed() {
     setState(() => connecting = true);
-    http.post(Uri.parse("$API_URL/auth/login"),
-        body: jsonEncode(
-            {"username": _usernameOrEmail.text, "password": _password.text}),
-        headers: {"Content-Type": "application/json"}).then((res) {
+    http.post(
+      Uri.parse("$API_URL/auth/login"),
+      body: jsonEncode(
+          {"username": _usernameOrEmail.text, "password": _password.text}),
+      headers: {"Content-Type": "application/json"},
+    ).onError((error, stackTrace) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.internet_error),
+        ),
+      );
+      setState(() => connecting = false);
+      return http.Response("", 218);
+    }).then((res) {
       if (res.statusCode == HttpStatus.unauthorized) {
         showDialog(
           context: context,
@@ -93,9 +104,31 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.internet_error)));
-      setState(() => connecting = false);
+      if (res.statusCode == 218) {
+        return;
+      }
+
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.error),
+              content: Text(jsonDecode(res.body)["errors"][0]["message"]),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)!.ok,
+                  ),
+                ),
+              ],
+              actionsAlignment: MainAxisAlignment.center,
+            );
+          }).then(
+        (_) => setState(() => connecting = false),
+      );
     });
   }
 
