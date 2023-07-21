@@ -16,5 +16,8 @@
     "yes": "Oui",
     "cancel": "Annuler",
     "log_out": "Se déconnecter",
-    "internet_error": "Une erreur est survenue, veuillez vérifier votre connexion Internet"
+    "internet_error": "Une erreur est survenue, veuillez vérifier votre connexion Internet",
+    "need_an_account": "Besoin d'un compte ?",
+    "create_an_account": "Créer un compte",
+    "username": "Nom d'utilisateur"
 }

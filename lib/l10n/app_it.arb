@@ -16,5 +16,8 @@
     "yes": "Sì",
     "cancel": "Annulla",
     "log_out": "Si disconnettere",
-    "internet_error": "Un'errore si è verificata, controlla la tua connessione Internet."
+    "internet_error": "Un'errore si è verificata, controlla la tua connessione Internet.",
+    "need_an_account": "Bisogno di un account ?",
+    "create_an_account": "Creare un account",
+    "username": "Nome utente"
 }

@@ -46,5 +46,8 @@
     "yes": "Yes",
     "cancel": "Cancel",
     "log_out": "Log out",
-    "internet_error": "An error occured, please check your Internet connection"
+    "internet_error": "An error occured, please check your Internet connection",
+    "need_an_account": "Need an account ?",
+    "create_an_account": "Create an account",
+    "username": "Username"
 }

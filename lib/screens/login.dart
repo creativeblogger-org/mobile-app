@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/home.dart';
 import 'package:creative_blogger_app/screens/loading.dart';
+import 'package:creative_blogger_app/screens/register/username_screen.dart';
+import 'package:creative_blogger_app/utils/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -14,24 +16,6 @@ class LoginScreen extends StatefulWidget {
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
-}
-
-var usernameValidCharacters = RegExp(r'^[a-zA-Z][\w]{2,}$');
-var emailRegex = RegExp(
-    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-
-String? isUsernameValid(String username, BuildContext context) {
-  if (usernameValidCharacters.hasMatch(username)) {
-    return null;
-  }
-  return AppLocalizations.of(context)!.invalid_username;
-}
-
-String? isEmailValid(String email, BuildContext context) {
-  if (emailRegex.hasMatch(email)) {
-    return null;
-  }
-  return AppLocalizations.of(context)!.invalid_email_address;
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -45,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _usernameOrEmail.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -162,7 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 AppLocalizations.of(context)!.welcome_back,
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                  fontSize:
+                      Theme.of(context).textTheme.headlineMedium!.fontSize,
                 ),
               ),
               const SizedBox(height: 16),
@@ -183,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     () => _usernameOrEmailError =
                         _usernameOrEmail.text.contains("@")
                             ? isEmailValid(_usernameOrEmail.text, context)
-                            : isUsernameValid(_usernameOrEmail.text, context),
+                            : isUsernameValid(context, _usernameOrEmail.text),
                   );
                 },
               ),
@@ -213,15 +199,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       : _passwordError = null,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               Container(
                 height: 40,
                 decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    gradient: LinearGradient(colors: [
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  gradient: LinearGradient(
+                    colors: [
                       Color.fromRGBO(21, 184, 166, 1),
                       Color.fromRGBO(99, 102, 241, 1)
-                    ])),
+                    ],
+                  ),
+                ),
                 child: ElevatedButton(
                   onPressed: _usernameOrEmailError == null &&
                           _passwordError == null &&
@@ -241,6 +230,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(AppLocalizations.of(context)!.login),
                   ),
                 ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ChooseUsernameScreen())),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(40)),
+                child: Text(AppLocalizations.of(context)!.need_an_account),
               )
             ],
           ),
