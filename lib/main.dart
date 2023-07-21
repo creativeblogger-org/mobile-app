@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:connection_notifier/connection_notifier.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,23 +18,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Creative Blogger',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      supportedLocales: const [
-        Locale("en"),
-        Locale("fr"),
-        Locale("it"),
-      ],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      home: const LoadingScreen(),
+    return ConnectionNotifier(
+      alignment: AlignmentDirectional.bottomCenter,
+      child: MaterialApp(
+        title: 'Creative Blogger',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        supportedLocales: const [
+          Locale("en"),
+          Locale("fr"),
+          Locale("it"),
+        ],
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        home: const LoadingScreen(),
+      ),
     );
   }
 }
