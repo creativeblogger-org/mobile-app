@@ -26,18 +26,18 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
+                  builder: (innerContext) => AlertDialog(
                     title: Text(AppLocalizations.of(context)!.confirm),
                     content: Text(AppLocalizations.of(context)!
                         .do_you_really_want_to_log_out),
                     actions: [
                       ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => Navigator.pop(innerContext),
                         child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pop(innerContext);
                           storage.delete(key: "token").then((_) {
                             Navigator.pushReplacement(
                               context,

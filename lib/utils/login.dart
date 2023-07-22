@@ -12,7 +12,10 @@ String? isUsernameValid(BuildContext context, String username) {
   return AppLocalizations.of(context)!.invalid_username;
 }
 
-String? isEmailValid(String email, BuildContext context) {
+String? isEmailValid(
+  BuildContext context,
+  String email,
+) {
   if (emailRegex.hasMatch(email)) {
     return null;
   }

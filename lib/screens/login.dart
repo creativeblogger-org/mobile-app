@@ -1,15 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/main.dart';
-import 'package:creative_blogger_app/screens/home.dart';
-import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:creative_blogger_app/screens/register/username_screen.dart';
+import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,108 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _usernameOrEmail.dispose();
     _password.dispose();
     super.dispose();
-  }
-
-  void onLoginButtonPressed() {
-    setState(() => connecting = true);
-    showDialog(
-      context: context,
-      builder: (context) => const Dialog.fullscreen(
-        backgroundColor: Color.fromRGBO(0, 0, 0, 0.3),
-        child: SpinKitSpinningLines(
-          color: Colors.blue,
-          size: 100,
-          duration: Duration(milliseconds: 1500),
-        ),
-      ),
-      barrierDismissible: false,
-    );
-    http.post(
-      Uri.parse("$API_URL/auth/login"),
-      body: jsonEncode(
-          {"username": _usernameOrEmail.text, "password": _password.text}),
-      headers: {"Content-Type": "application/json"},
-    ).onError((error, stackTrace) {
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.internet_error),
-        ),
-      );
-      setState(() => connecting = false);
-      return http.Response("", 218);
-    }).then((res) {
-      if (res.statusCode == HttpStatus.unauthorized) {
-        Navigator.of(context).pop();
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(AppLocalizations.of(context)!.error),
-              content:
-                  Text(AppLocalizations.of(context)!.incorrect_credentials),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context)!.ok,
-                  ),
-                ),
-              ],
-              actionsAlignment: MainAxisAlignment.center,
-            );
-          },
-        ).then(
-          (_) => setState(() => connecting = false),
-        );
-        return;
-      }
-      if (res.statusCode == HttpStatus.ok) {
-        String token = jsonDecode(res.body)["token"];
-        storage.write(key: "token", value: token).then((_) {
-          Navigator.of(context).pop();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
-          setState(() => connecting = false);
-        });
-        return;
-      }
-
-      if (res.statusCode == 218) {
-        return;
-      }
-
-      Navigator.of(context).pop();
-
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(AppLocalizations.of(context)!.error),
-              content: Text(jsonDecode(res.body)["errors"][0]["message"]),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context)!.ok,
-                  ),
-                ),
-              ],
-              actionsAlignment: MainAxisAlignment.center,
-            );
-          }).then(
-        (_) => setState(() => connecting = false),
-      );
-    });
   }
 
   @override
@@ -168,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   setState(
                     () => _usernameOrEmailError =
                         _usernameOrEmail.text.contains("@")
-                            ? isEmailValid(_usernameOrEmail.text, context)
+                            ? isEmailValid(context, _usernameOrEmail.text)
                             : isUsernameValid(context, _usernameOrEmail.text),
                   );
                 },
@@ -200,45 +95,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Container(
-                height: 40,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromRGBO(21, 184, 166, 1),
-                      Color.fromRGBO(99, 102, 241, 1)
-                    ],
-                  ),
-                ),
-                child: ElevatedButton(
-                  onPressed: _usernameOrEmailError == null &&
-                          _passwordError == null &&
-                          _usernameOrEmail.text.isNotEmpty &&
-                          _password.text.isNotEmpty &&
-                          !connecting
-                      ? onLoginButtonPressed
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40),
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    disabledBackgroundColor:
-                        const Color.fromRGBO(158, 158, 158, 0.5),
-                  ),
-                  child: Ink(
-                    child: Text(AppLocalizations.of(context)!.login),
-                  ),
-                ),
+              CustomButton(
+                onPressed: _usernameOrEmailError == null &&
+                        _passwordError == null &&
+                        _usernameOrEmail.text.isNotEmpty &&
+                        _password.text.isNotEmpty &&
+                        !connecting
+                    ? () => customRequest(
+                          context,
+                          (value) => setState(() => connecting = value),
+                          Uri.parse("$API_URL/auth/login"),
+                          jsonEncode({
+                            "username": _usernameOrEmail.text,
+                            "password": _password.text
+                          }),
+                          {"Content-Type": "application/json"},
+                        )
+                    : null,
+                child: Text(AppLocalizations.of(context)!.login),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
+              CustomButton(
                 onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ChooseUsernameScreen())),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40)),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChooseUsernameScreen(),
+                  ),
+                ),
                 child: Text(AppLocalizations.of(context)!.need_an_account),
               )
             ],

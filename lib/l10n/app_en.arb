@@ -49,5 +49,14 @@
     "internet_error": "An error occured, please check your Internet connection",
     "need_an_account": "Need an account ?",
     "create_an_account": "Create an account",
-    "username": "Username"
+    "username": "Username",
+    "available": "Available",
+    "not_available": "Not available",
+    "checking": "Checking...",
+    "continue_text": "Continue",
+    "terms_and_conditions_title": "Terms and conditions",
+    "terms_and_conditions": "Please be respectful. You can share your view while respecting others'.\nKeep also in mind you are the only one responsible of what you post. You can modify or delete your posts which, in that case, will be deleted from the database.\nCreative Blogger Org can't be held accountable of any content posted by its members.\nKeep also in mind that, in a legal context, we store your IP address.",
+    "accept_and_continue": "Accept & continue",
+    "create_a_password": "Create a password",
+    "email_address": "Email address"
 }
