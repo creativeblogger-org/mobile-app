@@ -1,4 +1,10 @@
+import 'package:creative_blogger_app/screens/home.dart';
 import 'package:creative_blogger_app/screens/loading.dart';
+import 'package:creative_blogger_app/screens/login.dart';
+import 'package:creative_blogger_app/screens/register/email_screen.dart';
+import 'package:creative_blogger_app/screens/register/password_screen.dart';
+import 'package:creative_blogger_app/screens/register/terms.dart';
+import 'package:creative_blogger_app/screens/register/username_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -25,6 +31,18 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
+        initialRoute: '/',
+        routes: {
+          LoadingScreen.routeName: (context) => const LoadingScreen(),
+          LoginScreen.routeName: (context) => const LoginScreen(),
+          HomeScreen.routeName: (context) => const HomeScreen(),
+          ChooseUsernameScreen.routeName: (context) =>
+              const ChooseUsernameScreen(),
+          TermsScreen.routeName: (context) => const TermsScreen(),
+          ChooseEmailScreen.routeName: (context) => const ChooseEmailScreen(),
+          ChoosePasswordScreen.routeName: (context) =>
+              const ChoosePasswordScreen(),
+        },
         supportedLocales: const [
           Locale("en"),
           Locale("fr"),
@@ -36,7 +54,6 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
-        home: const LoadingScreen(),
       ),
     );
   }

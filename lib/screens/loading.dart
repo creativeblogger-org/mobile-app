@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
+  static const routeName = '/';
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
@@ -24,23 +25,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
     storage.read(key: "token").then((token) {
       if (token == null) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()));
+        Navigator.pushReplacementNamed(context, LoginScreen.routeName);
       } else if (token.trim().isEmpty) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()));
+        Navigator.pushReplacementNamed(context, LoginScreen.routeName);
       } else {
         http.get(Uri.parse("$API_URL/@me"),
             headers: {"Authorization": "Bearer $token"}).then((res) {
           if (res.statusCode == HttpStatus.ok) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
           } else if (res.statusCode == HttpStatus.unauthorized) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()));
+            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
           }
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
         });
       }
     });
@@ -49,12 +45,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-        body: Center(
-      child: SpinKitSpinningLines(
-        color: Colors.blue,
-        size: 100,
-        duration: Duration(milliseconds: 1500),
+      body: Center(
+        child: SpinKitSpinningLines(
+          color: Colors.blue,
+          size: 100,
+          duration: Duration(milliseconds: 1500),
+        ),
       ),
-    ));
+    );
   }
 }

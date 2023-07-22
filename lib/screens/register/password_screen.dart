@@ -3,15 +3,13 @@ import 'dart:convert';
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
+import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChoosePasswordScreen extends StatefulWidget {
-  const ChoosePasswordScreen(
-      {super.key, required this.username, required this.email});
-
-  final String username;
-  final String email;
+  const ChoosePasswordScreen({super.key});
+  static const routeName = '/register/password';
 
   @override
   State<ChoosePasswordScreen> createState() => _ChoosePasswordScreenState();
@@ -31,6 +29,9 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as PasswordScreenArguments;
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -88,8 +89,8 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                         (value) => setState(() => connecting = value),
                         Uri.parse("$API_URL/auth/register"),
                         jsonEncode({
-                          "username": widget.username,
-                          "email": widget.email,
+                          "username": args.username,
+                          "email": args.email,
                           "password": _password.text
                         }),
                         {"Content-Type": "application/json"},

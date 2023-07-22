@@ -75,9 +75,8 @@ void customRequest(
       String token = jsonDecode(res.body)["token"];
       storage.write(key: "token", value: token).then((_) {
         Navigator.of(context).pop();
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            HomeScreen.routeName, (Route<dynamic> route) => false);
         setConnecting(false);
       });
       return;
@@ -90,24 +89,23 @@ void customRequest(
     Navigator.of(context).pop();
 
     showDialog(
-        context: context,
-        builder: (innerContext) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.error),
-            content: Text(jsonDecode(res.body)["errors"][0]["message"]),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(innerContext);
-                },
-                child: Text(
-                  AppLocalizations.of(context)!.ok,
-                ),
-              ),
-            ],
-            actionsAlignment: MainAxisAlignment.center,
-          );
-        }).then(
+      context: context,
+      builder: (innerContext) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.error),
+        content: Text(jsonDecode(res.body)["errors"][0]["message"]),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(innerContext);
+            },
+            child: Text(
+              AppLocalizations.of(context)!.ok,
+            ),
+          ),
+        ],
+        actionsAlignment: MainAxisAlignment.center,
+      ),
+    ).then(
       (_) => setConnecting(false),
     );
   });

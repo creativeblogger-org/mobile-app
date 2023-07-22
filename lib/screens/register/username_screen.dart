@@ -4,6 +4,7 @@ import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/register/terms.dart';
 import 'package:creative_blogger_app/utils/login.dart';
+import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +12,7 @@ import 'package:async/async.dart';
 
 class ChooseUsernameScreen extends StatefulWidget {
   const ChooseUsernameScreen({super.key});
+  static const routeName = '/register/username';
 
   @override
   State<ChooseUsernameScreen> createState() => _ChooseUsernameScreenState();
@@ -19,8 +21,8 @@ class ChooseUsernameScreen extends StatefulWidget {
 class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
   final _username = TextEditingController();
   String? _usernameError;
-  String _username_already_exists_text = "";
-  var _username_already_exists_color = Colors.green;
+  String _usernameAlreadyExistsText = "";
+  var _usernameAlreadyExistsColor = Colors.green;
   bool _isLoading = false;
 
   @override
@@ -31,14 +33,14 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
 
   Future<void> _username_exists(BuildContext context, String username) async {
     var res = await http
-        .get(Uri.parse("$API_URL/users/$username"))
+        .get(Uri.parse("$API_URL/verif/user/$username"))
         .onError((error, stackTrace) {
       return http.Response("", 218);
     });
     if (res.statusCode == HttpStatus.notFound) {
       setState(() {
-        _username_already_exists_text = AppLocalizations.of(context)!.available;
-        _username_already_exists_color = Colors.green;
+        _usernameAlreadyExistsText = AppLocalizations.of(context)!.available;
+        _usernameAlreadyExistsColor = Colors.green;
       });
       return;
     }
@@ -67,8 +69,8 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
 
     setState(() {
       _isLoading = true;
-      _username_already_exists_text = AppLocalizations.of(context)!.checking;
-      _username_already_exists_color = Colors.grey;
+      _usernameAlreadyExistsText = AppLocalizations.of(context)!.checking;
+      _usernameAlreadyExistsColor = Colors.grey;
     });
 
     _myCancelableFuture =
@@ -136,9 +138,9 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, left: 12),
                   child: Text(
-                    _username_already_exists_text,
+                    _usernameAlreadyExistsText,
                     style: TextStyle(
-                      color: _username_already_exists_color,
+                      color: _usernameAlreadyExistsColor,
                       fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                     ),
                   ),
@@ -150,12 +152,10 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
               onPressed: _usernameError == null &&
                       !_isLoading &&
                       _username.text.isNotEmpty
-                  ? () => Navigator.push(
+                  ? () => Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              TermsScreen(username: _username.text),
-                        ),
+                        TermsScreen.routeName,
+                        arguments: TermsAndEmailScreenArguments(_username.text),
                       )
                   : null,
               child: Text(AppLocalizations.of(context)!.continue_text),
