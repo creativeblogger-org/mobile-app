@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/main.dart';
-import 'package:creative_blogger_app/utils/custom_request.dart';
+import 'package:creative_blogger_app/utils/auth.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -83,18 +83,19 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
             ),
             const SizedBox(height: 10),
             CustomButton(
-              onPressed: _passwordError == null && _password.text.isNotEmpty
-                  ? () => customRequest(
-                        context,
-                        (value) => setState(() => connecting = value),
-                        Uri.parse("$API_URL/auth/register"),
-                        jsonEncode({
-                          "username": args.username,
-                          "email": args.email,
-                          "password": _password.text
-                        }),
-                        {"Content-Type": "application/json"},
-                      )
+              onPressed: _passwordError == null &&
+                      _password.text.isNotEmpty &&
+                      !connecting
+                  ? () => authRequest(
+                      context,
+                      (isConnecting) =>
+                          setState(() => connecting = isConnecting),
+                      Uri.parse("$API_URL/auth/register"),
+                      jsonEncode({
+                        "username": args.username,
+                        "email": args.email,
+                        "password": _password.text
+                      }))
                   : null,
               child: Text(AppLocalizations.of(context)!.create_an_account),
             )

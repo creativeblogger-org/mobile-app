@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/register/username_screen.dart';
-import 'package:creative_blogger_app/utils/custom_request.dart';
+import 'package:creative_blogger_app/utils/auth.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -103,15 +103,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         _usernameOrEmail.text.isNotEmpty &&
                         _password.text.isNotEmpty &&
                         !connecting
-                    ? () => customRequest(
+                    ? () => authRequest(
                           context,
-                          (value) => setState(() => connecting = value),
+                          (isConnecting) =>
+                              setState(() => connecting = isConnecting),
                           Uri.parse("$API_URL/auth/login"),
-                          jsonEncode({
-                            "username": _usernameOrEmail.text,
-                            "password": _password.text
-                          }),
-                          {"Content-Type": "application/json"},
+                          jsonEncode(
+                            {
+                              "username": _usernameOrEmail.text,
+                              "password": _password.text
+                            },
+                          ),
                         )
                     : null,
                 child: Text(AppLocalizations.of(context)!.login),
