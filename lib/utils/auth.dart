@@ -56,13 +56,13 @@ void authRequest(
       dismissDialog();
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (innerContext) => AlertDialog(
           title: Text(AppLocalizations.of(context)!.error),
           content: Text(AppLocalizations.of(context)!.incorrect_credentials),
           actions: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(innerContext);
               },
               child: Text(
                 AppLocalizations.of(context)!.ok,
@@ -79,7 +79,7 @@ void authRequest(
     if (res.statusCode == HttpStatus.ok) {
       String token = jsonDecode(res.body)["token"];
       storage.write(key: "token", value: token).then((_) {
-        Navigator.of(context).pop();
+        dismissDialog();
         Navigator.of(context).pushNamedAndRemoveUntil(
             HomeScreen.routeName, (Route<dynamic> route) => false);
         setConnecting(false);
