@@ -1,5 +1,7 @@
-import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:creative_blogger_app/screens/login.dart';
+import 'package:creative_blogger_app/utils/home.dart';
+import 'package:creative_blogger_app/utils/structs/post.dart';
+import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,18 +14,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<PreviewPost> posts = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      getPosts(context).then(
+        (previewPosts) => setState(
+          () {
+            posts = previewPosts;
+            isLoading = false;
+          },
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text("Creative Blogger"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
+        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
+        actions: [
+          IconButton(
               onPressed: () {
                 showDialog(
                   context: context,
@@ -39,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pop(innerContext);
-                          storage.delete(key: "token").then((_) {
+                          deleteToken().then((_) {
                             Navigator.pushReplacementNamed(
                               context,
                               LoginScreen.routeName,
@@ -52,15 +67,84 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-              child: Text(AppLocalizations.of(context)!.log_out),
-            )
-          ],
-        ),
+              icon: const Icon(Icons.exit_to_app_rounded))
+        ],
+        title: const Text("Creative Blogger"),
+        centerTitle: true,
       ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: null,
+      body: RefreshIndicator(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : posts.isNotEmpty
+                ? ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      for (var post in posts) ...{
+                        GestureDetector(
+                          onTap: () {
+                            //TODO redirect to post
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    post.title,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge!
+                                          .fontSize,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    "@${post.author.username}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .fontSize,
+                                    ),
+                                  ),
+                                  Text(
+                                    post.description,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Image.network(post.image)
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      }
+                    ],
+                  )
+                : const Text("Pas de posts"),
+        onRefresh: () {
+          setState(() => isLoading = true);
+          return getPosts(context).then(
+            (previewPosts) => setState(
+              () {
+                posts = previewPosts;
+                isLoading = false;
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //TODO create post
+        },
         tooltip: 'Post',
-        child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

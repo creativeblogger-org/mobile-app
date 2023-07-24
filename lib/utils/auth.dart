@@ -1,9 +1,10 @@
+import 'package:creative_blogger_app/utils/request_error_handling.dart';
+import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:creative_blogger_app/screens/home.dart';
-import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -52,33 +53,11 @@ void authRequest(
     setConnecting(false);
     return http.Response("", 218);
   }).then((res) {
-    if (res.statusCode == HttpStatus.unauthorized) {
-      dismissDialog();
-      showDialog(
-        context: context,
-        builder: (innerContext) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.error),
-          content: Text(AppLocalizations.of(context)!.incorrect_credentials),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(innerContext);
-              },
-              child: Text(
-                AppLocalizations.of(context)!.ok,
-              ),
-            ),
-          ],
-          actionsAlignment: MainAxisAlignment.center,
-        ),
-      ).then(
-        (_) => setConnecting(false),
-      );
+    if (res.statusCode == 218) {
       return;
     }
     if (res.statusCode == HttpStatus.ok) {
-      String token = jsonDecode(res.body)["token"];
-      storage.write(key: "token", value: token).then((_) {
+      setToken(jsonDecode(res.body)["token"]).then((_) {
         dismissDialog();
         Navigator.of(context).pushNamedAndRemoveUntil(
             HomeScreen.routeName, (Route<dynamic> route) => false);
@@ -86,31 +65,8 @@ void authRequest(
       });
       return;
     }
-
-    if (res.statusCode == 218) {
-      return;
-    }
-
     dismissDialog();
-    showDialog(
-      context: context,
-      builder: (innerContext) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.error),
-        content: Text(jsonDecode(res.body)["errors"][0]["message"]),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(innerContext);
-            },
-            child: Text(
-              AppLocalizations.of(context)!.ok,
-            ),
-          ),
-        ],
-        actionsAlignment: MainAxisAlignment.center,
-      ),
-    ).then(
-      (_) => setConnecting(false),
-    );
+    setConnecting(false);
+    handleError(context, res);
   });
 }
