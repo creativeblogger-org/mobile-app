@@ -30,7 +30,7 @@ class _CustomButtonState extends State<CustomButton> {
           minimumSize: const Size.fromHeight(40),
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          disabledBackgroundColor: const Color.fromRGBO(158, 158, 158, 0.5),
+          disabledBackgroundColor: const Color.fromRGBO(0, 0, 0, 0.4),
         ),
         child: widget.child,
       ),
