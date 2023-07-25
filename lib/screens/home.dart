@@ -1,6 +1,8 @@
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/utils/home.dart';
+import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
+import 'package:creative_blogger_app/utils/structs/user.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,20 +17,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<PreviewPost> posts = [];
-  bool isLoading = true;
+  bool arePostsLoading = true;
+  User? me;
+  bool isGetMeLoading = true;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      getPosts(context).then(
-        (previewPosts) => setState(
-          () {
-            posts = previewPosts;
-            isLoading = false;
-          },
-        ),
-      );
+      getPosts().then((previewPosts) {
+        if (mounted) {
+          setState(
+            () {
+              posts = previewPosts;
+              arePostsLoading = false;
+            },
+          );
+        }
+      });
+      getMe().then((user) {
+        if (!mounted) {
+          return;
+        }
+        if (user == null) {
+          return;
+        }
+        setState(() => me = user);
+      });
     });
   }
 
@@ -36,7 +51,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
+        leading: IconButton(
+          onPressed: () {},
+          icon: me == null || me?.pp == null
+              ? const Icon(Icons.person)
+              : LayoutBuilder(
+                  builder: (context, constraint) => ImageIcon(
+                    Image.network(me!.pp!).image,
+                    size: constraint.biggest.height,
+                  ),
+                ),
+        ),
         actions: [
           IconButton(
               onPressed: () {
@@ -73,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       body: RefreshIndicator(
-        child: isLoading
+        child: arePostsLoading
             ? const Center(child: CircularProgressIndicator())
             : posts.isNotEmpty
                 ? ListView(
@@ -86,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: Column(
@@ -127,24 +153,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 : const Text("Pas de posts"),
         onRefresh: () {
-          setState(() => isLoading = true);
-          return getPosts(context).then(
+          setState(() => arePostsLoading = true);
+          return getPosts().then(
             (previewPosts) => setState(
               () {
                 posts = previewPosts;
-                isLoading = false;
+                arePostsLoading = false;
               },
             ),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //TODO create post
-        },
-        tooltip: 'Post',
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

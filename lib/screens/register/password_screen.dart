@@ -87,7 +87,6 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                       _password.text.isNotEmpty &&
                       !connecting
                   ? () => authRequest(
-                      context,
                       (isConnecting) =>
                           setState(() => connecting = isConnecting),
                       Uri.parse("$API_URL/auth/register"),

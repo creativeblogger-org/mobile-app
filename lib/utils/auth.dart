@@ -1,3 +1,4 @@
+import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +18,13 @@ void dismissDialog() {
 }
 
 void authRequest(
-  BuildContext context,
   Function(bool connecting) setConnecting,
   Uri url,
   String body,
 ) {
   setConnecting(true);
   showDialog(
-    context: context,
+    context: navigatorKey.currentContext!,
     builder: (context) {
       dcontext = context;
       return const Dialog.fullscreen(
@@ -44,10 +44,11 @@ void authRequest(
     headers: {"Content-Type": "application/json"},
   ).onError((error, stackTrace) {
     dismissDialog();
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.internet_error),
+        content: Text(
+            AppLocalizations.of(navigatorKey.currentContext!)!.internet_error),
       ),
     );
     setConnecting(false);
@@ -59,14 +60,15 @@ void authRequest(
     if (res.statusCode == HttpStatus.ok) {
       setToken(jsonDecode(res.body)["token"]).then((_) {
         dismissDialog();
-        Navigator.of(context).pushNamedAndRemoveUntil(
+        Navigator.of(navigatorKey.currentContext!).pushNamedAndRemoveUntil(
             HomeScreen.routeName, (Route<dynamic> route) => false);
         setConnecting(false);
+        return;
       });
       return;
     }
     dismissDialog();
     setConnecting(false);
-    handleError(context, res);
+    handleError(res);
   });
 }

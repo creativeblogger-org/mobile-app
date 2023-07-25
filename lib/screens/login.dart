@@ -104,7 +104,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         _password.text.isNotEmpty &&
                         !connecting
                     ? () => authRequest(
-                          context,
                           (isConnecting) =>
                               setState(() => connecting = isConnecting),
                           Uri.parse("$API_URL/auth/login"),

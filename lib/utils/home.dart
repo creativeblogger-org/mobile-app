@@ -1,22 +1,26 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:creative_blogger_app/utils/token.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<PreviewPost>> getPosts(BuildContext context) async {
+Future<List<PreviewPost>> getPosts() async {
   var res = await http.get(Uri.parse("$API_URL/posts"), headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer ${getToken()}"
+    "Authorization": "Bearer ${await getToken()}"
   });
-  if (res.statusCode == 200) {
+  print("start");
+  if (res.statusCode == HttpStatus.ok) {
+    print("Ok");
     return (jsonDecode(res.body) as List)
         .map((jsonPost) => PreviewPost.fromJson(jsonPost))
         .toList();
   }
-  handleError(context, res);
+  print("wtf : ${res.statusCode} ${jsonDecode(res.body)}");
+  handleError(res);
+
   return [];
 }

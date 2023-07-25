@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:connection_notifier/connection_notifier.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const MyApp());
 }
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light(),
         darkTheme: ThemeData.dark(),
         initialRoute: '/',
+        navigatorKey: navigatorKey,
         routes: {
           LoadingScreen.routeName: (context) => const LoadingScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
