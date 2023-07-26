@@ -1,12 +1,15 @@
+import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/utils/home.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
-import 'package:creative_blogger_app/utils/structs/post.dart';
+import 'package:creative_blogger_app/utils/routes.dart';
+import 'package:creative_blogger_app/utils/structs/preview_post.dart';
 import 'package:creative_blogger_app/utils/structs/user.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,30 +24,29 @@ class _HomeScreenState extends State<HomeScreen> {
   bool arePostsLoading = true;
   User? me;
   bool isGetMeLoading = true;
+  bool isShowMoreLoading = false;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      getPosts().then((previewPosts) {
-        if (mounted) {
-          setState(
-            () {
-              posts = previewPosts;
-              arePostsLoading = false;
-            },
-          );
-        }
-      });
-      getMe().then((user) {
-        if (!mounted) {
-          return;
-        }
-        if (user == null) {
-          return;
-        }
-        setState(() => me = user);
-      });
+    getPreviewPosts().then((previewPosts) {
+      if (mounted) {
+        setState(
+          () {
+            posts = previewPosts;
+            arePostsLoading = false;
+          },
+        );
+      }
+    });
+    getMe().then((user) {
+      if (!mounted) {
+        return;
+      }
+      if (user == null) {
+        return;
+      }
+      setState(() => me = user);
     });
   }
 
@@ -55,13 +57,17 @@ class _HomeScreenState extends State<HomeScreen> {
         flexibleSpace: Container(
           decoration: customDecoration(),
         ),
-        leading: GestureDetector(
-          onTap: () {},
-          child: me == null || me?.pp == null
-              ? const Icon(Icons.person)
-              : Image.network(
-                  me!.pp!,
-                ),
+        leading: IconButton(
+          onPressed: () {},
+          icon: ClipRRect(
+            borderRadius: BorderRadius.circular(300),
+            child: me == null || me?.pp == null
+                ? const Icon(Icons.person)
+                : Image.network(
+                    me!.pp!,
+                    fit: BoxFit.cover,
+                  ),
+          ),
         ),
         actions: [
           IconButton(
@@ -100,7 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: RefreshIndicator(
         child: arePostsLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(
+                child: SpinKitSpinningLines(
+                  color: Colors.blue,
+                  size: 100,
+                  duration: Duration(milliseconds: 1500),
+                ),
+              )
             : posts.isNotEmpty
                 ? ListView(
                     padding: const EdgeInsets.all(16),
@@ -108,7 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       for (var post in posts) ...{
                         GestureDetector(
                           onTap: () {
-                            //TODO redirect to post
+                            Navigator.pushNamed(
+                              context,
+                              "/post",
+                              arguments: PostScreenArguments(post.slug),
+                            );
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
@@ -177,13 +193,33 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
+                      },
+                      const SizedBox(height: 10),
+                      if (!arePostsLoading &&
+                          posts.isNotEmpty &&
+                          posts.last.id != 86) ...{
+                        CustomButton(
+                          onPressed: isShowMoreLoading
+                              ? null
+                              : () {
+                                  setState(() => isShowMoreLoading = true);
+                                  getPreviewPosts(page: posts.length ~/ 20)
+                                      .then((previewPosts) {
+                                    posts.addAll(previewPosts);
+                                    setState(() => isShowMoreLoading = false);
+                                  });
+                                },
+                          child: isShowMoreLoading
+                              ? const CircularProgressIndicator()
+                              : Text(AppLocalizations.of(context)!.show_more),
+                        )
                       }
                     ],
                   )
                 : const Text("Pas de posts"),
         onRefresh: () {
           setState(() => arePostsLoading = true);
-          return getPosts().then(
+          return getPreviewPosts(limit: posts.length).then(
             (previewPosts) => setState(
               () {
                 posts = previewPosts;
@@ -192,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

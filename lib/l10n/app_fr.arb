@@ -28,5 +28,8 @@
     "terms_and_conditions": "Veuillez rester cordial dans vos propos. Vous pouvez y exprimer vos opinions tout en respectant celles des autres.\nNous vous rappelons également que vous seul êtes responsable de ce que vous postez. Vous pouvez modifier ou supprimer vos posts qui, dans ce cas, seront supprimés de la base de données.\nCreative Blogger Org ne peut en aucun cas être tenu responsable du contenu posté par ses membres.\nNous vous rappelons également que, dans un cadre juridique, nous stockons votre IP.",
     "accept_and_continue": "Accepter & continuer",
     "create_a_password": "Créer un mot de passe",
-    "email_address": "Adresse email"
+    "email_address": "Adresse email",
+    "show_more": "Afficher plus",
+    "post": "Post",
+    "an_error_occured_while_loading_post": "Une erreur s'est produite lors du chargement du post"
 }

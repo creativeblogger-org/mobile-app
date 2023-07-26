@@ -1,6 +1,7 @@
 import 'package:creative_blogger_app/screens/home.dart';
 import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:creative_blogger_app/screens/login.dart';
+import 'package:creative_blogger_app/screens/post.dart';
 import 'package:creative_blogger_app/screens/register/email_screen.dart';
 import 'package:creative_blogger_app/screens/register/password_screen.dart';
 import 'package:creative_blogger_app/screens/register/terms.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
           ChooseEmailScreen.routeName: (context) => const ChooseEmailScreen(),
           ChoosePasswordScreen.routeName: (context) =>
               const ChoosePasswordScreen(),
+          PostScreen.routeName: (context) => const PostScreen()
         },
         supportedLocales: const [
           Locale("en"),

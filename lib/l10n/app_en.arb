@@ -58,5 +58,8 @@
     "terms_and_conditions": "Please be respectful. You can share your view while respecting others'.\nKeep also in mind you are the only one responsible of what you post. You can modify or delete your posts which, in that case, will be deleted from the database.\nCreative Blogger Org can't be held accountable of any content posted by its members.\nKeep also in mind that, in a legal context, we store your IP address.",
     "accept_and_continue": "Accept & continue",
     "create_a_password": "Create a password",
-    "email_address": "Email address"
+    "email_address": "Email address",
+    "show_more": "Show more",
+    "post": "Post",
+    "an_error_occured_while_loading_post": "An error occured while loading post"
 }

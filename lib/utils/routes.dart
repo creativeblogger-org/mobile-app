@@ -10,3 +10,9 @@ class PasswordScreenArguments {
 
   PasswordScreenArguments(this.username, this.email);
 }
+
+class PostScreenArguments {
+  final String slug;
+
+  PostScreenArguments(this.slug);
+}
