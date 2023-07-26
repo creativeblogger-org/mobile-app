@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:creative_blogger_app/components/custom_button.dart';
+import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/register/password_screen.dart';
 import 'package:creative_blogger_app/utils/login.dart';
@@ -31,7 +32,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
     super.dispose();
   }
 
-  Future<void> _username_exists(BuildContext context, String email) async {
+  Future<void> _username_exists(String email) async {
     var res = await http
         .get(Uri.parse("$API_URL/verif/email/$email"))
         .onError((error, stackTrace) {
@@ -39,23 +40,25 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
     });
     if (res.statusCode == HttpStatus.notFound) {
       setState(() {
-        _emailAlreadyExistsText = AppLocalizations.of(context)!.available;
+        _emailAlreadyExistsText =
+            AppLocalizations.of(navigatorKey.currentContext!)!.available;
         _emailAlreadyExistsColor = Colors.green;
       });
       return;
     }
     if (res.statusCode == HttpStatus.ok) {
       setState(() {
-        _emailError = AppLocalizations.of(context)!.not_available;
+        _emailError =
+            AppLocalizations.of(navigatorKey.currentContext!)!.not_available;
       });
       return;
     }
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
       SnackBar(
         content: Text(res.statusCode == 218
-            ? AppLocalizations.of(context)!.internet_error
-            : AppLocalizations.of(context)!.error),
+            ? AppLocalizations.of(navigatorKey.currentContext!)!.internet_error
+            : AppLocalizations.of(navigatorKey.currentContext!)!.error),
       ),
     );
   }
@@ -74,7 +77,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
     });
 
     _myCancelableFuture =
-        CancelableOperation.fromFuture(_username_exists(context, username));
+        CancelableOperation.fromFuture(_username_exists(username));
 
     await _myCancelableFuture?.value;
 
@@ -92,14 +95,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.create_an_account),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(21, 184, 166, 1),
-                Color.fromRGBO(99, 102, 241, 1)
-              ],
-            ),
-          ),
+          decoration: customDecoration(),
         ),
       ),
       body: Padding(

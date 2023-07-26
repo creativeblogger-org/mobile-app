@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:creative_blogger_app/components/custom_button.dart';
+import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/auth.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
@@ -35,14 +36,7 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(21, 184, 166, 1),
-                Color.fromRGBO(99, 102, 241, 1)
-              ],
-            ),
-          ),
+          decoration: customDecoration(),
         ),
       ),
       body: Padding(

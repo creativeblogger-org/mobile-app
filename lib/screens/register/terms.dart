@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
+import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/register/email_screen.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,7 @@ class _TermsScreenState extends State<TermsScreen> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.terms_and_conditions_title),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(21, 184, 166, 1),
-                Color.fromRGBO(99, 102, 241, 1)
-              ],
-            ),
-          ),
+          decoration: customDecoration(),
         ),
       ),
       body: Padding(

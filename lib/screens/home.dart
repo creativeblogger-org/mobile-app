@@ -1,3 +1,4 @@
+import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/utils/home.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
@@ -51,15 +52,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: me == null || me?.pp == null
+        flexibleSpace: Container(
+          decoration: customDecoration(),
+        ),
+        leading: GestureDetector(
+          onTap: () {},
+          child: me == null || me?.pp == null
               ? const Icon(Icons.person)
-              : LayoutBuilder(
-                  builder: (context, constraint) => ImageIcon(
-                    Image.network(me!.pp!).image,
-                    size: constraint.biggest.height,
-                  ),
+              : Image.network(
+                  me!.pp!,
                 ),
         ),
         actions: [
@@ -115,34 +116,62 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
-                              child: Column(
+                              child: Row(
                                 children: [
-                                  Text(
-                                    post.title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .fontSize,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "@${post.author.username}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .fontSize,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(360),
+                                    child: Image.network(
+                                      post.image,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Icon(Icons.image);
+                                      },
                                     ),
                                   ),
-                                  Text(
-                                    post.description,
-                                    textAlign: TextAlign.center,
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          post.title,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge!
+                                                .fontSize,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const Divider(),
+                                        Text(
+                                          "@${post.author.username}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .fontSize,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          post.description,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Image.network(post.image)
                                 ],
                               ),
                             ),
