@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, ProfileSreen.routeName);
+            Navigator.pushNamed(context, ProfileScreen.routeName);
           },
           icon: ClipRRect(
             borderRadius: BorderRadius.circular(300),

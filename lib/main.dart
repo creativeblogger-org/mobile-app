@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           ChoosePasswordScreen.routeName: (context) =>
               const ChoosePasswordScreen(),
           PostScreen.routeName: (context) => const PostScreen(),
-          ProfileSreen.routeName: (context) => const ProfileSreen()
+          ProfileScreen.routeName: (context) => const ProfileScreen()
         },
         supportedLocales: const [
           Locale("en"),

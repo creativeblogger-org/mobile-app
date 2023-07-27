@@ -8,18 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class ProfileSreen extends StatefulWidget {
-  const ProfileSreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   static const routeName = "/profile";
 
   @override
-  State<ProfileSreen> createState() => _ProfileSreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileSreenState extends State<ProfileSreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   User? me;
-  bool isLoading = true;
+  bool _isLoading = true;
   TextEditingController usernameEditingController = TextEditingController();
   String? _usernameError;
   TextEditingController emailEditingController = TextEditingController();
@@ -35,7 +35,7 @@ class _ProfileSreenState extends State<ProfileSreen> {
         setState(
           () {
             me = value;
-            isLoading = false;
+            _isLoading = false;
           },
         );
       },
@@ -51,7 +51,7 @@ class _ProfileSreenState extends State<ProfileSreen> {
           decoration: customDecoration(),
         ),
       ),
-      body: isLoading
+      body: _isLoading
           ? const Center(
               child: SpinKitSpinningLines(
                 color: Colors.blue,
@@ -123,7 +123,8 @@ class _ProfileSreenState extends State<ProfileSreen> {
                               _usernameError == null && _emailError == null
                                   ? () {}
                                   : null,
-                          child: Text(""),
+                          //TODO add "Update account" text
+                          child: const Text(""),
                         )
                       ],
                     ),
