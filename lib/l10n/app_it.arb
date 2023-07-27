@@ -32,5 +32,7 @@
     "email_address": "Indirizzo email",
     "show_more": "Mostra di più",
     "post": "Post",
-    "an_error_occured_while_loading_post": "Un'errore si è verificata durante il caricamento del post"
+    "an_error_occured_while_loading_post": "Un'errore si è verificata durante il caricamento del post",
+    "profile": "Profilo",
+    "an_error_occured_while_loading_profile": "Un'errore si è verificata durante il caricamento del profilo"
 }

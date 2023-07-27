@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -75,7 +76,12 @@ class _PostScreenState extends State<PostScreen> {
                               fontWeight: FontWeight.bold),
                         ),
                         const Divider(),
-                        MarkdownBody(data: _post!.content)
+                        MarkdownBody(
+                          data: _post!.content,
+                          onTapLink: (text, url, title) {
+                            launchUrl(Uri.parse(url!));
+                          },
+                        )
                       ],
                     ),
                   ),

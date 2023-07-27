@@ -122,8 +122,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
               ),
               controller: _email,
               onChanged: (_) {
-                setState(
-                    () => _emailError = isEmailValid(context, _email.text));
+                setState(() => _emailError = isEmailValid(_email.text));
 
                 if (_emailError == null) {
                   checkUsername(context, _email.text);

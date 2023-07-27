@@ -32,7 +32,7 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
     super.dispose();
   }
 
-  Future<void> _username_exists(BuildContext context, String username) async {
+  Future<void> _usernameExists(String username) async {
     var res = await http
         .get(Uri.parse("$API_URL/verif/user/$username"))
         .onError((error, stackTrace) {
@@ -51,31 +51,32 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
       });
       return;
     }
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
       SnackBar(
         content: Text(res.statusCode == 218
-            ? AppLocalizations.of(context)!.internet_error
-            : AppLocalizations.of(context)!.error),
+            ? AppLocalizations.of(navigatorKey.currentContext!)!.internet_error
+            : AppLocalizations.of(navigatorKey.currentContext!)!.error),
       ),
     );
   }
 
   CancelableOperation? _myCancelableFuture;
 
-  void checkUsername(BuildContext context, String username) async {
+  void checkUsername(String username) async {
     if (_isLoading) {
       await _myCancelableFuture?.cancel();
     }
 
     setState(() {
       _isLoading = true;
-      _usernameAlreadyExistsText = AppLocalizations.of(context)!.checking;
+      _usernameAlreadyExistsText =
+          AppLocalizations.of(navigatorKey.currentContext!)!.checking;
       _usernameAlreadyExistsColor = Colors.grey;
     });
 
     _myCancelableFuture =
-        CancelableOperation.fromFuture(_username_exists(context, username));
+        CancelableOperation.fromFuture(_usernameExists(username));
 
     await _myCancelableFuture?.value;
 
@@ -117,11 +118,11 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
               ),
               controller: _username,
               onChanged: (_) {
-                setState(() =>
-                    _usernameError = isUsernameValid(context, _username.text));
+                setState(
+                    () => _usernameError = isUsernameValid(_username.text));
 
                 if (_usernameError == null) {
-                  checkUsername(context, _username.text);
+                  checkUsername(_username.text);
                 }
               },
             ),

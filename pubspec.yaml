@@ -43,6 +43,7 @@ dependencies:
   connection_notifier: ^1.0.1
   async: ^2.11.0
   flutter_markdown: ^0.6.17
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:

@@ -61,5 +61,7 @@
     "email_address": "Email address",
     "show_more": "Show more",
     "post": "Post",
-    "an_error_occured_while_loading_post": "An error occured while loading post"
+    "an_error_occured_while_loading_post": "An error occured while loading post",
+    "profile": "Profile",
+    "an_error_occured_while_loading_profile": "An error occured while loading profile"
 }

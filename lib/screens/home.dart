@@ -1,6 +1,7 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/login.dart';
+import 'package:creative_blogger_app/screens/profile.dart';
 import 'package:creative_blogger_app/utils/home.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
@@ -58,48 +59,48 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: customDecoration(),
         ),
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, ProfileSreen.routeName);
+          },
           icon: ClipRRect(
             borderRadius: BorderRadius.circular(300),
             child: me == null || me?.pp == null
                 ? const Icon(Icons.person)
-                : Image.network(
-                    me!.pp!,
-                    fit: BoxFit.cover,
-                  ),
+                : Image.network(me!.pp!),
           ),
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (innerContext) => AlertDialog(
-                    title: Text(AppLocalizations.of(context)!.confirm),
-                    content: Text(AppLocalizations.of(context)!
-                        .do_you_really_want_to_log_out),
-                    actions: [
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(innerContext),
-                        child: Text(AppLocalizations.of(context)!.cancel),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(innerContext);
-                          deleteToken().then((_) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              LoginScreen.routeName,
-                            );
-                          });
-                        },
-                        child: Text(AppLocalizations.of(context)!.yes),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              icon: const Icon(Icons.exit_to_app_rounded))
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (innerContext) => AlertDialog(
+                  title: Text(AppLocalizations.of(context)!.confirm),
+                  content: Text(AppLocalizations.of(context)!
+                      .do_you_really_want_to_log_out),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(innerContext),
+                      child: Text(AppLocalizations.of(context)!.cancel),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(innerContext);
+                        deleteToken().then((_) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            LoginScreen.routeName,
+                          );
+                        });
+                      },
+                      child: Text(AppLocalizations.of(context)!.yes),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: const Icon(Icons.exit_to_app_rounded),
+          )
         ],
         title: const Text("Creative Blogger"),
         centerTitle: true,

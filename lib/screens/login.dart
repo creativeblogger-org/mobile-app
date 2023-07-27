@@ -65,8 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   setState(
                     () => _usernameOrEmailError =
                         _usernameOrEmail.text.contains("@")
-                            ? isEmailValid(context, _usernameOrEmail.text)
-                            : isUsernameValid(context, _usernameOrEmail.text),
+                            ? isEmailValid(_usernameOrEmail.text)
+                            : isUsernameValid(_usernameOrEmail.text),
                   );
                 },
               ),
