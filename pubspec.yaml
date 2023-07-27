@@ -43,7 +43,7 @@ dependencies:
   connection_notifier: ^1.0.1
   async: ^2.11.0
   flutter_markdown: ^0.6.17
-  flutter_html: ^2.2.1
+  flutter_html: ^3.0.0-alpha.2
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -42,48 +43,45 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.post),
-          flexibleSpace: Container(
-            decoration: customDecoration(),
-          ),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.post),
+        flexibleSpace: Container(
+          decoration: customDecoration(),
         ),
-        body: isPostLoading
-            ? const Center(
-                child: SpinKitSpinningLines(
-                  color: Colors.blue,
-                  size: 100,
-                  duration: Duration(milliseconds: 1500),
-                ),
-              )
-            : _post == null
-                ? Text(AppLocalizations.of(context)!
-                    .an_error_occured_while_loading_post)
-                : LayoutBuilder(builder: (context, constraints) {
-                    return Container(
-                      width: constraints.maxWidth,
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          // mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _post!.title,
-                              style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall!
-                                    .fontSize,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Html(
-                                data: MarkdownRenderer(markdown: _post!.content)
-                                    .markdown)
-                          ],
+      ),
+      body: isPostLoading
+          ? const Center(
+              child: SpinKitSpinningLines(
+                color: Colors.blue,
+                size: 100,
+                duration: Duration(milliseconds: 1500),
+              ),
+            )
+          : _post == null
+              ? Text(AppLocalizations.of(context)!
+                  .an_error_occured_while_loading_post)
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 16),
+                        Text(
+                          _post!.title,
+                          style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall!
+                                  .fontSize,
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    );
-                  }));
+                        const Divider(),
+                        MarkdownBody(data: _post!.content)
+                      ],
+                    ),
+                  ),
+                ),
+    );
   }
 }

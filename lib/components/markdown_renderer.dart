@@ -83,6 +83,11 @@ class _MarkdownRendererState extends State<MarkdownRenderer> {
 
   @override
   Widget build(BuildContext context) {
-    return MarkdownBody(data: _htmlText);
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: MarkdownBody(data: _htmlText),
+      ),
+    );
   }
 }
