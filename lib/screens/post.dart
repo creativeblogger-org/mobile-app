@@ -1,5 +1,4 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
-import 'package:creative_blogger_app/components/markdown_renderer.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_html/flutter_html.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
