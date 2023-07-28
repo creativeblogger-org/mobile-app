@@ -69,17 +69,22 @@ class _PostScreenState extends State<PostScreen> {
                         Text(
                           _post!.title,
                           style: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall!
-                                  .fontSize,
-                              fontWeight: FontWeight.bold),
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .fontSize,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Pangolin",
+                          ),
                         ),
                         const Divider(),
                         MarkdownBody(
                           data: _post!.content,
                           onTapLink: (text, url, title) {
-                            launchUrl(Uri.parse(url!));
+                            launchUrl(
+                              Uri.parse(url!),
+                              mode: LaunchMode.externalApplication,
+                            );
                           },
                         )
                       ],

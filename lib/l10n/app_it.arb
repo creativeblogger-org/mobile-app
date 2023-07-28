@@ -34,5 +34,15 @@
     "post": "Post",
     "an_error_occured_while_loading_post": "Un'errore si è verificata durante il caricamento del post",
     "profile": "Profilo",
-    "an_error_occured_while_loading_profile": "Un'errore si è verificata durante il caricamento del profilo"
+    "an_error_occured_while_loading_profile": "Un'errore si è verificata durante il caricamento del profilo",
+    "home": "Home",
+    "create": "Creare",
+    "shorts": "Shorts",
+    "update_account": "Aggiornare l'account",
+    "account_updated_successfully": "Account aggiornato con successo",
+    "change_password": "Cambiare la password",
+    "delete_my_account": "Elimina il mio account",
+    "are_you_sure": "Sei sicuro ?",
+    "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "Questo è irreversibile. Tutti i tuoi post, commenti e shorts verranno eliminati per sempre.",
+    "im_sure": "Sono sicuro"
 }

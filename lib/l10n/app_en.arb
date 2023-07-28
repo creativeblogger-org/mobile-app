@@ -63,5 +63,15 @@
     "post": "Post",
     "an_error_occured_while_loading_post": "An error occured while loading post",
     "profile": "Profile",
-    "an_error_occured_while_loading_profile": "An error occured while loading profile"
+    "an_error_occured_while_loading_profile": "An error occured while loading profile",
+    "home": "Home",
+    "create": "Create",
+    "shorts": "Shorts",
+    "update_account": "Update account",
+    "account_updated_successfully": "Account updated successfully",
+    "change_password": "Change password",
+    "delete_my_account": "Delete my account",
+    "are_you_sure": "Are you sure ?",
+    "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "This is irreversible. All your posts, comments and shorts will be deleted forever.",
+    "im_sure": "I am sure"
 }

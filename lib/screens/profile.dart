@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
+import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/user.dart';
+import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,24 +25,31 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   User? me;
   bool _isLoading = true;
-  TextEditingController usernameEditingController = TextEditingController();
+  final TextEditingController _usernameEditingController =
+      TextEditingController();
   String? _usernameError;
-  TextEditingController emailEditingController = TextEditingController();
+  final TextEditingController _emailEditingController = TextEditingController();
   String? _emailError;
+  final TextEditingController _passwordEditingController =
+      TextEditingController();
+  String? _passwordError;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
     super.initState();
     getMe().then(
       (value) {
-        usernameEditingController.text = value!.username;
-        emailEditingController.text = value.email;
-        setState(
-          () {
-            me = value;
-            _isLoading = false;
-          },
-        );
+        _usernameEditingController.text = value!.username;
+        _emailEditingController.text = value.email;
+        if (mounted) {
+          setState(
+            () {
+              me = value;
+              _isLoading = false;
+            },
+          );
+        }
       },
     );
   }
@@ -65,68 +77,201 @@ class _ProfileScreenState extends State<ProfileScreen> {
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Center(
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          child: me!.pp == null
-                              ? const Icon(Icons.person)
-                              : Image.network(me!.pp!),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: usernameEditingController,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.username,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            errorText: _usernameError,
-                            errorMaxLines: 5,
+                    child: Form(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            child: me!.pp == null
+                                ? const Icon(Icons.person)
+                                : Image.network(me!.pp!),
                           ),
-                          onChanged: (_) {
-                            (_) {
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _usernameEditingController,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!.username,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              errorText: _usernameError,
+                              errorMaxLines: 5,
+                            ),
+                            onChanged: (_) {
                               setState(() => _usernameError = isUsernameValid(
-                                  usernameEditingController.text));
-                            };
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: emailEditingController,
-                          decoration: InputDecoration(
-                            labelText:
-                                AppLocalizations.of(context)!.email_address,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            errorText: _emailError,
-                            errorMaxLines: 5,
+                                  _usernameEditingController.text));
+                            },
                           ),
-                          onChanged: (_) {
-                            (_) {
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _emailEditingController,
+                            decoration: InputDecoration(
+                              labelText:
+                                  AppLocalizations.of(context)!.email_address,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              errorText: _emailError,
+                              errorMaxLines: 5,
+                            ),
+                            onChanged: (_) {
                               setState(() => _emailError =
-                                  isEmailValid(emailEditingController.text));
-                            };
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                            "Compté créé le ${me!.createdAt.day.toString().padLeft(2, "0")}/${me!.createdAt.month.toString().padLeft(2, "0")}/${me!.createdAt.year}"),
-                        const SizedBox(height: 16),
-                        CustomButton(
-                          onPressed:
-                              _usernameError == null && _emailError == null
-                                  ? () {}
-                                  : null,
-                          //TODO add "Update account" text
-                          child: const Text(""),
-                        )
-                      ],
+                                  isEmailValid(_emailEditingController.text));
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            obscureText: !_passwordVisible,
+                            controller: _passwordEditingController,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                  onPressed: () => setState(() =>
+                                      _passwordVisible = !_passwordVisible),
+                                  icon: const Icon(Icons.remove_red_eye)),
+                              suffixIconColor:
+                                  _passwordVisible ? Colors.red : Colors.grey,
+                              labelText:
+                                  AppLocalizations.of(context)!.change_password,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              errorText: _passwordError,
+                              errorMaxLines: 5,
+                            ),
+                            onChanged: (_) {
+                              setState(() => _passwordError =
+                                  _passwordEditingController.text.isEmpty ||
+                                          _passwordEditingController
+                                                  .text.length >
+                                              8
+                                      ? null
+                                      : AppLocalizations.of(context)!
+                                          .password_too_short);
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                              "Compté créé le ${me!.createdAt.day.toString().padLeft(2, "0")}/${me!.createdAt.month.toString().padLeft(2, "0")}/${me!.createdAt.year}"),
+                          const SizedBox(height: 16),
+                          CustomButton(
+                            onPressed: _usernameError == null &&
+                                    _emailError == null &&
+                                    _usernameEditingController
+                                        .text.isNotEmpty &&
+                                    _emailEditingController.text.isNotEmpty &&
+                                    _passwordError == null
+                                ? () async {
+                                    var body = {
+                                      'username':
+                                          _usernameEditingController.text,
+                                      'email': _emailEditingController.text
+                                    };
+
+                                    if (_passwordEditingController
+                                        .text.isNotEmpty) {
+                                      body['password'] =
+                                          _passwordEditingController.text;
+                                    }
+
+                                    var res = await http.put(
+                                        Uri.parse("$API_URL/@me"),
+                                        body: jsonEncode(body),
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                          "Authorization":
+                                              "Bearer ${await getToken()}"
+                                        });
+                                    if (res.statusCode == 204) {
+                                      ScaffoldMessenger.of(
+                                              navigatorKey.currentContext!)
+                                          .clearSnackBars();
+                                      ScaffoldMessenger.of(
+                                              navigatorKey.currentContext!)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            AppLocalizations.of(navigatorKey
+                                                    .currentContext!)!
+                                                .account_updated_successfully,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                      return;
+                                    }
+
+                                    handleError(res);
+                                  }
+                                : null,
+                            child: Text(
+                                AppLocalizations.of(context)!.update_account),
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (innerContext) => AlertDialog(
+                                    title: Text(AppLocalizations.of(context)!
+                                        .are_you_sure),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever),
+                                    actions: [
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(innerContext);
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .cancel)),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          var res = await http.delete(
+                                            Uri.parse("$API_URL/@me"),
+                                            headers: {
+                                              "Content-Type":
+                                                  "application/json",
+                                              "Authorization":
+                                                  "Bearer ${await getToken()}"
+                                            },
+                                          );
+                                          if (res.statusCode == 204) {
+                                            Navigator.pop(innerContext);
+                                            Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                "/login",
+                                                (route) => false);
+                                            return;
+                                          }
+                                          handleError(res);
+                                        },
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .im_sure),
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red),
+                              child: Text(AppLocalizations.of(context)!
+                                  .delete_my_account),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:creative_blogger_app/screens/home.dart';
 import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:creative_blogger_app/screens/login.dart';
+import 'package:creative_blogger_app/screens/main_screen_with_bottom_app_bar.dart';
 import 'package:creative_blogger_app/screens/post.dart';
 import 'package:creative_blogger_app/screens/profile.dart';
 import 'package:creative_blogger_app/screens/register/email_screen.dart';
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
         routes: {
           LoadingScreen.routeName: (context) => const LoadingScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
-          HomeScreen.routeName: (context) => const HomeScreen(),
+          MainScreenWithBottomAppBar.routeName: (context) =>
+              const MainScreenWithBottomAppBar(),
           ChooseUsernameScreen.routeName: (context) =>
               const ChooseUsernameScreen(),
           TermsScreen.routeName: (context) => const TermsScreen(),
