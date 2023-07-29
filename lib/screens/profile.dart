@@ -87,9 +87,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           CircleAvatar(
+                            backgroundColor: Colors.grey,
                             radius: 50,
                             child: me!.pp == null
-                                ? const Icon(Icons.person)
+                                ? const Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.white,
+                                  )
                                 : Image.network(me!.pp!),
                           ),
                           const SizedBox(height: 16),
