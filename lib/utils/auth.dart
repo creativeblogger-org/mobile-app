@@ -1,5 +1,5 @@
 import 'package:creative_blogger_app/main.dart';
-import 'package:creative_blogger_app/screens/main_screen_with_bottom_app_bar.dart';
+import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
@@ -61,8 +61,7 @@ void authRequest(
       setToken(jsonDecode(res.body)["token"]).then((_) {
         dismissDialog();
         Navigator.of(navigatorKey.currentContext!).pushNamedAndRemoveUntil(
-            MainScreenWithBottomAppBar.routeName,
-            (Route<dynamic> route) => false);
+            HomeScreen.routeName, (Route<dynamic> route) => false);
         setConnecting(false);
         return;
       });

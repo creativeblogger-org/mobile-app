@@ -43,5 +43,6 @@
     "delete_my_account": "Supprimer mon compte",
     "are_you_sure": "Êtes-vous sûr ?",
     "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "Cette action est irréversible. Tous vos posts, commentaires et shorts seront supprimés à jamais.",
-    "im_sure": "Je suis sûr"
+    "im_sure": "Je suis sûr",
+    "no_post_for_the_moment": "Pas de post pour le moment..."
 }

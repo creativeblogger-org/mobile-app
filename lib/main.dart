@@ -1,6 +1,6 @@
 import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:creative_blogger_app/screens/login.dart';
-import 'package:creative_blogger_app/screens/main_screen_with_bottom_app_bar.dart';
+import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/screens/post.dart';
 import 'package:creative_blogger_app/screens/profile.dart';
 import 'package:creative_blogger_app/screens/register/email_screen.dart';
@@ -33,15 +33,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Creative Blogger',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
+        theme: ThemeData.light(useMaterial3: true),
+        darkTheme: ThemeData.dark(useMaterial3: true),
         initialRoute: '/',
         navigatorKey: navigatorKey,
         routes: {
           LoadingScreen.routeName: (context) => const LoadingScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
-          MainScreenWithBottomAppBar.routeName: (context) =>
-              const MainScreenWithBottomAppBar(),
+          HomeScreen.routeName: (context) => const HomeScreen(),
           ChooseUsernameScreen.routeName: (context) =>
               const ChooseUsernameScreen(),
           TermsScreen.routeName: (context) => const TermsScreen(),

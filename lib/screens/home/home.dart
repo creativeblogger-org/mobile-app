@@ -1,5 +1,6 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
-import 'package:creative_blogger_app/screens/home.dart';
+import 'package:creative_blogger_app/screens/home/posts.dart';
+import 'package:creative_blogger_app/screens/home/shorts.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/screens/profile.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
@@ -8,24 +9,22 @@ import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MainScreenWithBottomAppBar extends StatefulWidget {
-  const MainScreenWithBottomAppBar({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  static const String routeName = "/main";
+  static const String routeName = "/home";
 
   @override
-  State<MainScreenWithBottomAppBar> createState() =>
-      _MainScreenWithBottomAppBarState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MainScreenWithBottomAppBarState
-    extends State<MainScreenWithBottomAppBar> {
+class _HomeScreenState extends State<HomeScreen> {
   User? me;
   bool isGetMeLoading = true;
   int _currentIndex = 0;
 
-  //TODO change to [HomeScreen(), CreateScreen(), ShortsScreen()]
-  static const pages = [HomeScreen(), HomeScreen(), HomeScreen()];
+  //TODO change to [PostsScreen(), CreateScreen(), ShortsScreen()]
+  static const pages = [PostsScreen(), PostsScreen(), ShortsScreen()];
 
   @override
   void initState() {

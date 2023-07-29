@@ -73,5 +73,6 @@
     "delete_my_account": "Delete my account",
     "are_you_sure": "Are you sure ?",
     "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "This is irreversible. All your posts, comments and shorts will be deleted forever.",
-    "im_sure": "I am sure"
+    "im_sure": "I am sure",
+    "no_post_for_the_moment": "No post for the moment..."
 }
