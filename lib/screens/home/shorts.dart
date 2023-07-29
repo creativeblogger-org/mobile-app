@@ -1,8 +1,5 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
-import 'package:creative_blogger_app/utils/posts.dart';
-import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/shorts.dart';
-import 'package:creative_blogger_app/utils/structs/preview_post.dart';
 import 'package:creative_blogger_app/utils/structs/short.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
