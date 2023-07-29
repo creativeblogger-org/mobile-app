@@ -16,7 +16,7 @@ class _CustomButtonState extends State<CustomButton> {
     return Container(
       height: 40,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         gradient: LinearGradient(
           colors: [
             Color.fromRGBO(21, 184, 166, 1),
