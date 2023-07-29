@@ -1,9 +1,7 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/utils/home.dart';
-import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/structs/preview_post.dart';
-import 'package:creative_blogger_app/utils/structs/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

@@ -40,7 +40,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     getMe().then(
       (value) {
-        _usernameEditingController.text = value!.username;
+        if (value == null) {
+          setState(() => _isLoading = false);
+          return;
+        }
+        _usernameEditingController.text = value.username;
         _emailEditingController.text = value.email;
         if (mounted) {
           setState(
@@ -72,8 +76,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )
           : me == null
-              ? Text(AppLocalizations.of(navigatorKey.currentContext!)!
-                  .an_error_occured_while_loading_profile)
+              ? Center(
+                  child: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+                      .an_error_occured_while_loading_profile),
+                )
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Center(
@@ -245,20 +251,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                           );
                                           if (res.statusCode == 204) {
+                                            await deleteToken();
                                             Navigator.pop(innerContext);
                                             Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                "/login",
-                                                (route) => false);
+                                              context,
+                                              "/login",
+                                              (route) => false,
+                                            );
                                             return;
                                           }
                                           handleError(res);
                                         },
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red),
                                         child: Text(
                                             AppLocalizations.of(context)!
                                                 .im_sure),
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red),
                                       ),
                                     ],
                                   ),
