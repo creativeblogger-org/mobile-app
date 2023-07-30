@@ -45,5 +45,9 @@
     "are_you_sure": "Sei sicuro ?",
     "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "Questo è irreversibile. Tutti i tuoi post, commenti e shorts verranno eliminati per sempre.",
     "im_sure": "Sono sicuro",
-    "no_post_for_the_moment": "Nessun post per adesso..."
+    "no_post_for_the_moment": "Nessun post per adesso...",
+    "post_deleted_successfully": "Post cancellato con successo",
+    "this_post_will_be_definitely_deleted": "Questo post sarà cancellato per sempre",
+    "short_deleted_successfully": "Short cancellato con successo",
+    "this_short_will_be_definitely_deleted": "Questo short sarà cancellato per sempre"
 }

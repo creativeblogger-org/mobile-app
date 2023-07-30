@@ -60,8 +60,8 @@ void authRequest(
     if (res.statusCode == HttpStatus.ok) {
       setToken(jsonDecode(res.body)["token"]).then((_) {
         dismissDialog();
-        Navigator.of(navigatorKey.currentContext!).pushNamedAndRemoveUntil(
-            HomeScreen.routeName, (Route<dynamic> route) => false);
+        Navigator.of(navigatorKey.currentContext!)
+            .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false, arguments: 0);
         setConnecting(false);
         return;
       });

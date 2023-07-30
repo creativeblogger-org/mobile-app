@@ -29,11 +29,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
       http.get(Uri.parse("$API_URL/@me"),
           headers: {"Authorization": "Bearer $token"}).then((res) {
         if (res.statusCode == HttpStatus.ok) {
-          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+          Navigator.pushReplacementNamed(
+            context,
+            HomeScreen.routeName,
+            arguments: 0,
+          );
         } else if (res.statusCode == HttpStatus.unauthorized) {
           Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         }
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        Navigator.pushReplacementNamed(
+          context,
+          HomeScreen.routeName,
+          arguments: 0,
+        );
       });
     });
   }

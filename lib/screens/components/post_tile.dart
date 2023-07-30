@@ -19,7 +19,6 @@ class _PostTileState extends State<PostTile> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          // mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 16),
             Text(

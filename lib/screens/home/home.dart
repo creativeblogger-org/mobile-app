@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
+import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/home/posts.dart';
 import 'package:creative_blogger_app/screens/home/shorts.dart';
 import 'package:creative_blogger_app/screens/login.dart';
@@ -37,6 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
         return;
       }
       setState(() => me = user);
+    });
+    Future.delayed(Duration.zero, () {
+      setState(() =>
+          _currentIndex = ModalRoute.of(context)!.settings.arguments as int);
     });
   }
 
