@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
+import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
@@ -260,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Navigator.pop(innerContext);
                                             Navigator.pushNamedAndRemoveUntil(
                                               context,
-                                              "/login",
+                                              LoginScreen.routeName,
                                               (route) => false,
                                             );
                                             return;

@@ -7,6 +7,8 @@ import 'package:creative_blogger_app/screens/register/email_screen.dart';
 import 'package:creative_blogger_app/screens/register/password_screen.dart';
 import 'package:creative_blogger_app/screens/register/terms.dart';
 import 'package:creative_blogger_app/screens/register/username_screen.dart';
+import 'package:creative_blogger_app/screens/user.dart';
+import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -50,15 +52,54 @@ class MyApp extends StatelessWidget {
         routes: {
           LoadingScreen.routeName: (context) => const LoadingScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
-          HomeScreen.routeName: (context) => const HomeScreen(),
           ChooseUsernameScreen.routeName: (context) =>
               const ChooseUsernameScreen(),
-          TermsScreen.routeName: (context) => const TermsScreen(),
-          ChooseEmailScreen.routeName: (context) => const ChooseEmailScreen(),
-          ChoosePasswordScreen.routeName: (context) =>
-              const ChoosePasswordScreen(),
-          PostScreen.routeName: (context) => const PostScreen(),
-          ProfileScreen.routeName: (context) => const ProfileScreen()
+          ProfileScreen.routeName: (context) => const ProfileScreen(),
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == TermsScreen.routeName) {
+            final arg = settings.arguments as String;
+
+            return MaterialPageRoute(
+                builder: (context) => TermsScreen(username: arg));
+          }
+
+          if (settings.name == ChooseEmailScreen.routeName) {
+            final arg = settings.arguments as String;
+
+            return MaterialPageRoute(
+                builder: (context) => ChooseEmailScreen(username: arg));
+          }
+
+          if (settings.name == ChoosePasswordScreen.routeName) {
+            final args = settings.arguments as PasswordScreenArguments;
+
+            return MaterialPageRoute(
+                builder: (context) => ChoosePasswordScreen(args: args));
+          }
+
+          if (settings.name == HomeScreen.routeName) {
+            final index = settings.arguments as int;
+
+            return MaterialPageRoute(
+                builder: (context) => HomeScreen(index: index));
+          }
+
+          if (settings.name == PostScreen.routeName) {
+            final postSlug = settings.arguments as String;
+
+            return MaterialPageRoute(
+                builder: (context) => PostScreen(slug: postSlug));
+          }
+
+          if (settings.name == UserScreen.routeName) {
+            final userName = settings.arguments as String;
+
+            return MaterialPageRoute(
+                builder: (context) => UserScreen(username: userName));
+          }
+
+          return null;
         },
         supportedLocales: const [
           Locale("en"),

@@ -12,8 +12,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 
 class ChooseEmailScreen extends StatefulWidget {
-  const ChooseEmailScreen({super.key});
-  static const routeName = '/register/';
+  const ChooseEmailScreen({super.key, required this.username});
+  static const routeName = '/register/email';
+
+  final String username;
 
   @override
   State<ChooseEmailScreen> createState() => _ChooseEmailScreenState();
@@ -88,9 +90,6 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments
-        as TermsAndEmailScreenArguments;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.create_an_account),
@@ -153,7 +152,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
                   ? () => Navigator.pushNamed(
                       context, ChoosePasswordScreen.routeName,
                       arguments:
-                          PasswordScreenArguments(args.username, _email.text))
+                          PasswordScreenArguments(widget.username, _email.text))
                   : null,
               child: Text(AppLocalizations.of(context)!.continue_text),
             )

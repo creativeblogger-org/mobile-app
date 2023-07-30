@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.index});
 
   static const String routeName = "/home";
+
+  final int index;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -38,10 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       setState(() => me = user);
     });
-    Future.delayed(Duration.zero, () {
-      setState(() =>
-          _currentIndex = ModalRoute.of(context)!.settings.arguments as int);
-    });
+    setState(() => _currentIndex = widget.index);
   }
 
   @override

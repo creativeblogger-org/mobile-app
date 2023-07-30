@@ -150,7 +150,7 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
                   ? () => Navigator.pushNamed(
                         context,
                         TermsScreen.routeName,
-                        arguments: TermsAndEmailScreenArguments(_username.text),
+                        arguments: _username.text,
                       )
                   : null,
               child: Text(AppLocalizations.of(context)!.continue_text),

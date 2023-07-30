@@ -78,5 +78,7 @@
     "post_deleted_successfully": "Post deleted successfully",
     "this_post_will_be_definitely_deleted": "This post will be definitely deleted",
     "short_deleted_successfully": "Short deleted successfully",
-    "this_short_will_be_definitely_deleted": "This short will be definitely deleted"
+    "this_short_will_be_definitely_deleted": "This short will be definitely deleted",
+    "user": "User",
+    "an_error_occured_while_loading_user": "An error occured while loading user"
 }

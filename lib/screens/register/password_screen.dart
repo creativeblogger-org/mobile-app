@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChoosePasswordScreen extends StatefulWidget {
-  const ChoosePasswordScreen({super.key});
+  const ChoosePasswordScreen({super.key, required this.args});
   static const routeName = '/register/password';
+
+  final PasswordScreenArguments args;
 
   @override
   State<ChoosePasswordScreen> createState() => _ChoosePasswordScreenState();
@@ -30,9 +32,6 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as PasswordScreenArguments;
-
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -85,8 +84,8 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                           setState(() => connecting = isConnecting),
                       Uri.parse("$API_URL/auth/register"),
                       jsonEncode({
-                        "username": args.username,
-                        "email": args.email,
+                        "username": widget.args.username,
+                        "email": widget.args.email,
                         "password": _password.text
                       }))
                   : null,
