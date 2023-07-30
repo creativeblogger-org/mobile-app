@@ -1,5 +1,4 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
-import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/home/posts.dart';
 import 'package:creative_blogger_app/screens/home/shorts.dart';
 import 'package:creative_blogger_app/screens/login.dart';
