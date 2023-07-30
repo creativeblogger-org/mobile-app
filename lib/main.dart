@@ -33,8 +33,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Creative Blogger',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(useMaterial3: true),
-        darkTheme: ThemeData.dark(useMaterial3: true),
+        theme: ThemeData.light(useMaterial3: true).copyWith(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
+          ),
+        ),
+        darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
+          ),
+        ),
         initialRoute: '/',
         navigatorKey: navigatorKey,
         routes: {
