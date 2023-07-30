@@ -1,12 +1,11 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
+import 'package:creative_blogger_app/screens/components/post_tile.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -59,38 +58,7 @@ class _PostScreenState extends State<PostScreen> {
           : _post == null
               ? Text(AppLocalizations.of(context)!
                   .an_error_occured_while_loading_post)
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      // mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 16),
-                        Text(
-                          _post!.title,
-                          style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .headlineSmall!
-                                .fontSize,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Pangolin",
-                          ),
-                        ),
-                        const Divider(),
-                        MarkdownBody(
-                          data: _post!.content,
-                          onTapLink: (text, url, title) {
-                            launchUrl(
-                              Uri.parse(url!),
-                              mode: LaunchMode.externalApplication,
-                            );
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+              : PostTile(post: _post!),
     );
   }
 }

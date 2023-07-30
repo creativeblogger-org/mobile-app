@@ -1,6 +1,6 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
+import 'package:creative_blogger_app/screens/home/components/preview_post_tile.dart';
 import 'package:creative_blogger_app/utils/posts.dart';
-import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/structs/preview_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -62,81 +62,8 @@ class _PostsScreenState extends State<PostsScreen> {
                       child: ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: posts.length,
-                        itemBuilder: (context, index) => Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground),
-                          ),
-                          elevation: 10.0,
-                          shadowColor:
-                              Theme.of(context).colorScheme.onBackground,
-                          child: ListTile(
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              "/post",
-                              arguments: PostScreenArguments(posts[index].slug),
-                            ),
-                            contentPadding: const EdgeInsets.all(16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            leading: CircleAvatar(
-                              child: Image.network(
-                                posts[index].image,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-                                  return const Icon(Icons.image);
-                                },
-                              ),
-                            ),
-                            title: Text(
-                              posts[index].title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .fontSize,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Divider(),
-                                Text(
-                                  "@${posts[index].author.username}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .fontSize,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  posts[index].description,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            tileColor: Theme.of(context)
-                                .colorScheme
-                                .background
-                                .withOpacity(0.5),
-                          ),
-                        ),
+                        itemBuilder: (context, index) =>
+                            PreviewPostTile(post: posts[index]),
                       ),
                     ),
                     const SizedBox(height: 10),

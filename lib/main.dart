@@ -37,11 +37,13 @@ class MyApp extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
           ),
+          colorScheme: const ColorScheme.light(primary: Colors.blue),
         ),
         darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
           ),
+          colorScheme: ColorScheme.dark(primary: Colors.blue.shade800),
         ),
         initialRoute: '/',
         navigatorKey: navigatorKey,
