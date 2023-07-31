@@ -15,33 +15,28 @@ class PostTile extends StatefulWidget {
 class _PostTileState extends State<PostTile> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              widget.post.title,
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Pangolin",
-              ),
-            ),
-            const Divider(),
-            MarkdownBody(
-              data: widget.post.content,
-              onTapLink: (text, url, title) {
-                launchUrl(
-                  Uri.parse(url!),
-                  mode: LaunchMode.externalApplication,
-                );
-              },
-            )
-          ],
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          widget.post.title,
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Pangolin",
+          ),
         ),
-      ),
+        const Divider(),
+        MarkdownBody(
+          data: widget.post.content,
+          onTapLink: (text, url, title) {
+            launchUrl(
+              Uri.parse(url!),
+              mode: LaunchMode.externalApplication,
+            );
+          },
+        )
+      ],
     );
   }
 }

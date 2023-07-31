@@ -18,34 +18,32 @@ class _PostsScreenState extends State<PostsScreen> {
   bool arePostsLoading = true;
   bool isShowMoreLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    getPreviewPosts().then((previewPosts) {
-      if (mounted) {
-        setState(
-          () {
-            posts = previewPosts;
-            arePostsLoading = false;
-          },
-        );
-      }
+  Future<void> _getPreviewPosts({int limit = 20}) async {
+    getPreviewPosts(limit: limit).then((previewPosts) {
+      setState(
+        () {
+          posts = previewPosts;
+          arePostsLoading = false;
+        },
+      );
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getPreviewPosts();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    bool showShowMoreButton =
+        !arePostsLoading && posts.isNotEmpty && posts.last.id != 86;
+
     return RefreshIndicator(
       onRefresh: () {
         setState(() => arePostsLoading = true);
-        return getPreviewPosts(limit: posts.length).then(
-          (previewPosts) => setState(
-            () {
-              posts = previewPosts;
-              arePostsLoading = false;
-            },
-          ),
-        );
+        return _getPreviewPosts(limit: posts.length);
       },
       child: arePostsLoading
           ? const Center(
@@ -61,31 +59,34 @@ class _PostsScreenState extends State<PostsScreen> {
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.all(16),
-                        itemCount: posts.length,
-                        itemBuilder: (context, index) =>
-                            PreviewPostTile(post: posts[index]),
+                        itemCount: showShowMoreButton
+                            ? posts.length + 1
+                            : posts.length,
+                        itemBuilder: (context, index) {
+                          if (index < posts.length) {
+                            return PreviewPostTile(post: posts[index]);
+                          }
+                          return CustomButton(
+                            onPressed: isShowMoreLoading
+                                ? null
+                                : () {
+                                    setState(() => isShowMoreLoading = true);
+                                    getPreviewPosts(page: posts.length ~/ 20)
+                                        .then(
+                                      (previewPosts) {
+                                        posts.addAll(previewPosts);
+                                        setState(
+                                            () => isShowMoreLoading = false);
+                                      },
+                                    );
+                                  },
+                            child: isShowMoreLoading
+                                ? const CircularProgressIndicator()
+                                : Text(AppLocalizations.of(context)!.show_more),
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    if (!arePostsLoading &&
-                        posts.isNotEmpty &&
-                        posts.last.id != 86) ...{
-                      CustomButton(
-                        onPressed: isShowMoreLoading
-                            ? null
-                            : () {
-                                setState(() => isShowMoreLoading = true);
-                                getPreviewPosts(page: posts.length ~/ 20)
-                                    .then((previewPosts) {
-                                  posts.addAll(previewPosts);
-                                  setState(() => isShowMoreLoading = false);
-                                });
-                              },
-                        child: isShowMoreLoading
-                            ? const CircularProgressIndicator()
-                            : Text(AppLocalizations.of(context)!.show_more),
-                      ),
-                    },
                   ],
                 )
               : Text(AppLocalizations.of(context)!.no_post_for_the_moment),

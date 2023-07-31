@@ -69,9 +69,8 @@ class _UserScreenState extends State<UserScreen> {
                         ),
                         getPermission(_user!.permission),
                         Text(
-                          AppLocalizations.of(context)!.signed_up_the(
-                            getHumanDate(_user!.createdAt),
-                          ),
+                          AppLocalizations.of(context)!
+                              .signed_up_the(getHumanDate(_user!.createdAt)),
                         )
                       ],
                     ),

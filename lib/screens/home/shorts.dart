@@ -18,34 +18,31 @@ class _ShortsScreenState extends State<ShortsScreen> {
   bool areShortsLoading = true;
   bool isShowMoreLoading = false;
 
+  Future<void> _getShorts({int limit = 20}) async {
+    var receivedShorts = await getShorts(limit: limit);
+    setState(
+      () {
+        shorts = receivedShorts;
+        areShortsLoading = false;
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    getShorts().then((receivedShorts) {
-      if (mounted) {
-        setState(
-          () {
-            shorts = receivedShorts;
-            areShortsLoading = false;
-          },
-        );
-      }
-    });
+    _getShorts();
   }
 
   @override
   Widget build(BuildContext context) {
+    bool showButton =
+        !areShortsLoading && shorts.isNotEmpty && shorts.length % 20 == 0;
+
     return RefreshIndicator(
       onRefresh: () {
         setState(() => areShortsLoading = true);
-        return getShorts(limit: shorts.length).then(
-          (receivedShorts) => setState(
-            () {
-              shorts = receivedShorts;
-              areShortsLoading = false;
-            },
-          ),
-        );
+        return _getShorts(limit: shorts.length < 20 ? 20 : shorts.length);
       },
       child: areShortsLoading
           ? const Center(
@@ -61,31 +58,35 @@ class _ShortsScreenState extends State<ShortsScreen> {
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.all(16),
-                        itemCount: shorts.length,
-                        itemBuilder: (context, index) =>
-                            ShortTile(short: shorts[index]),
+                        itemCount:
+                            showButton ? shorts.length + 1 : shorts.length,
+                        itemBuilder: (context, index) {
+                          if (index < shorts.length) {
+                            return ShortTile(
+                              short: shorts[index],
+                              reload: () => _getShorts(limit: shorts.length),
+                            );
+                          }
+                          return CustomButton(
+                            onPressed: isShowMoreLoading
+                                ? null
+                                : () {
+                                    setState(() => isShowMoreLoading = true);
+                                    getShorts(page: shorts.length ~/ 20).then(
+                                      (receivedShorts) {
+                                        shorts.addAll(receivedShorts);
+                                        setState(
+                                            () => isShowMoreLoading = false);
+                                      },
+                                    );
+                                  },
+                            child: isShowMoreLoading
+                                ? const CircularProgressIndicator()
+                                : Text(AppLocalizations.of(context)!.show_more),
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    if (!areShortsLoading &&
-                        shorts.isNotEmpty &&
-                        shorts.length % 20 == 0) ...{
-                      CustomButton(
-                        onPressed: isShowMoreLoading
-                            ? null
-                            : () {
-                                setState(() => isShowMoreLoading = true);
-                                getShorts(page: shorts.length ~/ 20)
-                                    .then((receivedShorts) {
-                                  shorts.addAll(receivedShorts);
-                                  setState(() => isShowMoreLoading = false);
-                                });
-                              },
-                        child: isShowMoreLoading
-                            ? const CircularProgressIndicator()
-                            : Text(AppLocalizations.of(context)!.show_more),
-                      ),
-                    },
                   ],
                 )
               : Text(AppLocalizations.of(context)!.no_post_for_the_moment),

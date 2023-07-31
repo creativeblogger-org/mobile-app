@@ -54,52 +54,40 @@ class MyApp extends StatelessWidget {
           LoginScreen.routeName: (context) => const LoginScreen(),
           ChooseUsernameScreen.routeName: (context) =>
               const ChooseUsernameScreen(),
+          HomeScreen.routeName: (context) => const HomeScreen(),
           ProfileScreen.routeName: (context) => const ProfileScreen(),
         },
         onGenerateRoute: (settings) {
-          if (settings.name == TermsScreen.routeName) {
-            final arg = settings.arguments as String;
+          switch (settings.name) {
+            case TermsScreen.routeName:
+              final arg = settings.arguments as String;
 
-            return MaterialPageRoute(
-                builder: (context) => TermsScreen(username: arg));
+              return MaterialPageRoute(
+                  builder: (context) => TermsScreen(username: arg));
+            case ChooseEmailScreen.routeName:
+              final arg = settings.arguments as String;
+
+              return MaterialPageRoute(
+                  builder: (context) => ChooseEmailScreen(username: arg));
+            case ChoosePasswordScreen.routeName:
+              final args = settings.arguments as PasswordScreenArguments;
+
+              return MaterialPageRoute(
+                  builder: (context) => ChoosePasswordScreen(args: args));
+            case PostScreen.routeName:
+              final postSlug = settings.arguments as String;
+
+              return MaterialPageRoute(
+                  builder: (context) => PostScreen(slug: postSlug));
+
+            case UserScreen.routeName:
+              final userName = settings.arguments as String;
+
+              return MaterialPageRoute(
+                  builder: (context) => UserScreen(username: userName));
+            default:
+              return null;
           }
-
-          if (settings.name == ChooseEmailScreen.routeName) {
-            final arg = settings.arguments as String;
-
-            return MaterialPageRoute(
-                builder: (context) => ChooseEmailScreen(username: arg));
-          }
-
-          if (settings.name == ChoosePasswordScreen.routeName) {
-            final args = settings.arguments as PasswordScreenArguments;
-
-            return MaterialPageRoute(
-                builder: (context) => ChoosePasswordScreen(args: args));
-          }
-
-          if (settings.name == HomeScreen.routeName) {
-            final index = settings.arguments as int;
-
-            return MaterialPageRoute(
-                builder: (context) => HomeScreen(index: index));
-          }
-
-          if (settings.name == PostScreen.routeName) {
-            final postSlug = settings.arguments as String;
-
-            return MaterialPageRoute(
-                builder: (context) => PostScreen(slug: postSlug));
-          }
-
-          if (settings.name == UserScreen.routeName) {
-            final userName = settings.arguments as String;
-
-            return MaterialPageRoute(
-                builder: (context) => UserScreen(username: userName));
-          }
-
-          return null;
         },
         supportedLocales: const [
           Locale("en"),
