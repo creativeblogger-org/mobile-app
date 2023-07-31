@@ -1,6 +1,5 @@
 import 'package:creative_blogger_app/screens/post.dart';
 import 'package:creative_blogger_app/screens/user.dart';
-import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:creative_blogger_app/utils/structs/preview_post.dart';
 import 'package:flutter/material.dart';
 

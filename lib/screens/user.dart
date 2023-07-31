@@ -1,7 +1,6 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
-import 'package:creative_blogger_app/utils/get_user.dart';
-import 'package:creative_blogger_app/utils/structs/public_user.dart';
 import 'package:creative_blogger_app/utils/user.dart';
+import 'package:creative_blogger_app/utils/structs/public_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
