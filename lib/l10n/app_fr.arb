@@ -50,5 +50,10 @@
     "short_deleted_successfully": "Short supprimé avec succès",
     "this_short_will_be_definitely_deleted": "Ce short sera définitivement supprimé",
     "user": "Utilisateur",
-    "an_error_occured_while_loading_user": "Une erreur s'est produite lors du chargement de l'utilisateur"
+    "an_error_occured_while_loading_user": "Une erreur s'est produite lors du chargement de l'utilisateur",
+    "member": "Membre",
+    "writer": "Rédacteur",
+    "moderator": "Moderateur",
+    "administrator": "Administrateur",
+    "signed_up_the": "Inscrit le {date}"
 }

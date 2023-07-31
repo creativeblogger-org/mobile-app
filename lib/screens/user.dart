@@ -56,16 +56,34 @@ class _UserScreenState extends State<UserScreen> {
               : Center(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(16),
-                    child: Expanded(
-                      child: Column(
-                        children: [
-                          Text(_user!.username),
-                          Text(getPermission(_user!.permission)),
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          _user!.username,
+                          style: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .fontSize,
+                          ),
+                        ),
+                        getPermission(_user!.permission),
+                        Text(
+                          AppLocalizations.of(context)!.signed_up_the(
+                            getHumanDate(_user!.createdAt),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
     );
   }
+}
+
+String getHumanDate(DateTime date) {
+  String day = date.day.toString().padLeft(2, "0");
+  String month = date.month.toString().padLeft(2, "0");
+  int year = date.year;
+  return "$day/$month/$year";
 }
