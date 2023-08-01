@@ -92,5 +92,7 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "comments": "Comments",
+    "add_a_comment": "Add a comment"
 }

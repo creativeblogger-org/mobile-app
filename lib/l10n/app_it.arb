@@ -56,5 +56,7 @@
     "writer": "Redattore",
     "moderator": "Moderatore",
     "administrator": "Amministratore",
-    "signed_up_the": "Iscritto il {date}"
+    "signed_up_the": "Iscritto il {date}",
+    "comments": "Commenti",
+    "add_a_comment": "Aggiungi un commento"
 }

@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
+import 'package:creative_blogger_app/screens/components/comment_tile.dart';
 import 'package:creative_blogger_app/screens/components/post_tile.dart';
 import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/utils/post.dart';
@@ -65,16 +66,18 @@ class _PostScreenState extends State<PostScreen> {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.pop(innerContext);
-                            removePost(_post!.slug).then((fine) {
-                              if (fine) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  HomeScreen.routeName,
-                                  (route) => false,
-                                  arguments: 0,
-                                );
-                              }
-                            });
+                            removePost(_post!.slug).then(
+                              (fine) {
+                                if (fine) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    HomeScreen.routeName,
+                                    (route) => false,
+                                    arguments: 0,
+                                  );
+                                }
+                              },
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red),
@@ -105,34 +108,62 @@ class _PostScreenState extends State<PostScreen> {
               ? Text(AppLocalizations.of(context)!
                   .an_error_occured_while_loading_post)
               : SingleChildScrollView(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       PostTile(post: _post!),
                       const SizedBox(height: 16),
-                      Row(
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: "",
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor,
+                      Text(
+                        AppLocalizations.of(context)!.comments,
+                        style: TextStyle(
+                          fontSize: Theme.of(context)
+                              .textTheme
+                              .headlineLarge!
+                              .fontSize,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Pangolin",
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context)!
+                                      .add_a_comment,
+                                  hintStyle: const TextStyle(
+                                      fontWeight: FontWeight.normal),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 5),
-                          Icon(
-                            Icons.send,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ],
+                            const SizedBox(width: 5),
+                            Icon(
+                              Icons.send,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _post!.comments.length,
+                        itemBuilder: (context, index) {
+                          //TODO add show more button when implemented in API-side
+
+                          // if (index < _post!.comments.length) {
+                          return CommentTile(comment: _post!.comments[index]);
+                          // }
+                        },
                       ),
                     ],
                   ),
