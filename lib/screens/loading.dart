@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/screens/home/home.dart';
+import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -26,8 +26,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         return;
       }
-      http.get(Uri.parse("$API_URL/@me"),
-          headers: {"Authorization": "Bearer $token"}).then((res) {
+      customGetRequest("$API_URL/@me").then((res) {
         if (res.statusCode == HttpStatus.ok) {
           Navigator.pushReplacementNamed(
             context,

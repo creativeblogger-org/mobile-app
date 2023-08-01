@@ -2,6 +2,7 @@ import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/components/comment_tile.dart';
 import 'package:creative_blogger_app/screens/components/post_tile.dart';
 import 'package:creative_blogger_app/screens/home/home.dart';
+import 'package:creative_blogger_app/utils/comment.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +22,24 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   Post? _post;
-  bool isPostLoading = true;
+  bool _isPostLoading = true;
+  bool _isPostCommentLoading = false;
+  final TextEditingController _postCommentTextController =
+      TextEditingController();
+  bool _activePostCommentButton = false;
 
   @override
   void initState() {
     super.initState();
+    _getPost();
+  }
+
+  void _getPost() {
     getPost(widget.slug).then((post) {
       if (mounted) {
         setState(() {
           _post = post;
-          isPostLoading = false;
+          _isPostLoading = false;
         });
       }
     });
@@ -96,7 +105,7 @@ class _PostScreenState extends State<PostScreen> {
           },
         ],
       ),
-      body: isPostLoading
+      body: _isPostLoading
           ? const Center(
               child: SpinKitSpinningLines(
                 color: Colors.blue,
@@ -131,6 +140,7 @@ class _PostScreenState extends State<PostScreen> {
                           children: [
                             Flexible(
                               child: TextField(
+                                controller: _postCommentTextController,
                                 decoration: InputDecoration(
                                   hintText: AppLocalizations.of(context)!
                                       .add_a_comment,
@@ -143,12 +153,39 @@ class _PostScreenState extends State<PostScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
+                                onChanged: (value) => setState(() =>
+                                    _activePostCommentButton =
+                                        value.length > 5),
                               ),
                             ),
-                            const SizedBox(width: 5),
-                            Icon(
-                              Icons.send,
-                              color: Theme.of(context).colorScheme.primary,
+                            IconButton(
+                              onPressed: _activePostCommentButton &&
+                                      !_isPostCommentLoading
+                                  ? () {
+                                      setState(
+                                          () => _isPostCommentLoading = true);
+                                      postComment(_post!.slug,
+                                              _postCommentTextController.text)
+                                          .then((fine) {
+                                        //TODO reload only comments when the API will allow it
+                                        setState(() {
+                                          _isPostCommentLoading = false;
+                                          if (fine) {
+                                            _isPostLoading = true;
+                                          }
+                                        });
+                                        if (fine) {
+                                          _getPost();
+                                        }
+                                      });
+                                    }
+                                  : null,
+                              icon: Icon(
+                                Icons.send,
+                                color: _activePostCommentButton
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.grey,
+                              ),
                             ),
                           ],
                         ),

@@ -5,9 +5,7 @@ import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/short.dart';
-import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //changer par limit = 20
@@ -24,10 +22,7 @@ Future<List<Short>> getShorts({int limit = 20, int page = 0}) async {
 }
 
 Future<bool> removeShort(int id) async {
-  var res = await http.delete(Uri.parse("$API_URL/shorts/$id"), headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer ${await getToken()}"
-  });
+  var res = await customDeleteRequest("$API_URL/shorts/$id");
   if (res.statusCode == HttpStatus.noContent) {
     ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(

@@ -4,10 +4,11 @@ import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/register/terms.dart';
+import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/login.dart';
+import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 
 class ChooseUsernameScreen extends StatefulWidget {
@@ -32,11 +33,7 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
   }
 
   Future<void> _usernameExists(String username) async {
-    var res = await http
-        .get(Uri.parse("$API_URL/verif/user/$username"))
-        .onError((error, stackTrace) {
-      return http.Response("", 218);
-    });
+    var res = await customGetRequest("$API_URL/verif/user/$username");
     if (res.statusCode == HttpStatus.notFound) {
       setState(() {
         _usernameAlreadyExistsText = AppLocalizations.of(context)!.available;
@@ -50,14 +47,8 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
       });
       return;
     }
-    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(res.statusCode == 218
-            ? AppLocalizations.of(navigatorKey.currentContext!)!.internet_error
-            : AppLocalizations.of(navigatorKey.currentContext!)!.error),
-      ),
-    );
+
+    handleError(res);
   }
 
   CancelableOperation? _myCancelableFuture;

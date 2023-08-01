@@ -82,7 +82,7 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                   ? () => authRequest(
                       (isConnecting) =>
                           setState(() => connecting = isConnecting),
-                      Uri.parse("$API_URL/auth/register"),
+                      "$API_URL/auth/register",
                       jsonEncode({
                         "username": widget.args.username,
                         "email": widget.args.email,

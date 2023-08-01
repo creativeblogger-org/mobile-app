@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? () => authRequest(
                           (isConnecting) =>
                               setState(() => connecting = isConnecting),
-                          Uri.parse("$API_URL/auth/login"),
+                          "$API_URL/auth/login",
                           jsonEncode(
                             {
                               "username": _usernameOrEmail.text,

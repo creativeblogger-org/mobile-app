@@ -5,9 +5,7 @@ import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
-import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<Post?> getPost(String slug) async {
@@ -21,10 +19,7 @@ Future<Post?> getPost(String slug) async {
 }
 
 Future<bool> removePost(String slug) async {
-  var res = await http.delete(Uri.parse("$API_URL/posts/$slug"), headers: {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer ${await getToken()}"
-  });
+  var res = await customDeleteRequest("$API_URL/posts/$slug");
   if (res.statusCode == HttpStatus.noContent) {
     ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(

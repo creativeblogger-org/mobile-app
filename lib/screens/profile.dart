@@ -1,18 +1,17 @@
-import 'dart:convert';
-
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/login.dart';
+import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
+import 'package:creative_blogger_app/utils/profile.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/user.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -178,48 +177,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .text.isNotEmpty &&
                                     _emailEditingController.text.isNotEmpty &&
                                     _passwordError == null
-                                ? () async {
-                                    var body = {
-                                      'username':
-                                          _usernameEditingController.text,
-                                      'email': _emailEditingController.text
-                                    };
-
-                                    if (_passwordEditingController
-                                        .text.isNotEmpty) {
-                                      body['password'] =
-                                          _passwordEditingController.text;
-                                    }
-
-                                    var res = await http.put(
-                                        Uri.parse("$API_URL/@me"),
-                                        body: jsonEncode(body),
-                                        headers: {
-                                          "Content-Type": "application/json",
-                                          "Authorization":
-                                              "Bearer ${await getToken()}"
-                                        });
-                                    if (res.statusCode == 204) {
-                                      ScaffoldMessenger.of(
-                                              navigatorKey.currentContext!)
-                                          .clearSnackBars();
-                                      ScaffoldMessenger.of(
-                                              navigatorKey.currentContext!)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            AppLocalizations.of(navigatorKey
-                                                    .currentContext!)!
-                                                .account_updated_successfully,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                      return;
-                                    }
-
-                                    handleError(res);
+                                ? () {
+                                    updateProfile(
+                                        _usernameEditingController.text,
+                                        _emailEditingController.text,
+                                        _passwordEditingController.text);
                                   }
                                 : null,
                             child: Text(
@@ -247,14 +209,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   .cancel)),
                                       ElevatedButton(
                                         onPressed: () async {
-                                          var res = await http.delete(
-                                            Uri.parse("$API_URL/@me"),
-                                            headers: {
-                                              "Content-Type":
-                                                  "application/json",
-                                              "Authorization":
-                                                  "Bearer ${await getToken()}"
-                                            },
+                                          var res = await customDeleteRequest(
+                                            "$API_URL/@me",
                                           );
                                           if (res.statusCode == 204) {
                                             await deleteToken();

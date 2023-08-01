@@ -5,11 +5,12 @@ import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/register/password_screen.dart';
+import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/login.dart';
+import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:http/http.dart' as http;
 
 class ChooseEmailScreen extends StatefulWidget {
   const ChooseEmailScreen({super.key, required this.username});
@@ -35,11 +36,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
   }
 
   Future<void> _username_exists(String email) async {
-    var res = await http
-        .get(Uri.parse("$API_URL/verif/email/$email"))
-        .onError((error, stackTrace) {
-      return http.Response("", 218);
-    });
+    var res = await customGetRequest("$API_URL/verif/email/$email");
     if (res.statusCode == HttpStatus.notFound) {
       setState(() {
         _emailAlreadyExistsText =
@@ -55,14 +52,8 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
       });
       return;
     }
-    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(res.statusCode == 218
-            ? AppLocalizations.of(navigatorKey.currentContext!)!.internet_error
-            : AppLocalizations.of(navigatorKey.currentContext!)!.error),
-      ),
-    );
+
+    handleError(res);
   }
 
   CancelableOperation? _myCancelableFuture;
