@@ -39,6 +39,9 @@ class Post {
       hasPermission: json["has_permission"],
       comments: (json["comments"] as List)
           .map((jsonComment) => Comment.fromJson(jsonComment))
+          .toList()
+          //TODO remove the following lines when the problem is patched
+          .reversed
           .toList(),
     );
   }

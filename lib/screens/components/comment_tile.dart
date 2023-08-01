@@ -8,14 +8,16 @@ class CommentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var hasPP = comment.author.pp == null;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: comment.author.pp == null ? null : Colors.transparent,
-              child: comment.author.pp == null
+              backgroundColor: hasPP ? null : Colors.transparent,
+              child: hasPP
                   ? const Icon(Icons.person)
                   : Image.network(
                       comment.author.pp!,
