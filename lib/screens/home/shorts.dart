@@ -18,7 +18,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
   bool areShortsLoading = true;
   bool isShowMoreLoading = false;
 
-  Future<void> _getShorts({int limit = 20}) async {
+  _getShorts({int limit = 20}) async {
     var receivedShorts = await getShorts(limit: limit);
     setState(
       () {
@@ -64,7 +64,10 @@ class _ShortsScreenState extends State<ShortsScreen> {
                           if (index < shorts.length) {
                             return ShortTile(
                               short: shorts[index],
-                              reload: () => _getShorts(limit: shorts.length),
+                              reload: () {
+                                setState(() => areShortsLoading = true);
+                                _getShorts(limit: shorts.length);
+                              },
                             );
                           }
                           return CustomButton(

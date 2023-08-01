@@ -60,11 +60,13 @@ class ShortTile extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.pop(innerContext);
-                                removeShort(short.id).then((fine) {
-                                  if (fine) {
-                                    reload();
-                                  }
-                                });
+                                removeShort(short.id).then(
+                                  (fine) {
+                                    if (fine) {
+                                      reload();
+                                    }
+                                  },
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red),

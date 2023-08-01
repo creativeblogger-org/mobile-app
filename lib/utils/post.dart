@@ -26,17 +26,11 @@ Future<bool> removePost(String slug) async {
     "Authorization": "Bearer ${await getToken()}"
   });
   if (res.statusCode == HttpStatus.noContent) {
-    await showDialog(
-      context: navigatorKey.currentContext!,
-      builder: (innerContext) => AlertDialog(
-        title: Text(AppLocalizations.of(navigatorKey.currentContext!)!
+    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(navigatorKey.currentContext!)!
             .post_deleted_successfully),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(innerContext),
-            child: Text(AppLocalizations.of(navigatorKey.currentContext!)!.ok),
-          ),
-        ],
       ),
     );
     return true;

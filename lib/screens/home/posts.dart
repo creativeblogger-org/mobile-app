@@ -20,12 +20,14 @@ class _PostsScreenState extends State<PostsScreen> {
 
   Future<void> _getPreviewPosts({int limit = 20}) async {
     getPreviewPosts(limit: limit).then((previewPosts) {
-      setState(
-        () {
-          posts = previewPosts;
-          arePostsLoading = false;
-        },
-      );
+      if (mounted) {
+        setState(
+          () {
+            posts = previewPosts;
+            arePostsLoading = false;
+          },
+        );
+      }
     });
   }
 
