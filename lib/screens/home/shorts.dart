@@ -18,7 +18,7 @@ class _ShortsScreenState extends State<ShortsScreen> {
   bool areShortsLoading = true;
   bool isShowMoreLoading = false;
 
-  _getShorts({int limit = 20}) async {
+  Future<void> _getShorts({int limit = 20}) async {
     var receivedShorts = await getShorts(limit: limit);
     setState(
       () {
