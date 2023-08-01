@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="creative_blogger_app"
+        android:label="Creative Blogger"
         android:name="${applicationName}"
         android:roundIcon="@mipmap/round_launcher"
         android:icon="@mipmap/ic_launcher">
