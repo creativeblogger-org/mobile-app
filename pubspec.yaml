@@ -40,11 +40,10 @@ dependencies:
     sdk: flutter
   intl: any
   flutter_spinkit: ^5.2.0
-  connection_notifier: ^1.0.1
   async: ^2.11.0
   flutter_markdown: ^0.6.17
   url_launcher: ^6.1.12
-  retry: ^3.1.2
+  connection_notifier: ^1.0.1
 
 dev_dependencies:
   flutter_test:

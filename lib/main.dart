@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConnectionNotifier(
-      alignment: AlignmentDirectional.bottomCenter,
       child: MaterialApp(
         title: 'Creative Blogger',
         debugShowCheckedModeBanner: false,

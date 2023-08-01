@@ -26,22 +26,30 @@ class _LoadingScreenState extends State<LoadingScreen> {
         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         return;
       }
-      customGetRequest("$API_URL/@me").then((res) {
-        if (res.statusCode == HttpStatus.ok) {
+      try {
+        customGetRequest("$API_URL/@me").then((res) {
+          if (res.statusCode == HttpStatus.ok) {
+            Navigator.pushReplacementNamed(
+              context,
+              HomeScreen.routeName,
+              arguments: 0,
+            );
+          } else if (res.statusCode == HttpStatus.unauthorized) {
+            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+          }
           Navigator.pushReplacementNamed(
             context,
             HomeScreen.routeName,
             arguments: 0,
           );
-        } else if (res.statusCode == HttpStatus.unauthorized) {
-          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-        }
+        });
+      } on SocketException catch (_) {
         Navigator.pushReplacementNamed(
           context,
           HomeScreen.routeName,
           arguments: 0,
         );
-      });
+      }
     });
   }
 

@@ -14,7 +14,7 @@ class PostsScreen extends StatefulWidget {
 }
 
 class _PostsScreenState extends State<PostsScreen> {
-  List<PreviewPost> posts = [];
+  List<PreviewPost>? posts = [];
   bool arePostsLoading = true;
   bool isShowMoreLoading = false;
 
@@ -39,13 +39,15 @@ class _PostsScreenState extends State<PostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool showShowMoreButton =
-        !arePostsLoading && posts.isNotEmpty && posts.last.id != 86;
+    bool showShowMoreButton = posts != null &&
+        !arePostsLoading &&
+        posts!.isNotEmpty &&
+        posts!.last.id != 86;
 
     return RefreshIndicator(
       onRefresh: () {
         setState(() => arePostsLoading = true);
-        return _getPreviewPosts(limit: posts.length);
+        return _getPreviewPosts(limit: (posts ?? []).length);
       },
       child: arePostsLoading
           ? const Center(
@@ -55,43 +57,59 @@ class _PostsScreenState extends State<PostsScreen> {
                 duration: Duration(milliseconds: 1500),
               ),
             )
-          : posts.isNotEmpty
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: showShowMoreButton
-                            ? posts.length + 1
-                            : posts.length,
-                        itemBuilder: (context, index) {
-                          if (index < posts.length) {
-                            return PreviewPostTile(post: posts[index]);
-                          }
-                          return CustomButton(
-                            onPressed: isShowMoreLoading
-                                ? null
-                                : () {
-                                    setState(() => isShowMoreLoading = true);
-                                    getPreviewPosts(page: posts.length ~/ 20)
-                                        .then(
-                                      (previewPosts) {
-                                        posts.addAll(previewPosts);
-                                        setState(
-                                            () => isShowMoreLoading = false);
-                                      },
-                                    );
-                                  },
-                            child: isShowMoreLoading
-                                ? const CircularProgressIndicator()
-                                : Text(AppLocalizations.of(context)!.show_more),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+          : posts == null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(AppLocalizations.of(context)!
+                        .an_error_occured_while_loading_post),
+                  ),
                 )
-              : Text(AppLocalizations.of(context)!.no_post_for_the_moment),
+              : posts!.isNotEmpty
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: showShowMoreButton
+                                ? posts!.length + 1
+                                : posts!.length,
+                            itemBuilder: (context, index) {
+                              if (index < posts!.length) {
+                                return PreviewPostTile(post: posts![index]);
+                              }
+                              return CustomButton(
+                                onPressed: isShowMoreLoading
+                                    ? null
+                                    : () {
+                                        setState(
+                                            () => isShowMoreLoading = true);
+                                        getPreviewPosts(
+                                                page: posts!.length ~/ 20)
+                                            .then(
+                                          (previewPosts) {
+                                            if (previewPosts == null) {
+                                              setState(() =>
+                                                  isShowMoreLoading = false);
+                                              return;
+                                            }
+                                            posts!.addAll(previewPosts);
+                                            setState(() =>
+                                                isShowMoreLoading = false);
+                                          },
+                                        );
+                                      },
+                                child: isShowMoreLoading
+                                    ? const CircularProgressIndicator()
+                                    : Text(AppLocalizations.of(context)!
+                                        .show_more),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(AppLocalizations.of(context)!.no_post_for_the_moment),
     );
   }
 }

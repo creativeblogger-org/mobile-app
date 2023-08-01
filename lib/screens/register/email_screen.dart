@@ -35,25 +35,30 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
     super.dispose();
   }
 
-  Future<void> _username_exists(String email) async {
-    var res = await customGetRequest("$API_URL/verif/email/$email");
-    if (res.statusCode == HttpStatus.notFound) {
-      setState(() {
-        _emailAlreadyExistsText =
-            AppLocalizations.of(navigatorKey.currentContext!)!.available;
-        _emailAlreadyExistsColor = Colors.green;
-      });
-      return;
-    }
-    if (res.statusCode == HttpStatus.ok) {
-      setState(() {
-        _emailError =
-            AppLocalizations.of(navigatorKey.currentContext!)!.not_available;
-      });
-      return;
-    }
+  Future<void> _usernameExists(String email) async {
+    try {
+      var res = await customGetRequest("$API_URL/verif/email/$email");
+      if (res.statusCode == HttpStatus.notFound) {
+        setState(() {
+          _emailAlreadyExistsText =
+              AppLocalizations.of(navigatorKey.currentContext!)!.available;
+          _emailAlreadyExistsColor = Colors.green;
+        });
+        return;
+      }
+      if (res.statusCode == HttpStatus.ok) {
+        setState(() {
+          _emailError =
+              AppLocalizations.of(navigatorKey.currentContext!)!.not_available;
+        });
+        return;
+      }
 
-    handleError(res);
+      handleError(res);
+    } on SocketException catch (_) {
+      setState(() =>
+          _emailError = AppLocalizations.of(context)!.no_Internet_connection);
+    }
   }
 
   CancelableOperation? _myCancelableFuture;
@@ -70,7 +75,7 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
     });
 
     _myCancelableFuture =
-        CancelableOperation.fromFuture(_username_exists(username));
+        CancelableOperation.fromFuture(_usernameExists(username));
 
     await _myCancelableFuture?.value;
 

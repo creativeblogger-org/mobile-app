@@ -14,7 +14,7 @@ class ShortsScreen extends StatefulWidget {
 }
 
 class _ShortsScreenState extends State<ShortsScreen> {
-  List<Short> shorts = [];
+  List<Short>? shorts = [];
   bool areShortsLoading = true;
   bool isShowMoreLoading = false;
 
@@ -36,13 +36,16 @@ class _ShortsScreenState extends State<ShortsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool showButton =
-        !areShortsLoading && shorts.isNotEmpty && shorts.length % 20 == 0;
+    bool showButton = shorts != null &&
+        !areShortsLoading &&
+        shorts!.isNotEmpty &&
+        shorts!.length % 20 == 0;
 
     return RefreshIndicator(
       onRefresh: () {
         setState(() => areShortsLoading = true);
-        return _getShorts(limit: shorts.length < 20 ? 20 : shorts.length);
+        return _getShorts(
+            limit: (shorts ?? []).length < 20 ? 20 : (shorts ?? []).length);
       },
       child: areShortsLoading
           ? const Center(
@@ -52,47 +55,70 @@ class _ShortsScreenState extends State<ShortsScreen> {
                 duration: Duration(milliseconds: 1500),
               ),
             )
-          : shorts.isNotEmpty
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount:
-                            showButton ? shorts.length + 1 : shorts.length,
-                        itemBuilder: (context, index) {
-                          if (index < shorts.length) {
-                            return ShortTile(
-                              short: shorts[index],
-                              reload: () {
-                                setState(() => areShortsLoading = true);
-                                _getShorts(limit: shorts.length);
-                              },
-                            );
-                          }
-                          return CustomButton(
-                            onPressed: isShowMoreLoading
-                                ? null
-                                : () {
-                                    setState(() => isShowMoreLoading = true);
-                                    getShorts(page: shorts.length ~/ 20).then(
-                                      (receivedShorts) {
-                                        shorts.addAll(receivedShorts);
-                                        setState(
-                                            () => isShowMoreLoading = false);
-                                      },
-                                    );
+          : shorts == null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(AppLocalizations.of(context)!
+                        .an_error_occured_while_loading_shorts),
+                  ),
+                )
+              : shorts!.isNotEmpty
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: showButton
+                                ? shorts!.length + 1
+                                : shorts!.length,
+                            itemBuilder: (context, index) {
+                              if (index < shorts!.length) {
+                                return ShortTile(
+                                  short: shorts![index],
+                                  reload: () {
+                                    setState(() => areShortsLoading = true);
+                                    _getShorts(limit: shorts!.length);
                                   },
-                            child: isShowMoreLoading
-                                ? const CircularProgressIndicator()
-                                : Text(AppLocalizations.of(context)!.show_more),
-                          );
-                        },
+                                );
+                              }
+                              return CustomButton(
+                                onPressed: isShowMoreLoading
+                                    ? null
+                                    : () {
+                                        setState(
+                                            () => isShowMoreLoading = true);
+                                        getShorts(page: shorts!.length ~/ 20)
+                                            .then(
+                                          (receivedShorts) {
+                                            if (receivedShorts == null) {
+                                              setState(() =>
+                                                  isShowMoreLoading = false);
+                                              return null;
+                                            }
+                                            shorts!.addAll(receivedShorts);
+                                            setState(() =>
+                                                isShowMoreLoading = false);
+                                          },
+                                        );
+                                      },
+                                child: isShowMoreLoading
+                                    ? const CircularProgressIndicator()
+                                    : Text(AppLocalizations.of(context)!
+                                        .show_more),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(AppLocalizations.of(context)!
+                            .no_post_for_the_moment),
                       ),
                     ),
-                  ],
-                )
-              : Text(AppLocalizations.of(context)!.no_post_for_the_moment),
     );
   }
 }

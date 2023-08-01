@@ -33,22 +33,28 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
   }
 
   Future<void> _usernameExists(String username) async {
-    var res = await customGetRequest("$API_URL/verif/user/$username");
-    if (res.statusCode == HttpStatus.notFound) {
-      setState(() {
-        _usernameAlreadyExistsText = AppLocalizations.of(context)!.available;
-        _usernameAlreadyExistsColor = Colors.green;
-      });
-      return;
-    }
-    if (res.statusCode == HttpStatus.ok) {
-      setState(() {
-        _usernameError = AppLocalizations.of(context)!.not_available;
-      });
-      return;
-    }
+    try {
+      var res = await customGetRequest("$API_URL/verif/user/$username");
 
-    handleError(res);
+      if (res.statusCode == HttpStatus.notFound) {
+        setState(() {
+          _usernameAlreadyExistsText = AppLocalizations.of(context)!.available;
+          _usernameAlreadyExistsColor = Colors.green;
+        });
+        return;
+      }
+      if (res.statusCode == HttpStatus.ok) {
+        setState(() {
+          _usernameError = AppLocalizations.of(context)!.not_available;
+        });
+        return;
+      }
+
+      handleError(res);
+    } on SocketException catch (_) {
+      setState(() => _usernameError =
+          AppLocalizations.of(context)!.no_Internet_connection);
+    }
   }
 
   CancelableOperation? _myCancelableFuture;

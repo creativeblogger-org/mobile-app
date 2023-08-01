@@ -120,8 +120,13 @@ class _PostScreenState extends State<PostScreen> {
               ),
             )
           : _post == null
-              ? Text(AppLocalizations.of(context)!
-                  .an_error_occured_while_loading_post)
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(AppLocalizations.of(context)!
+                        .an_error_occured_while_loading_post),
+                  ),
+                )
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(4.0),
                   child: Column(

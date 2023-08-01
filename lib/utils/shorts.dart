@@ -9,16 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //changer par limit = 20
-Future<List<Short>> getShorts({int limit = 20, int page = 0}) async {
-  var res = await customGetRequest("$API_URL/shorts?limit=$limit&page=$page");
-  if (res.statusCode == HttpStatus.ok) {
-    return (jsonDecode(res.body) as List)
-        .map((jsonShorts) => Short.fromJson(jsonShorts))
-        .toList();
-  }
-  handleError(res);
+Future<List<Short>?> getShorts({int limit = 20, int page = 0}) async {
+  try {
+    var res = await customGetRequest("$API_URL/shorts?limit=$limit&page=$page");
+    if (res.statusCode == HttpStatus.ok) {
+      return (jsonDecode(res.body) as List)
+          .map((jsonShorts) => Short.fromJson(jsonShorts))
+          .toList();
+    }
+    handleError(res);
 
-  return [];
+    return null;
+  } on SocketException catch (_) {
+    return null;
+  }
 }
 
 Future<bool> removeShort(int id) async {

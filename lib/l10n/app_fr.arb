@@ -58,5 +58,8 @@
     "signed_up_the": "Inscrit le {date}",
     "comments": "Commentaires ({nb})",
     "add_a_comment": "Ajoutez un commentaire",
-    "this_comment_will_be_definitely_deleted": "Ce commenaire sera définitivement supprimé"
+    "this_comment_will_be_definitely_deleted": "Ce commenaire sera définitivement supprimé",
+    "no_Internet_connection": "Pas de connexion Internet",
+    "an_error_occured_while_loading_posts": "Une erreur s'est produite lors du chargement des posts",
+    "an_error_occured_while_loading_shorts": "Une erreur s'est produite lors du chargement des shorts"
 }

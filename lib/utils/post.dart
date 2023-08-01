@@ -9,13 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<Post?> getPost(String slug) async {
-  var res = await customGetRequest("$API_URL/posts/$slug");
-  if (res.statusCode == HttpStatus.ok) {
-    return Post.fromJson(jsonDecode(res.body));
+  try {
+    var res = await customGetRequest("$API_URL/posts/$slug");
+    if (res.statusCode == HttpStatus.ok) {
+      return Post.fromJson(jsonDecode(res.body));
+    }
+    handleError(res);
+    return null;
+  } on SocketException catch (_) {
+    return null;
   }
-  handleError(res);
-
-  return null;
 }
 
 Future<bool> removePost(String slug) async {
