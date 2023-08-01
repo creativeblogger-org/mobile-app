@@ -57,6 +57,7 @@
     "moderator": "Moderatore",
     "administrator": "Amministratore",
     "signed_up_the": "Iscritto il {date}",
-    "comments": "Commenti",
-    "add_a_comment": "Aggiungi un commento"
+    "comments": "Commenti ({nb})",
+    "add_a_comment": "Aggiungi un commento",
+    "this_comment_will_be_definitely_deleted": "Questo commento sarà cancellato per sempre"
 }

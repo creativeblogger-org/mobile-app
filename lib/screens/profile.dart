@@ -34,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TextEditingController();
   String? _passwordError;
   bool _passwordVisible = false;
+  bool _isUpdateAccountLoading = false;
 
   @override
   void initState() {
@@ -87,7 +88,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           CircleAvatar(
-                            backgroundColor: Colors.grey,
+                            backgroundColor: me!.pp == null
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.transparent,
                             radius: 50,
                             child: me!.pp == null
                                 ? const Icon(
@@ -176,16 +179,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     _usernameEditingController
                                         .text.isNotEmpty &&
                                     _emailEditingController.text.isNotEmpty &&
-                                    _passwordError == null
+                                    _passwordError == null &&
+                                    !_isUpdateAccountLoading
                                 ? () {
+                                    setState(
+                                        () => _isUpdateAccountLoading = true);
                                     updateProfile(
-                                        _usernameEditingController.text,
-                                        _emailEditingController.text,
-                                        _passwordEditingController.text);
+                                            _usernameEditingController.text,
+                                            _emailEditingController.text,
+                                            _passwordEditingController.text)
+                                        .then(
+                                      (value) => setState(() =>
+                                          _isUpdateAccountLoading = false),
+                                    );
                                   }
                                 : null,
-                            child: Text(
-                                AppLocalizations.of(context)!.update_account),
+                            child: _isUpdateAccountLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 3),
+                                  )
+                                : Text(
+                                    AppLocalizations.of(context)!
+                                        .update_account,
+                                  ),
                           ),
                           const SizedBox(height: 10),
                           SizedBox(

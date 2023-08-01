@@ -93,6 +93,14 @@
             }
         }
     },
-    "comments": "Comments",
-    "add_a_comment": "Add a comment"
+    "comments": "Comments ({nb})",
+    "@comments": {
+        "placeholders": {
+            "nb": {
+                "type": "int"
+            }
+        }
+    },
+    "add_a_comment": "Add a comment",
+    "this_comment_will_be_definitely_deleted": "This comment will be definitely deleted"
 }

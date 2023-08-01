@@ -56,6 +56,7 @@
     "moderator": "Moderateur",
     "administrator": "Administrateur",
     "signed_up_the": "Inscrit le {date}",
-    "comments": "Commentaires",
-    "add_a_comment": "Ajoutez un commentaire"
+    "comments": "Commentaires ({nb})",
+    "add_a_comment": "Ajoutez un commentaire",
+    "this_comment_will_be_definitely_deleted": "Ce commenaire sera définitivement supprimé"
 }

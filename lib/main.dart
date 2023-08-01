@@ -37,15 +37,21 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light(useMaterial3: true).copyWith(
           elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue.shade800,
+            ),
           ),
-          colorScheme: const ColorScheme.light(primary: Colors.blue),
+          colorScheme: ColorScheme.light(primary: Colors.blue.shade800),
         ),
         darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
           elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue.shade800,
+            ),
           ),
-          colorScheme: ColorScheme.dark(primary: Colors.blue.shade800),
+          colorScheme: const ColorScheme.dark(primary: Colors.blue),
         ),
         initialRoute: '/',
         navigatorKey: navigatorKey,

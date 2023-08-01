@@ -34,7 +34,13 @@ class _PostScreenState extends State<PostScreen> {
     _getPost();
   }
 
-  void _getPost() {
+  @override
+  void dispose() {
+    super.dispose();
+    _postCommentTextController.dispose();
+  }
+
+  _getPost() {
     getPost(widget.slug).then((post) {
       if (mounted) {
         setState(() {
@@ -123,7 +129,8 @@ class _PostScreenState extends State<PostScreen> {
                       PostTile(post: _post!),
                       const SizedBox(height: 16),
                       Text(
-                        AppLocalizations.of(context)!.comments,
+                        AppLocalizations.of(context)!
+                            .comments(_post!.comments.length),
                         style: TextStyle(
                           fontSize: Theme.of(context)
                               .textTheme
@@ -145,7 +152,8 @@ class _PostScreenState extends State<PostScreen> {
                                   hintText: AppLocalizations.of(context)!
                                       .add_a_comment,
                                   hintStyle: const TextStyle(
-                                      fontWeight: FontWeight.normal),
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Theme.of(context).primaryColor,
@@ -175,17 +183,22 @@ class _PostScreenState extends State<PostScreen> {
                                           }
                                         });
                                         if (fine) {
+                                          _postCommentTextController.text = "";
                                           _getPost();
                                         }
                                       });
                                     }
                                   : null,
-                              icon: Icon(
-                                Icons.send,
-                                color: _activePostCommentButton
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Colors.grey,
-                              ),
+                              icon: _isPostCommentLoading
+                                  ? const CircularProgressIndicator()
+                                  : Icon(
+                                      Icons.send,
+                                      color: _activePostCommentButton
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Colors.grey,
+                                    ),
                             ),
                           ],
                         ),
@@ -198,7 +211,13 @@ class _PostScreenState extends State<PostScreen> {
                           //TODO add show more button when implemented in API-side
 
                           // if (index < _post!.comments.length) {
-                          return CommentTile(comment: _post!.comments[index]);
+                          return CommentTile(
+                            comment: _post!.comments[index],
+                            onReload: () {
+                              setState(() => _isPostLoading = true);
+                              _getPost();
+                            },
+                          );
                           // }
                         },
                       ),

@@ -22,18 +22,16 @@ class PostTile extends StatelessWidget {
           ),
         ),
         const Divider(),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MarkdownBody(
-              data: post.content,
-              onTapLink: (text, url, title) {
-                launchUrl(
-                  Uri.parse(url!),
-                  mode: LaunchMode.externalApplication,
-                );
-              },
-            ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: MarkdownBody(
+            data: post.content,
+            onTapLink: (text, url, title) {
+              launchUrl(
+                Uri.parse(url!),
+                mode: LaunchMode.externalApplication,
+              );
+            },
           ),
         ),
         const Divider(),

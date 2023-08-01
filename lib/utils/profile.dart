@@ -27,6 +27,7 @@ Future<void> updateProfile(
         backgroundColor: Colors.green,
       ),
     );
+    return;
   }
 
   handleError(res);

@@ -45,7 +45,6 @@ class PreviewPostTile extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
           ),
-          textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -69,7 +68,7 @@ class PreviewPostTile extends StatelessWidget {
             const SizedBox(height: 5),
             Text(
               post.description,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
           ],

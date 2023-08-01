@@ -18,3 +18,12 @@ Future<bool> postComment(String postSlug, String content) async {
   handleError(res);
   return false;
 }
+
+Future<bool> deleteComment(int commentId) async {
+  var res = await customDeleteRequest("$API_URL/comments/$commentId");
+  if (res.statusCode == HttpStatus.noContent) {
+    return true;
+  }
+  handleError(res);
+  return false;
+}

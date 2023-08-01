@@ -26,7 +26,9 @@ void handleError(Response res) {
         ],
         actionsAlignment: MainAxisAlignment.center,
       ),
-    );
+    ).then((_) {
+      return;
+    });
     return;
   }
   showDialog(
