@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
+import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/utils/user.dart';
 import 'package:creative_blogger_app/utils/structs/public_user.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,11 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
+    _getPublicUser();
+  }
+
+  void _getPublicUser() {
+    setState(() => _isLoading = true);
     getPublicUser(widget.username).then(
       (user) => setState(
         () {
@@ -40,42 +46,48 @@ class _UserScreenState extends State<UserScreen> {
         title: Text(AppLocalizations.of(context)!.user),
         flexibleSpace: Container(decoration: customDecoration()),
       ),
-      body: _isLoading
-          ? const Center(
-              child: SpinKitSpinningLines(
-                color: Colors.blue,
-                size: 100,
-                duration: Duration(milliseconds: 1500),
-              ),
-            )
-          : _user == null
-              ? Center(
-                  child: Text(AppLocalizations.of(context)!
-                      .an_error_occured_while_loading_user),
-                )
-              : Center(
-                  child: SingleChildScrollView(
+      body: RefreshIndicator(
+        onRefresh: () async => _getPublicUser,
+        child: _isLoading
+            ? const Center(
+                child: SpinKitSpinningLines(
+                  color: Colors.blue,
+                  size: 100,
+                  duration: Duration(milliseconds: 1500),
+                ),
+              )
+            : _user == null
+                ? CustomErrorWhileLoadingComponent(
+                    message: AppLocalizations.of(context)!
+                        .an_error_occured_while_loading_user,
+                  )
+                : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Text(
-                          _user!.username,
-                          style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .fontSize,
+                    child: Align(
+                      child: Column(
+                        children: [
+                          Text(
+                            _user!.username,
+                            style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .fontSize,
+                            ),
                           ),
-                        ),
-                        getPermission(_user!.permission),
-                        Text(
-                          AppLocalizations.of(context)!
-                              .signed_up_the(getHumanDate(_user!.createdAt)),
-                        )
-                      ],
+                          getPermission(_user!.permission),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .signed_up_the(getHumanDate(_user!.createdAt)),
+                          ),
+                          //TODO add user's posts
+                          ListView.builder(itemBuilder: (context, index) {})
+                        ],
+                      ),
                     ),
                   ),
-                ),
+      ),
     );
   }
 }

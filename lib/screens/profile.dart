@@ -80,6 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _getMe() {
+    setState(() => _isLoading = true);
     getMe().then(
       (value) {
         if (value == null) {
@@ -100,6 +101,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _updateProfile(String username, String email, String password) {
+    setState(() => _isUpdateAccountLoading = true);
+    updateProfile(_usernameEditingController.text, _emailEditingController.text,
+            _passwordEditingController.text)
+        .then(
+      (value) => setState(() => _isUpdateAccountLoading = false),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +121,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          setState(() => _isLoading = true);
           _getMe();
         },
         child: _isLoading
@@ -233,18 +242,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       _emailEditingController.text.isNotEmpty &&
                                       _passwordError == null &&
                                       !_isUpdateAccountLoading
-                                  ? () {
-                                      setState(
-                                          () => _isUpdateAccountLoading = true);
-                                      updateProfile(
-                                              _usernameEditingController.text,
-                                              _emailEditingController.text,
-                                              _passwordEditingController.text)
-                                          .then(
-                                        (value) => setState(() =>
-                                            _isUpdateAccountLoading = false),
-                                      );
-                                    }
+                                  ? () => _updateProfile(
+                                        _usernameEditingController.text,
+                                        _emailEditingController.text,
+                                        _passwordEditingController.text,
+                                      )
                                   : null,
                               child: _isUpdateAccountLoading
                                   ? const SizedBox(

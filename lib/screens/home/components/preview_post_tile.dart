@@ -28,16 +28,9 @@ class PreviewPostTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         leading: CircleAvatar(
+          radius: 30.0,
           backgroundColor: Colors.transparent,
-          child: Image.network(post.image,
-              loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return const Icon(Icons.image);
-          }, errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.image);
-          }),
+          backgroundImage: NetworkImage(post.image),
         ),
         title: Text(
           post.title,

@@ -22,7 +22,7 @@ Future<Post?> getPost(String slug) async {
   return null;
 }
 
-Future<bool> removePost(String slug) async {
+Future<bool> deletePost(String slug) async {
   var res = await customDeleteRequest("$API_URL/posts/$slug");
   if (res == null) {
     return false;

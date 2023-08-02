@@ -43,12 +43,67 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   void _getPost() {
+    setState(() => _isPostLoading = true);
     getPost(widget.slug).then((post) {
       if (mounted) {
         setState(() {
           _post = post;
           _isPostLoading = false;
         });
+      }
+    });
+  }
+
+  void _deletePost() {
+    showDialog(
+      context: context,
+      builder: (innerContext) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.are_you_sure),
+        content: Text(
+            AppLocalizations.of(context)!.this_post_will_be_definitely_deleted),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(innerContext),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary),
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          ElevatedButton(
+            onPressed: _isDeletePostLoading
+                ? null
+                : () {
+                    Navigator.pop(innerContext);
+                    deletePost(_post!.slug).then(
+                      (fine) {
+                        if (fine) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            HomeScreen.routeName,
+                            (route) => false,
+                            arguments: 0,
+                          );
+                        }
+                      },
+                    );
+                  },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: _isDeletePostLoading
+                ? const CircularProgressIndicator(color: Colors.red)
+                : Text(AppLocalizations.of(context)!.im_sure),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _postComment(String slug, String content) {
+    setState(() => _isPostCommentLoading = true);
+    postComment(slug, content).then((fine) {
+      //TODO reload only comments when the API will allow it
+      setState(() => _isPostCommentLoading = false);
+      if (fine) {
+        _postCommentTextController.text = "";
+        _getPost();
       }
     });
   }
@@ -68,53 +123,7 @@ class _PostScreenState extends State<PostScreen> {
                 onPressed: !_isDeletePostLoading &&
                         !_isPostCommentLoading &&
                         !_isPostLoading
-                    ? () {
-                        showDialog(
-                          context: context,
-                          builder: (innerContext) => AlertDialog(
-                            title: Text(
-                                AppLocalizations.of(context)!.are_you_sure),
-                            content: Text(AppLocalizations.of(context)!
-                                .this_post_will_be_definitely_deleted),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () => Navigator.pop(innerContext),
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.primary),
-                                child:
-                                    Text(AppLocalizations.of(context)!.cancel),
-                              ),
-                              ElevatedButton(
-                                onPressed: _isDeletePostLoading
-                                    ? null
-                                    : () {
-                                        Navigator.pop(innerContext);
-                                        removePost(_post!.slug).then(
-                                          (fine) {
-                                            if (fine) {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                HomeScreen.routeName,
-                                                (route) => false,
-                                                arguments: 0,
-                                              );
-                                            }
-                                          },
-                                        );
-                                      },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red),
-                                child: _isDeletePostLoading
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.red)
-                                    : Text(
-                                        AppLocalizations.of(context)!.im_sure),
-                              )
-                            ],
-                          ),
-                        );
-                      }
+                    ? _deletePost
                     : null,
                 icon: const Icon(
                   Icons.delete,
@@ -126,10 +135,7 @@ class _PostScreenState extends State<PostScreen> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() => _isPostLoading = true);
-          _getPost();
-        },
+        onRefresh: () async => _getPost(),
         child: _isPostLoading
             ? const Center(
                 child: SpinKitSpinningLines(
@@ -162,7 +168,7 @@ class _PostScreenState extends State<PostScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Row(
                             // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -190,26 +196,8 @@ class _PostScreenState extends State<PostScreen> {
                               IconButton(
                                 onPressed: _activePostCommentButton &&
                                         !_isPostCommentLoading
-                                    ? () {
-                                        setState(
-                                            () => _isPostCommentLoading = true);
-                                        postComment(_post!.slug,
-                                                _postCommentTextController.text)
-                                            .then((fine) {
-                                          //TODO reload only comments when the API will allow it
-                                          setState(() {
-                                            _isPostCommentLoading = false;
-                                            if (fine) {
-                                              _isPostLoading = true;
-                                            }
-                                          });
-                                          if (fine) {
-                                            _postCommentTextController.text =
-                                                "";
-                                            _getPost();
-                                          }
-                                        });
-                                      }
+                                    ? () => _postComment(_post!.slug,
+                                        _postCommentTextController.text)
                                     : null,
                                 icon: _isPostCommentLoading
                                     ? const CircularProgressIndicator()
@@ -235,10 +223,7 @@ class _PostScreenState extends State<PostScreen> {
                             // if (index < _post!.comments.length) {
                             return CommentTile(
                               comment: _post!.comments[index],
-                              onReload: () {
-                                setState(() => _isPostLoading = true);
-                                _getPost();
-                              },
+                              onReload: _getPost,
                             );
                             // }
                           },
