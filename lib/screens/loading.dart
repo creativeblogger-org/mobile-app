@@ -28,7 +28,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
       }
       customGetRequest("$API_URL/@me").then((res) {
         if (res == null) {
-          print("slt");
           Navigator.pushReplacementNamed(
             context,
             HomeScreen.routeName,
@@ -42,14 +41,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
             HomeScreen.routeName,
             arguments: 0,
           );
-        } else if (res.statusCode == HttpStatus.unauthorized) {
-          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         }
-        Navigator.pushReplacementNamed(
-          context,
-          HomeScreen.routeName,
-          arguments: 0,
-        );
+        Navigator.pushReplacementNamed(context, LoginScreen.routeName);
       });
     });
   }

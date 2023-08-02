@@ -1,6 +1,5 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
-import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/utils/login.dart';

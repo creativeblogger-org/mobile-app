@@ -63,5 +63,6 @@
     "this_comment_will_be_definitely_deleted": "Questo commento sarà cancellato per sempre",
     "no_Internet_connection": "Nessuna connessione Internet",
     "an_error_occured_while_loading_posts": "Un'errore si è verificata durante il caricamento dei post",
-    "an_error_occured_while_loading_shorts": "Un'errore si è verificata durante il caricamento dei shorts"
+    "an_error_occured_while_loading_shorts": "Un'errore si è verificata durante il caricamento dei shorts",
+    "search": "Cerca"
 }

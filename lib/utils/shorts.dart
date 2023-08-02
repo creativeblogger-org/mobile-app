@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
-import 'package:creative_blogger_app/utils/show_no_internet_connection.dart';
 import 'package:creative_blogger_app/utils/structs/short.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

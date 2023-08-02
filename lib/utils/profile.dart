@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
-import 'package:creative_blogger_app/utils/show_no_internet_connection.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

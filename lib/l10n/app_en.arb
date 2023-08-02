@@ -106,5 +106,6 @@
     "this_comment_will_be_definitely_deleted": "This comment will be definitely deleted",
     "no_Internet_connection": "No Internet connection",
     "an_error_occured_while_loading_posts": "An error occured while loading posts",
-    "an_error_occured_while_loading_shorts": "An error occured while loading shorts"
+    "an_error_occured_while_loading_shorts": "An error occured while loading shorts",
+    "search": "Search"
 }

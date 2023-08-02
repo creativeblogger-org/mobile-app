@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
-import 'package:creative_blogger_app/utils/show_no_internet_connection.dart';
 
 Future<bool> postComment(String postSlug, String content) async {
   var res = await customPostRequest(

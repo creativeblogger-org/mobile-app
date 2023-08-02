@@ -7,7 +7,6 @@ import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/register/password_screen.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/login.dart';
-import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
