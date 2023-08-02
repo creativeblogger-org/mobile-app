@@ -37,9 +37,10 @@ class _CommentTileState extends State<CommentTile> {
               backgroundColor: hasPP ? null : Colors.transparent,
               child: hasPP
                   ? const Icon(Icons.person)
-                  : Image.network(
-                      widget.comment.author.pp!,
-                    ),
+                  : Image.network(widget.comment.author.pp!,
+                      errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.person);
+                    }),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -80,11 +81,7 @@ class _CommentTileState extends State<CommentTile> {
                                   Navigator.pop(innerContext);
                                   _deleteComment(widget.comment.id).then(
                                     (fine) {
-                                      setState(
-                                          () => _isDeletePostLoading = true);
                                       if (fine) {
-                                        setState(
-                                            () => _isDeletePostLoading = false);
                                         widget.onReload();
                                       }
                                     },

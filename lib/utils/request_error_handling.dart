@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void handleError(Response res) {
+Future<void> handleError(Response res) async {
   if (res.statusCode == HttpStatus.unauthorized) {
-    showDialog(
+    await showDialog(
       context: navigatorKey.currentContext!,
       builder: (innerContext) => AlertDialog(
         title: Text(AppLocalizations.of(navigatorKey.currentContext!)!.error),
@@ -26,12 +26,10 @@ void handleError(Response res) {
         ],
         actionsAlignment: MainAxisAlignment.center,
       ),
-    ).then((_) {
-      return;
-    });
+    );
     return;
   }
-  showDialog(
+  await showDialog(
     context: navigatorKey.currentContext!,
     builder: (innerContext) => AlertDialog(
       title: Text(AppLocalizations.of(navigatorKey.currentContext!)!.error),

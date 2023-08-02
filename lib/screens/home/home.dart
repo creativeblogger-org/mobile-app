@@ -51,11 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             Navigator.pushNamed(context, ProfileScreen.routeName);
           },
-          icon: ClipRRect(
-            borderRadius: BorderRadius.circular(300),
+          icon: CircleAvatar(
             child: me == null || me?.pp == null
                 ? const Icon(Icons.person)
-                : Image.network(me!.pp!),
+                : Image.network(me!.pp!,
+                    errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.person);
+                  }),
           ),
         ),
         actions: [

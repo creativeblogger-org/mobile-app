@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
+import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/screens/home/components/short_tile.dart';
 import 'package:creative_blogger_app/utils/shorts.dart';
 import 'package:creative_blogger_app/utils/structs/short.dart';
@@ -42,83 +43,71 @@ class _ShortsScreenState extends State<ShortsScreen> {
         shorts!.length % 20 == 0;
 
     return RefreshIndicator(
-      onRefresh: () {
-        setState(() => areShortsLoading = true);
-        return _getShorts(
-            limit: (shorts ?? []).length < 20 ? 20 : (shorts ?? []).length);
-      },
-      child: areShortsLoading
-          ? const Center(
-              child: SpinKitSpinningLines(
-                color: Colors.blue,
-                size: 100,
-                duration: Duration(milliseconds: 1500),
-              ),
-            )
-          : shorts == null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(AppLocalizations.of(context)!
-                        .an_error_occured_while_loading_shorts),
-                  ),
-                )
-              : shorts!.isNotEmpty
-                  ? Column(
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: showButton
-                                ? shorts!.length + 1
-                                : shorts!.length,
-                            itemBuilder: (context, index) {
-                              if (index < shorts!.length) {
-                                return ShortTile(
-                                  short: shorts![index],
-                                  reload: () {
-                                    setState(() => areShortsLoading = true);
-                                    _getShorts(limit: shorts!.length);
-                                  },
-                                );
-                              }
-                              return CustomButton(
-                                onPressed: isShowMoreLoading
-                                    ? null
-                                    : () {
-                                        setState(
-                                            () => isShowMoreLoading = true);
-                                        getShorts(page: shorts!.length ~/ 20)
-                                            .then(
-                                          (receivedShorts) {
-                                            if (receivedShorts == null) {
-                                              setState(() =>
-                                                  isShowMoreLoading = false);
-                                              return null;
-                                            }
-                                            shorts!.addAll(receivedShorts);
+        onRefresh: () {
+          setState(() => areShortsLoading = true);
+          return _getShorts(
+              limit: (shorts ?? []).length < 20 ? 20 : (shorts ?? []).length);
+        },
+        child: areShortsLoading
+            ? const Center(
+                child: SpinKitSpinningLines(
+                  color: Colors.blue,
+                  size: 100,
+                  duration: Duration(milliseconds: 1500),
+                ),
+              )
+            : shorts == null || shorts!.isEmpty
+                ? CustomErrorWhileLoadingComponent(
+                    message: shorts == null
+                        ? AppLocalizations.of(context)!
+                            .an_error_occured_while_loading_shorts
+                        : AppLocalizations.of(context)!.no_short_for_the_moment,
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount:
+                              showButton ? shorts!.length + 1 : shorts!.length,
+                          itemBuilder: (context, index) {
+                            if (index < shorts!.length) {
+                              return ShortTile(
+                                short: shorts![index],
+                                reload: () {
+                                  setState(() => areShortsLoading = true);
+                                  _getShorts(limit: shorts!.length);
+                                },
+                              );
+                            }
+                            return CustomButton(
+                              onPressed: isShowMoreLoading
+                                  ? null
+                                  : () {
+                                      setState(() => isShowMoreLoading = true);
+                                      getShorts(page: shorts!.length ~/ 20)
+                                          .then(
+                                        (receivedShorts) {
+                                          if (receivedShorts == null) {
                                             setState(() =>
                                                 isShowMoreLoading = false);
-                                          },
-                                        );
-                                      },
-                                child: isShowMoreLoading
-                                    ? const CircularProgressIndicator()
-                                    : Text(AppLocalizations.of(context)!
-                                        .show_more),
-                              );
-                            },
-                          ),
+                                            return;
+                                          }
+                                          shorts!.addAll(receivedShorts);
+                                          setState(
+                                              () => isShowMoreLoading = false);
+                                        },
+                                      );
+                                    },
+                              child: isShowMoreLoading
+                                  ? const CircularProgressIndicator()
+                                  : Text(
+                                      AppLocalizations.of(context)!.show_more),
+                            );
+                          },
                         ),
-                      ],
-                    )
-                  : Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(AppLocalizations.of(context)!
-                            .no_post_for_the_moment),
                       ),
-                    ),
-    );
+                    ],
+                  ));
   }
 }

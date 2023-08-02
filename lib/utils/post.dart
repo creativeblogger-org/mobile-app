@@ -9,20 +9,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<Post?> getPost(String slug) async {
-  try {
-    var res = await customGetRequest("$API_URL/posts/$slug");
-    if (res.statusCode == HttpStatus.ok) {
-      return Post.fromJson(jsonDecode(res.body));
-    }
-    handleError(res);
-    return null;
-  } on SocketException catch (_) {
+  var res = await customGetRequest("$API_URL/posts/$slug");
+
+  if (res == null) {
     return null;
   }
+
+  if (res.statusCode == HttpStatus.ok) {
+    return Post.fromJson(jsonDecode(res.body));
+  }
+  await handleError(res);
+  return null;
 }
 
 Future<bool> removePost(String slug) async {
   var res = await customDeleteRequest("$API_URL/posts/$slug");
+  if (res == null) {
+    return false;
+  }
   if (res.statusCode == HttpStatus.noContent) {
     ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
     ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
@@ -33,6 +37,6 @@ Future<bool> removePost(String slug) async {
     );
     return true;
   }
-  handleError(res);
+  await handleError(res);
   return false;
 }

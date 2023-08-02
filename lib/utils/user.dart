@@ -9,10 +9,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<PublicUser?> getPublicUser(String username) async {
   var res = await customGetRequest("$API_URL/users/$username");
+
+  if (res == null) {
+    return null;
+  }
+
   if (res.statusCode == 200) {
     return PublicUser.fromJson(jsonDecode(res.body));
   }
-  handleError(res);
+  await handleError(res);
   return null;
 }
 

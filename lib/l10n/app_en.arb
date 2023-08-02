@@ -23,7 +23,7 @@
     "@login": {
         "description": "Login text"
     },
-    "invalid_username": "The username must contain only letters, numbers and underscores, must begin by a letter and be at least 3 characters long.",
+    "invalid_username": "The username must contain only letters, numbers and underscores, must begin by a letter, contain between 3 and 12 characters.",
     "@invalid_username": {
         "description": "Invalid username error message"
     },
@@ -75,6 +75,7 @@
     "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "This is irreversible. All your posts, comments and shorts will be deleted forever.",
     "im_sure": "I am sure",
     "no_post_for_the_moment": "No post for the moment...",
+    "no_short_for_the_moment": "No short for the moment...",
     "post_deleted_successfully": "Post deleted successfully",
     "this_post_will_be_definitely_deleted": "This post will be definitely deleted",
     "short_deleted_successfully": "Short deleted successfully",

@@ -103,9 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         _usernameOrEmail.text.isNotEmpty &&
                         _password.text.isNotEmpty &&
                         !connecting
-                    ? () => authRequest(
-                          (isConnecting) =>
-                              setState(() => connecting = isConnecting),
+                    ? () {
+                        setState(() => connecting = true);
+                        authRequest(
                           "$API_URL/auth/login",
                           jsonEncode(
                             {
@@ -113,7 +113,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               "password": _password.text
                             },
                           ),
-                        )
+                        ).then((_) => setState(() => connecting = false));
+                      }
                     : null,
                 child: Text(AppLocalizations.of(context)!.login),
               ),

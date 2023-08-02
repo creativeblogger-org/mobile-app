@@ -36,28 +36,27 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
   }
 
   Future<void> _usernameExists(String email) async {
-    try {
-      var res = await customGetRequest("$API_URL/verif/email/$email");
-      if (res.statusCode == HttpStatus.notFound) {
-        setState(() {
-          _emailAlreadyExistsText =
-              AppLocalizations.of(navigatorKey.currentContext!)!.available;
-          _emailAlreadyExistsColor = Colors.green;
-        });
-        return;
-      }
-      if (res.statusCode == HttpStatus.ok) {
-        setState(() {
-          _emailError =
-              AppLocalizations.of(navigatorKey.currentContext!)!.not_available;
-        });
-        return;
-      }
-
-      handleError(res);
-    } on SocketException catch (_) {
+    var res = await customGetRequest("$API_URL/verif/email/$email");
+    if (res == null) {
       setState(() =>
           _emailError = AppLocalizations.of(context)!.no_Internet_connection);
+      return;
+    }
+
+    if (res.statusCode == HttpStatus.notFound) {
+      setState(() {
+        _emailAlreadyExistsText =
+            AppLocalizations.of(navigatorKey.currentContext!)!.available;
+        _emailAlreadyExistsColor = Colors.green;
+      });
+      return;
+    }
+    if (res.statusCode == HttpStatus.ok) {
+      setState(() {
+        _emailError =
+            AppLocalizations.of(navigatorKey.currentContext!)!.not_available;
+      });
+      return;
     }
   }
 

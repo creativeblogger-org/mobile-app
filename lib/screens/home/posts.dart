@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
+import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/screens/home/components/preview_post_tile.dart';
 import 'package:creative_blogger_app/utils/posts.dart';
 import 'package:creative_blogger_app/utils/structs/preview_post.dart';
@@ -57,59 +58,53 @@ class _PostsScreenState extends State<PostsScreen> {
                 duration: Duration(milliseconds: 1500),
               ),
             )
-          : posts == null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(AppLocalizations.of(context)!
-                        .an_error_occured_while_loading_post),
-                  ),
+          : posts == null || posts!.isEmpty
+              ? CustomErrorWhileLoadingComponent(
+                  message: posts == null
+                      ? AppLocalizations.of(context)!
+                          .an_error_occured_while_loading_posts
+                      : AppLocalizations.of(context)!.no_post_for_the_moment,
                 )
-              : posts!.isNotEmpty
-                  ? Column(
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: showShowMoreButton
-                                ? posts!.length + 1
-                                : posts!.length,
-                            itemBuilder: (context, index) {
-                              if (index < posts!.length) {
-                                return PreviewPostTile(post: posts![index]);
-                              }
-                              return CustomButton(
-                                onPressed: isShowMoreLoading
-                                    ? null
-                                    : () {
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: showShowMoreButton
+                            ? posts!.length + 1
+                            : posts!.length,
+                        itemBuilder: (context, index) {
+                          if (index < posts!.length) {
+                            return PreviewPostTile(post: posts![index]);
+                          }
+                          return CustomButton(
+                            onPressed: isShowMoreLoading
+                                ? null
+                                : () {
+                                    setState(() => isShowMoreLoading = true);
+                                    getPreviewPosts(page: posts!.length ~/ 20)
+                                        .then(
+                                      (previewPosts) {
+                                        if (previewPosts == null) {
+                                          setState(
+                                              () => isShowMoreLoading = false);
+                                          return;
+                                        }
+                                        posts!.addAll(previewPosts);
                                         setState(
-                                            () => isShowMoreLoading = true);
-                                        getPreviewPosts(
-                                                page: posts!.length ~/ 20)
-                                            .then(
-                                          (previewPosts) {
-                                            if (previewPosts == null) {
-                                              setState(() =>
-                                                  isShowMoreLoading = false);
-                                              return;
-                                            }
-                                            posts!.addAll(previewPosts);
-                                            setState(() =>
-                                                isShowMoreLoading = false);
-                                          },
-                                        );
+                                            () => isShowMoreLoading = false);
                                       },
-                                child: isShowMoreLoading
-                                    ? const CircularProgressIndicator()
-                                    : Text(AppLocalizations.of(context)!
-                                        .show_more),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    )
-                  : Text(AppLocalizations.of(context)!.no_post_for_the_moment),
+                                    );
+                                  },
+                            child: isShowMoreLoading
+                                ? const CircularProgressIndicator()
+                                : Text(AppLocalizations.of(context)!.show_more),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
     );
   }
 }

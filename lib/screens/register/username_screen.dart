@@ -33,27 +33,26 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
   }
 
   Future<void> _usernameExists(String username) async {
-    try {
-      var res = await customGetRequest("$API_URL/verif/user/$username");
+    var res = await customGetRequest("$API_URL/verif/user/$username");
 
-      if (res.statusCode == HttpStatus.notFound) {
-        setState(() {
-          _usernameAlreadyExistsText = AppLocalizations.of(context)!.available;
-          _usernameAlreadyExistsColor = Colors.green;
-        });
-        return;
-      }
-      if (res.statusCode == HttpStatus.ok) {
-        setState(() {
-          _usernameError = AppLocalizations.of(context)!.not_available;
-        });
-        return;
-      }
-
-      handleError(res);
-    } on SocketException catch (_) {
+    if (res == null) {
       setState(() => _usernameError =
           AppLocalizations.of(context)!.no_Internet_connection);
+      return;
+    }
+
+    if (res.statusCode == HttpStatus.notFound) {
+      setState(() {
+        _usernameAlreadyExistsText = AppLocalizations.of(context)!.available;
+        _usernameAlreadyExistsColor = Colors.green;
+      });
+      return;
+    }
+    if (res.statusCode == HttpStatus.ok) {
+      setState(() {
+        _usernameError = AppLocalizations.of(context)!.not_available;
+      });
+      return;
     }
   }
 

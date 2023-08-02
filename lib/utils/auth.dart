@@ -2,6 +2,7 @@ import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
+import 'package:creative_blogger_app/utils/show_no_internet_connection.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -16,12 +17,10 @@ void dismissDialog() {
   }
 }
 
-void authRequest(
-  Function(bool connecting) setConnecting,
+Future<void> authRequest(
   String url,
   String body,
-) {
-  setConnecting(true);
+) async {
   showDialog(
     context: navigatorKey.currentContext!,
     builder: (context) {
@@ -37,20 +36,21 @@ void authRequest(
     },
     barrierDismissible: false,
   );
-  customPostRequest(url: url, body: body).then((res) {
-    if (res.statusCode == HttpStatus.ok) {
-      setToken(jsonDecode(res.body)["token"]).then((_) {
-        dismissDialog();
-        Navigator.of(navigatorKey.currentContext!).pushNamedAndRemoveUntil(
-            HomeScreen.routeName, (route) => false,
-            arguments: 0);
-        setConnecting(false);
-        return;
-      });
-      return;
-    }
+  var res = await customPostRequest(url: url, body: body);
+  if (res == null) {
     dismissDialog();
-    setConnecting(false);
-    handleError(res);
-  });
+    return;
+  }
+  if (res.statusCode == HttpStatus.ok) {
+    setToken(jsonDecode(res.body)["token"]).then((_) {
+      dismissDialog();
+      Navigator.of(navigatorKey.currentContext!).pushNamedAndRemoveUntil(
+          HomeScreen.routeName, (route) => false,
+          arguments: 0);
+      return;
+    });
+    return;
+  }
+  dismissDialog();
+  await handleError(res);
 }

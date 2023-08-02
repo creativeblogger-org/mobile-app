@@ -9,17 +9,17 @@ import 'package:creative_blogger_app/utils/structs/preview_post.dart';
 //changer par limit = 20
 Future<List<PreviewPost>?> getPreviewPosts(
     {int limit = 20, int page = 0}) async {
-  try {
-    var res = await customGetRequest("$API_URL/posts?limit=$limit&page=$page");
-    if (res.statusCode == HttpStatus.ok) {
-      return (jsonDecode(res.body) as List)
-          .map((jsonPost) => PreviewPost.fromJson(jsonPost))
-          .toList();
-    }
-    handleError(res);
-
-    return [];
-  } on SocketException catch (_) {
-    return [];
+  var res = await customGetRequest("$API_URL/posts?limit=$limit&page=$page");
+  if (res == null) {
+    return null;
   }
+
+  if (res.statusCode == HttpStatus.ok) {
+    return (jsonDecode(res.body) as List)
+        .map((jsonPost) => PreviewPost.fromJson(jsonPost))
+        .toList();
+  }
+  await handleError(res);
+
+  return [];
 }

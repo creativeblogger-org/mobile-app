@@ -79,15 +79,21 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
               onPressed: _passwordError == null &&
                       _password.text.isNotEmpty &&
                       !connecting
-                  ? () => authRequest(
-                      (isConnecting) =>
-                          setState(() => connecting = isConnecting),
-                      "$API_URL/auth/register",
-                      jsonEncode({
-                        "username": widget.args.username,
-                        "email": widget.args.email,
-                        "password": _password.text
-                      }))
+                  ? () {
+                      setState(() => connecting = true);
+                      authRequest(
+                        "$API_URL/auth/register",
+                        jsonEncode(
+                          {
+                            "username": widget.args.username,
+                            "email": widget.args.email,
+                            "password": _password.text
+                          },
+                        ),
+                      ).then(
+                        (_) => setState(() => connecting = false),
+                      );
+                    }
                   : null,
               child: Text(AppLocalizations.of(context)!.create_an_account),
             )

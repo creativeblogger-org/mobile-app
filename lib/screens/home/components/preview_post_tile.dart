@@ -29,15 +29,15 @@ class PreviewPostTile extends StatelessWidget {
         ),
         leading: CircleAvatar(
           backgroundColor: Colors.transparent,
-          child: Image.network(
-            post.image,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }
-              return const Icon(Icons.image);
-            },
-          ),
+          child: Image.network(post.image,
+              loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return const Icon(Icons.image);
+          }, errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.image);
+          }),
         ),
         title: Text(
           post.title,
