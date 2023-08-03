@@ -56,3 +56,10 @@ Widget getPermission(int permission) {
       return Text(AppLocalizations.of(navigatorKey.currentContext!)!.error);
   }
 }
+
+String getHumanDate(DateTime date) {
+  String day = date.day.toString().padLeft(2, "0");
+  String month = date.month.toString().padLeft(2, "0");
+  int year = date.year;
+  return "$day/$month/$year";
+}

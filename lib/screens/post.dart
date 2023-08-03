@@ -157,6 +157,7 @@ class _PostScreenState extends State<PostScreen> {
                         const SizedBox(height: 16),
                         Text(
                           AppLocalizations.of(context)!
+                              //TODO change by an header
                               .comments(_post!.comments.length),
                           style: TextStyle(
                             fontSize: Theme.of(context)

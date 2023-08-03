@@ -23,10 +23,12 @@ Future<List<PreviewPost>?> getPreviewPosts(
   return [];
 }
 
+//TODO replace int by String
 Future<List<PreviewPost>?> getPreviewPostsByAuthor(
-    {required String author, int limit = 20, int page = 0}) async {
+    {required int author, int limit = 20, int page = 0}) async {
   //TODO URL will be changed, this doesn't work for now
   var res = await customGetRequest(
+      //TODO replace by /users/$author/posts?limit=$limit&page=$page
       "$API_URL/posts/username/$author?limit=$limit&page=$page");
   if (res == null) {
     return null;

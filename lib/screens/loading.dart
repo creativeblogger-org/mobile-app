@@ -41,6 +41,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             HomeScreen.routeName,
             arguments: 0,
           );
+          return;
         }
         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
       });

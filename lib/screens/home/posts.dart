@@ -20,6 +20,7 @@ class _PostsScreenState extends State<PostsScreen> {
   bool isShowMoreLoading = false;
 
   Future<void> _getPreviewPosts({int limit = 20}) async {
+    setState(() => arePostsLoading = true);
     getPreviewPosts(limit: limit).then((previewPosts) {
       if (mounted) {
         setState(
@@ -46,10 +47,12 @@ class _PostsScreenState extends State<PostsScreen> {
         posts!.last.id != 86;
 
     return RefreshIndicator(
-      onRefresh: () {
-        setState(() => arePostsLoading = true);
-        return _getPreviewPosts(limit: (posts ?? []).length);
-      },
+      onRefresh: () => _getPreviewPosts(
+          limit: posts == null
+              ? 20
+              : posts!.length < 20
+                  ? 20
+                  : posts!.length),
       child: arePostsLoading
           ? const Center(
               child: SpinKitSpinningLines(
