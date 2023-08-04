@@ -109,5 +109,7 @@
     "an_error_occured_while_loading_shorts": "An error occured while loading shorts",
     "search": "Search",
     "users_posts": "User's posts :",
-    "this_user_hasnt_published_any_post_yet": "This user hasn't published any post yet."
+    "this_user_hasnt_published_any_post_yet": "This user hasn't published any post yet.",
+    "search_posts": "Search posts",
+    "creative_blogger": "Creative Blogger"
 }

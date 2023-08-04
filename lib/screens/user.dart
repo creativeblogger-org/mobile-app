@@ -57,8 +57,7 @@ class _UserScreenState extends State<UserScreen> {
   Future<void> _getPreviewPostsByAuthor(int author,
       {int limit = 20, int page = 0}) async {
     setState(() => _arePreviewPostsLoading = true);
-    var posts =
-        await getPreviewPostsByAuthor(author: author, limit: limit, page: page);
+    var posts = await getPreviewPostsByAuthor(author, limit: limit, page: page);
     setState(() {
       _posts = posts;
       _arePreviewPostsLoading = false;

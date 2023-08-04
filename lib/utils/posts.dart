@@ -24,12 +24,32 @@ Future<List<PreviewPost>?> getPreviewPosts(
 }
 
 //TODO replace int by String
-Future<List<PreviewPost>?> getPreviewPostsByAuthor(
-    {required int author, int limit = 20, int page = 0}) async {
-  //TODO URL will be changed, this doesn't work for now
+Future<List<PreviewPost>?> getPreviewPostsByAuthor(int author,
+    {int limit = 20, int page = 0}) async {
+  //TODO URL will be changed
   var res = await customGetRequest(
       //TODO replace by /users/$author/posts?limit=$limit&page=$page
       "$API_URL/posts/username/$author?limit=$limit&page=$page");
+  if (res == null) {
+    return null;
+  }
+
+  if (res.statusCode == HttpStatus.ok) {
+    return (jsonDecode(res.body) as List)
+        .map((jsonPost) => PreviewPost.fromJson(jsonPost))
+        .toList();
+  }
+  await handleError(res);
+
+  return [];
+}
+
+Future<List<PreviewPost>?> searchPreviewPostsByContent(String query,
+    {int limit = 20, int page = 0}) async {
+  //TODO URL will be changed
+  var res = await customGetRequest(
+      //TODO replace by /users/$author/posts?limit=$limit&page=$page
+      "$API_URL/posts/content/$query?limit=$limit&page=$page");
   if (res == null) {
     return null;
   }

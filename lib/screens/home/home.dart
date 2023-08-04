@@ -23,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isGetMeLoading = true;
   int _currentIndex = 0;
 
-  //TODO change to [PostsScreen(), CreateScreen(), ShortsScreen()]
-  static const pages = [PostsScreen(), PostsScreen(), ShortsScreen()];
+  static const pages = [PostsScreen(), ShortsScreen()];
 
   @override
   void initState() {
@@ -93,9 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.exit_to_app_rounded),
           )
         ],
-        title: const Text(
-          "Creative Blogger",
-          style: TextStyle(fontFamily: "Pangolin", fontSize: 25),
+        title: Text(
+          AppLocalizations.of(context)!.creative_blogger,
+          style: const TextStyle(fontFamily: "Pangolin", fontSize: 25),
         ),
         centerTitle: true,
       ),
@@ -106,16 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.home),
               label: AppLocalizations.of(context)!.home),
           BottomNavigationBarItem(
-              icon: const Icon(Icons.search),
-              label: AppLocalizations.of(context)!.search),
-          BottomNavigationBarItem(
               icon: const Icon(Icons.hourglass_bottom_rounded),
               label: AppLocalizations.of(context)!.shorts),
         ],
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        // showSelectedLabels: false,
-        // showUnselectedLabels: false,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         type: BottomNavigationBarType.fixed,
         elevation: 10,
