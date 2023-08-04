@@ -109,26 +109,40 @@ class _UserScreenState extends State<UserScreen> {
                               AppLocalizations.of(context)!.signed_up_the(
                                   getHumanDate(_user!.createdAt)),
                             ),
-                            if (_posts != null && _posts!.isNotEmpty) ...{
-                              const SizedBox(height: 16),
-                              Text(
-                                AppLocalizations.of(context)!.users_posts,
-                                style: TextStyle(
-                                  fontSize: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium!
-                                      .fontSize,
-                                ),
+                            const SizedBox(height: 16),
+                            Text(
+                              AppLocalizations.of(context)!.users_posts,
+                              style: TextStyle(
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium!
+                                    .fontSize,
                               ),
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) =>
-                                    PreviewPostTile(post: _posts![index]),
-                                //TODO add show more button
-                                itemCount: (_posts ?? []).length,
-                                shrinkWrap: true,
-                              ),
-                            },
+                            ),
+                            _arePreviewPostsLoading
+                                ? const Center(
+                                    child: SpinKitSpinningLines(
+                                      color: Colors.blue,
+                                      size: 100,
+                                      duration: Duration(milliseconds: 1500),
+                                    ),
+                                  )
+                                : (_posts ?? []).isEmpty
+                                    ? Center(
+                                        child: Text(AppLocalizations.of(
+                                                context)!
+                                            .this_user_hasnt_published_any_post_yet),
+                                      )
+                                    : ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) =>
+                                            PreviewPostTile(
+                                                post: _posts![index]),
+                                        //TODO add show more button
+                                        itemCount: (_posts ?? []).length,
+                                        shrinkWrap: true,
+                                      ),
                           ],
                         ),
                       ),

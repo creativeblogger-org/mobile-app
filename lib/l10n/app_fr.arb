@@ -64,5 +64,6 @@
     "an_error_occured_while_loading_posts": "Une erreur s'est produite lors du chargement des posts",
     "an_error_occured_while_loading_shorts": "Une erreur s'est produite lors du chargement des shorts",
     "search": "Chercher",
-    "users_posts": "Posts de l'utilisateur :"
+    "users_posts": "Posts de l'utilisateur :",
+    "this_user_hasnt_published_any_post_yet": "Cet utilisateur n'a pas encore publié de post."
 }
