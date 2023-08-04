@@ -7,6 +7,7 @@ import 'package:creative_blogger_app/utils/auth.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +31,18 @@ class _LoginScreenState extends State<LoginScreen> {
     _usernameOrEmail.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  void _login(String usernameOrEmail, String password) {
+    setState(() => connecting = true);
+    authRequest(
+      "$API_URL/auth/login",
+      jsonEncode(
+        {"username": usernameOrEmail, "password": password},
+      ),
+    ).then(
+      (_) => setState(() => connecting = false),
+    );
   }
 
   @override
@@ -103,20 +116,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         _usernameOrEmail.text.isNotEmpty &&
                         _password.text.isNotEmpty &&
                         !connecting
-                    ? () {
-                        setState(() => connecting = true);
-                        authRequest(
-                          "$API_URL/auth/login",
-                          jsonEncode(
-                            {
-                              "username": _usernameOrEmail.text,
-                              "password": _password.text
-                            },
-                          ),
-                        ).then((_) => setState(() => connecting = false));
-                      }
+                    ? () => _login(_usernameOrEmail.text, _password.text)
                     : null,
-                child: Text(AppLocalizations.of(context)!.login),
+                child: connecting
+                    ? SpinKitRing(
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                        lineWidth: 2,
+                      )
+                    : Text(AppLocalizations.of(context)!.login),
               ),
               const SizedBox(height: 16),
               CustomButton(

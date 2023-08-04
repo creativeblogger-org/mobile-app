@@ -7,6 +7,7 @@ import 'package:creative_blogger_app/utils/auth.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ChoosePasswordScreen extends StatefulWidget {
   const ChoosePasswordScreen({super.key, required this.args});
@@ -28,6 +29,22 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
   void dispose() {
     _password.dispose();
     super.dispose();
+  }
+
+  void _register(String username, String email, String password) {
+    setState(() => connecting = true);
+    authRequest(
+      "$API_URL/auth/register",
+      jsonEncode(
+        {
+          "username": username,
+          "email": email,
+          "password": password,
+        },
+      ),
+    ).then(
+      (_) => setState(() => connecting = false),
+    );
   }
 
   @override
@@ -80,22 +97,17 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                       _password.text.isNotEmpty &&
                       !connecting
                   ? () {
-                      setState(() => connecting = true);
-                      authRequest(
-                        "$API_URL/auth/register",
-                        jsonEncode(
-                          {
-                            "username": widget.args.username,
-                            "email": widget.args.email,
-                            "password": _password.text
-                          },
-                        ),
-                      ).then(
-                        (_) => setState(() => connecting = false),
-                      );
+                      _register(widget.args.username, widget.args.email,
+                          _password.text);
                     }
                   : null,
-              child: Text(AppLocalizations.of(context)!.create_an_account),
+              child: connecting
+                  ? SpinKitRing(
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 20,
+                      lineWidth: 2,
+                    )
+                  : Text(AppLocalizations.of(context)!.create_an_account),
             )
           ],
         ),
