@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isDeleteAccountLoading = false;
 
   Future<void> _confirmDeleteAccount() async {
-    showDialog(
+    await showDialog(
       context: context,
       builder: (innerContext) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.are_you_sure),
@@ -267,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 onPressed: !_isDeleteAccountLoading &&
                                         !_isLoading &&
                                         !_isUpdateAccountLoading
-                                    ? deleteAccount
+                                    ? _confirmDeleteAccount
                                     : null,
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red),
