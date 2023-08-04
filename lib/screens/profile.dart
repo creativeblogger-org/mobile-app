@@ -65,7 +65,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 : null,
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: _isDeleteAccountLoading
-                ? const CircularProgressIndicator(color: Colors.red)
+                ? const SpinKitRing(
+                    color: Colors.red,
+                    size: 20,
+                    lineWidth: 2,
+                  )
                 : Text(AppLocalizations.of(context)!.im_sure),
           ),
         ],
@@ -249,11 +253,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       )
                                   : null,
                               child: _isUpdateAccountLoading
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                          strokeWidth: 3),
+                                  ? SpinKitRing(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      size: 20,
+                                      lineWidth: 2,
                                     )
                                   : Text(
                                       AppLocalizations.of(context)!

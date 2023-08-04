@@ -2,6 +2,7 @@ import 'package:creative_blogger_app/utils/comment.dart';
 import 'package:creative_blogger_app/utils/structs/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CommentTile extends StatefulWidget {
   const CommentTile({super.key, required this.comment, required this.onReload});
@@ -97,7 +98,11 @@ class _CommentTileState extends State<CommentTile> {
                         );
                       },
                 icon: _isDeletePostLoading
-                    ? const CircularProgressIndicator(color: Colors.red)
+                    ? const SpinKitRing(
+                        color: Colors.red,
+                        size: 20,
+                        lineWidth: 2,
+                      )
                     : const Icon(Icons.delete, color: Colors.red),
               )
             }

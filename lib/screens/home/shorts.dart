@@ -100,7 +100,12 @@ class _ShortsScreenState extends State<ShortsScreen> {
                                       );
                                     },
                               child: isShowMoreLoading
-                                  ? const CircularProgressIndicator()
+                                  ? SpinKitRing(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      size: 20,
+                                      lineWidth: 2,
+                                    )
                                   : Text(
                                       AppLocalizations.of(context)!.show_more),
                             );

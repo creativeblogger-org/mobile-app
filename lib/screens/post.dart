@@ -88,7 +88,11 @@ class _PostScreenState extends State<PostScreen> {
                   },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: _isDeletePostLoading
-                ? const CircularProgressIndicator(color: Colors.red)
+                ? const SpinKitRing(
+                    color: Colors.red,
+                    size: 20,
+                    lineWidth: 2,
+                  )
                 : Text(AppLocalizations.of(context)!.im_sure),
           )
         ],
@@ -201,7 +205,13 @@ class _PostScreenState extends State<PostScreen> {
                                         _postCommentTextController.text)
                                     : null,
                                 icon: _isPostCommentLoading
-                                    ? const CircularProgressIndicator()
+                                    ? SpinKitRing(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        size: 20,
+                                        lineWidth: 2,
+                                      )
                                     : Icon(
                                         Icons.send,
                                         color: _activePostCommentButton
