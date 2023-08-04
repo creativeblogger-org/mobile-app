@@ -14,19 +14,20 @@ class PostsScreen extends StatefulWidget {
 }
 
 class _PostsScreenState extends State<PostsScreen> {
-  List<PreviewPost>? posts = [];
-  bool arePostsLoading = true;
-  bool isShowMoreLoading = false;
-  TextEditingController _searchEditingController = TextEditingController();
+  List<PreviewPost>? _posts = [];
+  bool _arePostsLoading = true;
+  bool _isShowMoreLoading = false;
+  final TextEditingController _searchEditingController =
+      TextEditingController();
 
   Future<void> _getPreviewPosts({int limit = 20}) async {
-    setState(() => arePostsLoading = true);
+    setState(() => _arePostsLoading = true);
     getPreviewPosts(limit: limit).then((previewPosts) {
       if (mounted) {
         setState(
           () {
-            posts = previewPosts;
-            arePostsLoading = false;
+            _posts = previewPosts;
+            _arePostsLoading = false;
           },
         );
       }
@@ -35,13 +36,13 @@ class _PostsScreenState extends State<PostsScreen> {
 
   Future<void> _searchPreviewPostsByContent(String content,
       {int limit = 20}) async {
-    setState(() => arePostsLoading = true);
+    setState(() => _arePostsLoading = true);
     searchPreviewPostsByContent(content, limit: limit).then((previewPosts) {
       if (mounted) {
         setState(
           () {
-            posts = previewPosts;
-            arePostsLoading = false;
+            _posts = previewPosts;
+            _arePostsLoading = false;
           },
         );
       }
@@ -62,19 +63,15 @@ class _PostsScreenState extends State<PostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool showShowMoreButton = posts != null &&
-        !arePostsLoading &&
-        posts!.isNotEmpty &&
-        posts!.last.id != 86 &&
-        posts!.length % 20 == 0;
+    bool showShowMoreButton = _posts != null &&
+        !_arePostsLoading &&
+        _posts!.isNotEmpty &&
+        _posts!.last.id != 86 &&
+        _posts!.length % 20 == 0;
 
     return RefreshIndicator(
       onRefresh: () => _getPreviewPosts(
-        limit: posts == null
-            ? 20
-            : posts!.length < 20
-                ? 20
-                : posts!.length,
+        limit: _posts == null || _posts!.length < 20 ? 20 : _posts!.length,
       ),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -102,9 +99,10 @@ class _PostsScreenState extends State<PostsScreen> {
                 }
                 _searchPreviewPostsByContent(value);
               },
+              textInputAction: TextInputAction.search,
             ),
             const SizedBox(height: 16),
-            arePostsLoading
+            _arePostsLoading
                 ? const Center(
                     child: SpinKitSpinningLines(
                       color: Colors.blue,
@@ -112,10 +110,10 @@ class _PostsScreenState extends State<PostsScreen> {
                       duration: Duration(milliseconds: 1500),
                     ),
                   )
-                : posts == null || posts!.isEmpty
+                : _posts == null || _posts!.isEmpty
                     ? Center(
                         child: Text(
-                          posts == null
+                          _posts == null
                               ? AppLocalizations.of(context)!
                                   .an_error_occured_while_loading_posts
                               : AppLocalizations.of(context)!
@@ -125,51 +123,52 @@ class _PostsScreenState extends State<PostsScreen> {
                     : ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: showShowMoreButton
-                            ? posts!.length + 1
-                            : posts!.length,
+                            ? _posts!.length + 1
+                            : _posts!.length,
                         itemBuilder: (context, index) {
-                          if (index < posts!.length) {
-                            return PreviewPostTile(post: posts![index]);
+                          if (index < _posts!.length) {
+                            return PreviewPostTile(post: _posts![index]);
                           }
                           return CustomButton(
-                            onPressed: isShowMoreLoading
+                            onPressed: _isShowMoreLoading
                                 ? null
                                 : () {
                                     if (_searchEditingController.text.isEmpty) {
-                                      setState(() => isShowMoreLoading = true);
-                                      getPreviewPosts(page: posts!.length ~/ 20)
+                                      setState(() => _isShowMoreLoading = true);
+                                      getPreviewPosts(
+                                              page: _posts!.length ~/ 20)
                                           .then(
                                         (previewPosts) {
                                           if (previewPosts == null) {
                                             setState(() =>
-                                                isShowMoreLoading = false);
+                                                _isShowMoreLoading = false);
                                             return;
                                           }
-                                          posts!.addAll(previewPosts);
+                                          _posts!.addAll(previewPosts);
                                           setState(
-                                              () => isShowMoreLoading = false);
+                                              () => _isShowMoreLoading = false);
                                         },
                                       );
                                     } else {
-                                      setState(() => isShowMoreLoading = true);
+                                      setState(() => _isShowMoreLoading = true);
                                       searchPreviewPostsByContent(
                                               _searchEditingController.text,
-                                              page: posts!.length ~/ 20)
+                                              page: _posts!.length ~/ 20)
                                           .then(
                                         (previewPosts) {
                                           if (previewPosts == null) {
                                             setState(() =>
-                                                isShowMoreLoading = false);
+                                                _isShowMoreLoading = false);
                                             return;
                                           }
-                                          posts!.addAll(previewPosts);
+                                          _posts!.addAll(previewPosts);
                                           setState(
-                                              () => isShowMoreLoading = false);
+                                              () => _isShowMoreLoading = false);
                                         },
                                       );
                                     }
                                   },
-                            child: isShowMoreLoading
+                            child: _isShowMoreLoading
                                 ? SpinKitRing(
                                     color:
                                         Theme.of(context).colorScheme.primary,

@@ -15,16 +15,17 @@ class ShortsScreen extends StatefulWidget {
 }
 
 class _ShortsScreenState extends State<ShortsScreen> {
-  List<Short>? shorts = [];
-  bool areShortsLoading = true;
-  bool isShowMoreLoading = false;
+  List<Short>? _shorts = [];
+  bool _areShortsLoading = true;
+  bool _isShowMoreLoading = false;
 
   Future<void> _getShorts({int limit = 20}) async {
-    var receivedShorts = await getShorts(limit: limit);
+    setState(() => _areShortsLoading = true);
+    var shorts = await getShorts(limit: limit);
     setState(
       () {
-        shorts = receivedShorts;
-        areShortsLoading = false;
+        _shorts = shorts;
+        _areShortsLoading = false;
       },
     );
   }
@@ -37,82 +38,75 @@ class _ShortsScreenState extends State<ShortsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool showButton = shorts != null &&
-        !areShortsLoading &&
-        shorts!.isNotEmpty &&
-        shorts!.length % 20 == 0;
+    bool showButton = _shorts != null &&
+        !_areShortsLoading &&
+        _shorts!.isNotEmpty &&
+        _shorts!.length % 20 == 0;
 
     return RefreshIndicator(
-        onRefresh: () {
-          setState(() => areShortsLoading = true);
-          return _getShorts(
-              limit: (shorts ?? []).length < 20 ? 20 : (shorts ?? []).length);
-        },
-        child: areShortsLoading
-            ? const Center(
-                child: SpinKitSpinningLines(
-                  color: Colors.blue,
-                  size: 100,
-                  duration: Duration(milliseconds: 1500),
-                ),
-              )
-            : shorts == null || shorts!.isEmpty
-                ? CustomErrorWhileLoadingComponent(
-                    message: shorts == null
-                        ? AppLocalizations.of(context)!
-                            .an_error_occured_while_loading_shorts
-                        : AppLocalizations.of(context)!.no_short_for_the_moment,
-                  )
-                : Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount:
-                              showButton ? shorts!.length + 1 : shorts!.length,
-                          itemBuilder: (context, index) {
-                            if (index < shorts!.length) {
-                              return ShortTile(
-                                short: shorts![index],
-                                reload: () {
-                                  setState(() => areShortsLoading = true);
-                                  _getShorts(limit: shorts!.length);
-                                },
-                              );
-                            }
-                            return CustomButton(
-                              onPressed: isShowMoreLoading
-                                  ? null
-                                  : () {
-                                      setState(() => isShowMoreLoading = true);
-                                      getShorts(page: shorts!.length ~/ 20)
-                                          .then(
-                                        (receivedShorts) {
-                                          if (receivedShorts == null) {
-                                            setState(() =>
-                                                isShowMoreLoading = false);
-                                            return;
-                                          }
-                                          shorts!.addAll(receivedShorts);
-                                          setState(
-                                              () => isShowMoreLoading = false);
-                                        },
-                                      );
-                                    },
-                              child: isShowMoreLoading
-                                  ? SpinKitRing(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      size: 20,
-                                      lineWidth: 2,
-                                    )
-                                  : Text(
-                                      AppLocalizations.of(context)!.show_more),
+      onRefresh: () =>
+          _getShorts(limit: (_shorts ?? []).length < 20 ? 20 : _shorts!.length),
+      child: _areShortsLoading
+          ? Center(
+              child: SpinKitSpinningLines(
+                color: Theme.of(context).colorScheme.primary,
+                size: 100,
+                duration: const Duration(milliseconds: 1500),
+              ),
+            )
+          : _shorts == null || _shorts!.isEmpty
+              ? CustomErrorWhileLoadingComponent(
+                  message: _shorts == null
+                      ? AppLocalizations.of(context)!
+                          .an_error_occured_while_loading_shorts
+                      : AppLocalizations.of(context)!.no_short_for_the_moment,
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount:
+                            showButton ? _shorts!.length + 1 : _shorts!.length,
+                        itemBuilder: (context, index) {
+                          if (index < _shorts!.length) {
+                            return ShortTile(
+                              short: _shorts![index],
+                              reload: () => _getShorts(limit: _shorts!.length),
                             );
-                          },
-                        ),
+                          }
+                          return CustomButton(
+                            onPressed: _isShowMoreLoading
+                                ? null
+                                : () {
+                                    setState(() => _isShowMoreLoading = true);
+                                    getShorts(page: _shorts!.length ~/ 20).then(
+                                      (receivedShorts) {
+                                        if (receivedShorts == null) {
+                                          setState(
+                                              () => _isShowMoreLoading = false);
+                                          return;
+                                        }
+                                        _shorts!.addAll(receivedShorts);
+                                        setState(
+                                            () => _isShowMoreLoading = false);
+                                      },
+                                    );
+                                  },
+                            child: _isShowMoreLoading
+                                ? SpinKitRing(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    size: 20,
+                                    lineWidth: 2,
+                                  )
+                                : Text(AppLocalizations.of(context)!.show_more),
+                          );
+                        },
                       ),
-                    ],
-                  ));
+                    ),
+                  ],
+                ),
+    );
   }
 }

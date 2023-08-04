@@ -23,9 +23,6 @@ Future<Response?> customGetRequest(String url) async {
     return await http.get(Uri.parse(url), headers: await getJSONHeaders());
   } catch (e) {
     showNoInternetConnection();
-    if (e is SocketException || e is TimeoutException) {
-      return null;
-    }
     return null;
   }
 }
@@ -36,9 +33,6 @@ Future<Response?> customPostRequest({required String url, Object? body}) async {
         headers: await getJSONHeaders(), body: body);
   } catch (e) {
     showNoInternetConnection();
-    if (e is SocketException || e is TimeoutException) {
-      return null;
-    }
     return null;
   }
 }
@@ -49,9 +43,6 @@ Future<Response?> customPutRequest({required String url, Object? body}) async {
         headers: await getJSONHeaders(), body: body);
   } catch (e) {
     showNoInternetConnection();
-    if (e is SocketException || e is TimeoutException) {
-      return null;
-    }
     return null;
   }
 }
@@ -61,9 +52,6 @@ Future<Response?> customDeleteRequest(String url) async {
     return await http.delete(Uri.parse(url), headers: await getJSONHeaders());
   } catch (e) {
     showNoInternetConnection();
-    if (e is SocketException || e is TimeoutException) {
-      return null;
-    }
     return null;
   }
 }

@@ -121,20 +121,18 @@ class _PostScreenState extends State<PostScreen> {
           decoration: customDecoration(),
         ),
         actions: [
-          if (_post != null) ...{
-            if (_post!.hasPermission) ...{
-              IconButton(
-                onPressed: !_isDeletePostLoading &&
-                        !_isPostCommentLoading &&
-                        !_isPostLoading
-                    ? _deletePost
-                    : null,
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
+          if (_post != null && _post!.hasPermission) ...{
+            IconButton(
+              onPressed: !_isDeletePostLoading &&
+                      !_isPostCommentLoading &&
+                      !_isPostLoading
+                  ? _deletePost
+                  : null,
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
               ),
-            },
+            ),
           },
         ],
       ),
@@ -175,7 +173,6 @@ class _PostScreenState extends State<PostScreen> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
                                 child: TextField(
@@ -186,16 +183,23 @@ class _PostScreenState extends State<PostScreen> {
                                     hintStyle: const TextStyle(
                                       fontWeight: FontWeight.normal,
                                     ),
-                                    border: OutlineInputBorder(
+                                    border: UnderlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
                                       ),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.zero,
                                     ),
+                                    filled: true,
+                                    fillColor: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground
+                                        .withOpacity(0.1),
                                   ),
                                   onChanged: (value) => setState(() =>
                                       _activePostCommentButton =
-                                          value.length > 5),
+                                          value.length >= 5),
                                 ),
                               ),
                               IconButton(

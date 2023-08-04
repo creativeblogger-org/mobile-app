@@ -84,11 +84,10 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                 errorMaxLines: 5,
               ),
               controller: _password,
-              onChanged: (_) => setState(
-                () => _password.text.length < 8
-                    ? _passwordError =
-                        AppLocalizations.of(context)!.password_too_short
-                    : _passwordError = null,
+              onChanged: (password) => setState(
+                () => _passwordError = password.length < 8
+                    ? AppLocalizations.of(context)!.password_too_short
+                    : null,
               ),
             ),
             const SizedBox(height: 10),

@@ -37,8 +37,9 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
   Future<void> _usernameExists(String email) async {
     var res = await customGetRequest("$API_URL/verif/email/$email");
     if (res == null) {
-      setState(() =>
-          _emailError = AppLocalizations.of(context)!.no_Internet_connection);
+      setState(() => _emailError =
+          AppLocalizations.of(navigatorKey.currentContext!)!
+              .no_Internet_connection);
       return;
     }
 
@@ -61,14 +62,15 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
 
   CancelableOperation? _myCancelableFuture;
 
-  void checkUsername(BuildContext context, String username) async {
+  void checkUsername(String username) async {
     if (_isLoading) {
       await _myCancelableFuture?.cancel();
     }
 
     setState(() {
       _isLoading = true;
-      _emailAlreadyExistsText = AppLocalizations.of(context)!.checking;
+      _emailAlreadyExistsText =
+          AppLocalizations.of(navigatorKey.currentContext!)!.checking;
       _emailAlreadyExistsColor = Colors.grey;
     });
 
@@ -114,11 +116,11 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
                 errorMaxLines: 5,
               ),
               controller: _email,
-              onChanged: (_) {
-                setState(() => _emailError = isEmailValid(_email.text));
+              onChanged: (email) {
+                setState(() => _emailError = isEmailValid(email));
 
                 if (_emailError == null) {
-                  checkUsername(context, _email.text);
+                  checkUsername(email);
                 }
               },
             ),
