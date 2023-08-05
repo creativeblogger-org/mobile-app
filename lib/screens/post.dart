@@ -2,7 +2,6 @@ import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/components/comment_tile.dart';
 import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/screens/components/post_tile.dart';
-import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/utils/comment.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
