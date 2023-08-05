@@ -55,6 +55,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   void _deletePost() {
+    setState(() => _isDeletePostLoading = true);
     showDialog(
       context: context,
       builder: (innerContext) => AlertDialog(
@@ -76,12 +77,8 @@ class _PostScreenState extends State<PostScreen> {
                     deletePost(_post!.slug).then(
                       (fine) {
                         if (fine) {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            HomeScreen.routeName,
-                            (route) => false,
-                            arguments: 0,
-                          );
+                          Navigator.pop(context);
+                          setState(() => _isDeletePostLoading = true);
                         }
                       },
                     );
@@ -139,11 +136,16 @@ class _PostScreenState extends State<PostScreen> {
       body: RefreshIndicator(
         onRefresh: () async => _getPost(),
         child: _isPostLoading
-            ? const Center(
-                child: SpinKitSpinningLines(
-                  color: Colors.blue,
-                  size: 100,
-                  duration: Duration(milliseconds: 1500),
+            ? LayoutBuilder(
+                builder: (context, constraints) => SizedBox(
+                  height: constraints.maxHeight,
+                  child: const Center(
+                    child: SpinKitSpinningLines(
+                      color: Colors.blue,
+                      size: 100,
+                      duration: Duration(milliseconds: 1500),
+                    ),
+                  ),
                 ),
               )
             : _post == null

@@ -74,7 +74,9 @@ class _PostsScreenState extends State<PostsScreen> {
         limit: _posts == null || _posts!.length < 20 ? 20 : _posts!.length,
       ),
       child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: _arePostsLoading
+            ? const NeverScrollableScrollPhysics()
+            : const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -90,9 +92,24 @@ class _PostsScreenState extends State<PostsScreen> {
                 filled: true,
                 fillColor:
                     Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _searchEditingController.text = "";
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    _getPreviewPosts();
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.6),
+                  ),
+                ),
               ),
-              onChanged: (value) {
-                value = value.trim();
+              onEditingComplete: () {
+                var value = _searchEditingController.text.trim();
+                FocusScope.of(context).requestFocus(FocusNode());
                 if (value.isEmpty) {
                   _getPreviewPosts();
                   return;
@@ -103,11 +120,14 @@ class _PostsScreenState extends State<PostsScreen> {
             ),
             const SizedBox(height: 16),
             _arePostsLoading
-                ? const Center(
-                    child: SpinKitSpinningLines(
-                      color: Colors.blue,
-                      size: 100,
-                      duration: Duration(milliseconds: 1500),
+                ? Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: const SpinKitSpinningLines(
+                        color: Colors.blue,
+                        size: 100,
+                        duration: Duration(milliseconds: 1500),
+                      ),
                     ),
                   )
                 : _posts == null || _posts!.isEmpty

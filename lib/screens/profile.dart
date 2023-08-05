@@ -178,9 +178,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 errorText: _usernameError,
                                 errorMaxLines: 5,
                               ),
-                              onChanged: (_) {
-                                setState(() => _usernameError = isUsernameValid(
-                                    _usernameEditingController.text));
+                              onChanged: (username) {
+                                setState(() =>
+                                    _usernameError = isUsernameValid(username));
                               },
                             ),
                             const SizedBox(height: 16),
@@ -197,9 +197,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 errorText: _emailError,
                                 errorMaxLines: 5,
                               ),
-                              onChanged: (_) {
-                                setState(() => _emailError =
-                                    isEmailValid(_emailEditingController.text));
+                              onChanged: (email) {
+                                setState(
+                                    () => _emailError = isEmailValid(email));
                               },
                             ),
                             const SizedBox(height: 16),
@@ -223,12 +223,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 errorText: _passwordError,
                                 errorMaxLines: 5,
                               ),
-                              onChanged: (_) {
+                              onChanged: (password) {
                                 setState(() => _passwordError =
-                                    _passwordEditingController.text.isEmpty ||
-                                            _passwordEditingController
-                                                    .text.length >
-                                                8
+                                    password.isEmpty || password.length >= 8
                                         ? null
                                         : AppLocalizations.of(context)!
                                             .password_too_short);
