@@ -1,3 +1,4 @@
+import 'package:creative_blogger_app/screens/create_post_screen.dart';
 import 'package:creative_blogger_app/screens/loading.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/screens/home/home.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
             const ChooseUsernameScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
         ProfileScreen.routeName: (context) => const ProfileScreen(),
+        CreatePostScreen.routeName: (context) => const CreatePostScreen(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {

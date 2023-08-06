@@ -73,11 +73,11 @@ class _PostsScreenState extends State<PostsScreen> {
       onRefresh: () => _getPreviewPosts(
         limit: _posts == null || _posts!.length < 20 ? 20 : _posts!.length,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
               controller: _searchEditingController,
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.search_posts,
@@ -117,100 +117,96 @@ class _PostsScreenState extends State<PostsScreen> {
               },
               textInputAction: TextInputAction.search,
             ),
-            const SizedBox(height: 16),
-            _arePostsLoading
-                ? Center(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: const SpinKitSpinningLines(
-                        color: Colors.blue,
-                        size: 100,
-                        duration: Duration(milliseconds: 1500),
-                      ),
+          ),
+          _arePostsLoading
+              ? Center(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const SpinKitSpinningLines(
+                      color: Colors.blue,
+                      size: 100,
+                      duration: Duration(milliseconds: 1500),
                     ),
-                  )
-                : _posts == null || _posts!.isEmpty
-                    ? Expanded(
-                        child: SingleChildScrollView(
-                          child: Align(
-                            child: Text(
-                              _posts == null
-                                  ? AppLocalizations.of(context)!
-                                      .an_error_occured_while_loading_posts
-                                  : AppLocalizations.of(context)!
-                                      .no_post_for_the_moment,
-                            ),
+                  ),
+                )
+              : _posts == null || _posts!.isEmpty
+                  ? Expanded(
+                      child: SingleChildScrollView(
+                        child: Align(
+                          child: Text(
+                            _posts == null
+                                ? AppLocalizations.of(context)!
+                                    .an_error_occured_while_loading_posts
+                                : AppLocalizations.of(context)!
+                                    .no_post_for_the_moment,
                           ),
                         ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: showShowMoreButton
-                              ? _posts!.length + 1
-                              : _posts!.length,
-                          itemBuilder: (context, index) {
-                            if (index < _posts!.length) {
-                              return PreviewPostTile(post: _posts![index]);
-                            }
-                            return CustomButton(
-                              onPressed: _isShowMoreLoading
-                                  ? null
-                                  : () {
-                                      if (_searchEditingController
-                                          .text.isEmpty) {
-                                        setState(
-                                            () => _isShowMoreLoading = true);
-                                        getPreviewPosts(
-                                                page: _posts!.length ~/ 20)
-                                            .then(
-                                          (previewPosts) {
-                                            if (previewPosts == null) {
-                                              setState(() =>
-                                                  _isShowMoreLoading = false);
-                                              return;
-                                            }
-                                            _posts!.addAll(previewPosts);
-                                            setState(() =>
-                                                _isShowMoreLoading = false);
-                                          },
-                                        );
-                                      } else {
-                                        setState(
-                                            () => _isShowMoreLoading = true);
-                                        searchPreviewPostsByContent(
-                                                _searchEditingController.text,
-                                                page: _posts!.length ~/ 20)
-                                            .then(
-                                          (previewPosts) {
-                                            if (previewPosts == null) {
-                                              setState(() =>
-                                                  _isShowMoreLoading = false);
-                                              return;
-                                            }
-                                            _posts!.addAll(previewPosts);
-                                            setState(() =>
-                                                _isShowMoreLoading = false);
-                                          },
-                                        );
-                                      }
-                                    },
-                              child: _isShowMoreLoading
-                                  ? SpinKitRing(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      size: 20,
-                                      lineWidth: 2,
-                                    )
-                                  : Text(
-                                      AppLocalizations.of(context)!.show_more),
-                            );
-                          },
-                          // shrinkWrap: true,
-                        ),
                       ),
-          ],
-        ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(10),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: showShowMoreButton
+                            ? _posts!.length + 1
+                            : _posts!.length,
+                        itemBuilder: (context, index) {
+                          if (index < _posts!.length) {
+                            return PreviewPostTile(post: _posts![index]);
+                          }
+                          return CustomButton(
+                            onPressed: _isShowMoreLoading
+                                ? null
+                                : () {
+                                    if (_searchEditingController.text.isEmpty) {
+                                      setState(() => _isShowMoreLoading = true);
+                                      getPreviewPosts(
+                                              page: _posts!.length ~/ 20)
+                                          .then(
+                                        (previewPosts) {
+                                          if (previewPosts == null) {
+                                            setState(() =>
+                                                _isShowMoreLoading = false);
+                                            return;
+                                          }
+                                          _posts!.addAll(previewPosts);
+                                          setState(
+                                              () => _isShowMoreLoading = false);
+                                        },
+                                      );
+                                    } else {
+                                      setState(() => _isShowMoreLoading = true);
+                                      searchPreviewPostsByContent(
+                                              _searchEditingController.text,
+                                              page: _posts!.length ~/ 20)
+                                          .then(
+                                        (previewPosts) {
+                                          if (previewPosts == null) {
+                                            setState(() =>
+                                                _isShowMoreLoading = false);
+                                            return;
+                                          }
+                                          _posts!.addAll(previewPosts);
+                                          setState(
+                                              () => _isShowMoreLoading = false);
+                                        },
+                                      );
+                                    }
+                                  },
+                            child: _isShowMoreLoading
+                                ? SpinKitRing(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    size: 20,
+                                    lineWidth: 2,
+                                  )
+                                : Text(AppLocalizations.of(context)!.show_more),
+                          );
+                        },
+                        // shrinkWrap: true,
+                      ),
+                    ),
+        ],
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:creative_blogger_app/components/custom_decoration.dart';
+import 'package:creative_blogger_app/screens/create_post_screen.dart';
 import 'package:creative_blogger_app/screens/home/posts.dart';
-import 'package:creative_blogger_app/screens/home/shorts.dart';
 import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/screens/profile.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
@@ -21,9 +21,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   User? me;
   bool isGetMeLoading = true;
-  int _currentIndex = 0;
-
-  static const pages = [PostsScreen(), ShortsScreen()];
 
   @override
   void initState() {
@@ -98,22 +95,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      body: pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.home),
-              label: AppLocalizations.of(context)!.home),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.hourglass_bottom_rounded),
-              label: AppLocalizations.of(context)!.shorts),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        type: BottomNavigationBarType.fixed,
-        elevation: 10,
-      ),
+      body: const PostsScreen(),
+      floatingActionButton: me != null && me!.permission >= 1
+          ? FloatingActionButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, CreatePostScreen.routeName),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
