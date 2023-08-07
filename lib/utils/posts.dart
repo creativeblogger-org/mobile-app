@@ -23,13 +23,10 @@ Future<List<PreviewPost>?> getPreviewPosts(
   return [];
 }
 
-//TODO replace int by String
 Future<List<PreviewPost>?> getPreviewPostsByAuthor(int author,
     {int limit = 20, int page = 0}) async {
-  //TODO URL will be changed
   var res = await customGetRequest(
-      //TODO replace by /users/$author/posts?limit=$limit&page=$page
-      "$API_URL/posts/username/$author?limit=$limit&page=$page");
+      "$API_URL/users/$author/posts?limit=$limit&page=$page");
   if (res == null) {
     return null;
   }
@@ -46,9 +43,8 @@ Future<List<PreviewPost>?> getPreviewPostsByAuthor(int author,
 
 Future<List<PreviewPost>?> searchPreviewPostsByContent(String query,
     {int limit = 20, int page = 0}) async {
-  //TODO URL will be changed
   var res = await customGetRequest(
-      //TODO replace by /users/$author/posts?limit=$limit&page=$page
+      //TODO replace by /posts?q=$query&limit=$limit&page=$page
       "$API_URL/posts/content/$query?limit=$limit&page=$page");
   if (res == null) {
     return null;

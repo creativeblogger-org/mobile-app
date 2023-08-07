@@ -129,5 +129,8 @@
     "investigation": "Investigation",
     "publish_post": "Publish post",
     "content_too_short": "Content too short",
-    "content_too_long": "Content too long"
+    "content_too_long": "Content too long",
+    "post_published_successfully": "Post published successfully",
+    "post_updated_successfully": "Post updated successfully",
+    "update_post": "Update post"
 }

@@ -85,6 +85,9 @@
     "culture": "Cultura",
     "investigation": "Inchiesta",
     "publish_post": "Pubblica il post",
-    "content_too_short": "Contenuto troppo corta",
-    "content_too_long": "Contenuto troppo lunga"
+    "content_too_short": "Contenuto troppo corto",
+    "content_too_long": "Contenuto troppo lungo",
+    "post_published_successfully": "Post pubblicato con successo",
+    "post_updated_successfully": "Post aggiornato con successo",
+    "update_post": "Aggiornare il post"
 }

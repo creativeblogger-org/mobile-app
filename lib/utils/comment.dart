@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
+import 'package:creative_blogger_app/utils/structs/comment.dart';
 
 Future<bool> postComment(String postSlug, String content) async {
   var res = await customPostRequest(
@@ -32,4 +33,21 @@ Future<bool> deleteComment(int commentId) async {
   }
   await handleError(res);
   return false;
+}
+
+Future<List<Comment>?> getComments(int postId, {int page = 1}) async {
+  var res = await customGetRequest("$API_URL/comments/$postId?page=$page");
+  if (res == null) {
+    return null;
+  }
+
+  if (res.statusCode == HttpStatus.ok) {
+    //TODO remove ["data"] when the API will allow it
+    return (jsonDecode(res.body)["data"] as List)
+        .map((jsonComment) => Comment.fromJson(jsonComment))
+        .toList();
+  }
+  await handleError(res);
+
+  return [];
 }

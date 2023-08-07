@@ -10,6 +10,7 @@ import 'package:creative_blogger_app/screens/register/terms.dart';
 import 'package:creative_blogger_app/screens/register/username_screen.dart';
 import 'package:creative_blogger_app/screens/user.dart';
 import 'package:creative_blogger_app/utils/routes.dart';
+import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -62,7 +63,6 @@ class MyApp extends StatelessWidget {
             const ChooseUsernameScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
         ProfileScreen.routeName: (context) => const ProfileScreen(),
-        CreatePostScreen.routeName: (context) => const CreatePostScreen(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -92,6 +92,11 @@ class MyApp extends StatelessWidget {
 
             return MaterialPageRoute(
                 builder: (context) => UserScreen(username: userName));
+          case CreatePostScreen.routeName:
+            final post = settings.arguments as Post?;
+
+            return MaterialPageRoute(
+                builder: (context) => CreatePostScreen(post: post));
           default:
             return null;
         }

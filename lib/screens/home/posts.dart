@@ -66,8 +66,8 @@ class _PostsScreenState extends State<PostsScreen> {
     bool showShowMoreButton = _posts != null &&
         !_arePostsLoading &&
         _posts!.isNotEmpty &&
-        _posts!.last.id != 86 &&
-        _posts!.length % 20 == 0;
+        _posts!.length % 20 == 0 &&
+        !_posts!.last.isLast;
 
     return RefreshIndicator(
       onRefresh: () => _getPreviewPosts(

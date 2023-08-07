@@ -17,9 +17,11 @@ Future<void> authRequest(
   }
   if (res.statusCode == HttpStatus.ok) {
     setToken(jsonDecode(res.body)["token"]).then((_) {
-      Navigator.of(navigatorKey.currentContext!).pushNamedAndRemoveUntil(
-          HomeScreen.routeName, (route) => false,
-          arguments: 0);
+      Navigator.pushNamedAndRemoveUntil(
+        navigatorKey.currentContext!,
+        HomeScreen.routeName,
+        (route) => false,
+      );
     });
     return;
   }

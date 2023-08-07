@@ -85,5 +85,8 @@
     "investigation": "Enquête",
     "publish_post": "Publier le post",
     "content_too_short": "Contenu trop court",
-    "content_too_long": "Contenu trop long"
+    "content_too_long": "Contenu trop long",
+    "post_published_successfully": "Post publié avec succès",
+    "post_updated_successfully": "Post mis à jour avec succès",
+    "update_post": "Mettre à jour le post"
 }

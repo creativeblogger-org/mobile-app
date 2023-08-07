@@ -1,3 +1,4 @@
+import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/screens/home/components/preview_post_tile.dart';
@@ -25,14 +26,12 @@ class _UserScreenState extends State<UserScreen> {
   List<PreviewPost>? _posts;
   bool _isLoading = true;
   bool _arePreviewPostsLoading = true;
+  bool _isShowMoreLoading = false;
 
   @override
   void initState() {
     super.initState();
     _getPublicUser();
-    //TODO décommenter cette ligne
-
-    // _getPreviewPostsByAuthor(widget.username);
   }
 
   void _getPublicUser() {
@@ -45,7 +44,6 @@ class _UserScreenState extends State<UserScreen> {
             _isLoading = false;
           },
         );
-        //TODO delete the following
         if (_user != null) {
           _getPreviewPostsByAuthor(_user!.id);
         }
@@ -53,7 +51,6 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  //TODO replace int by String
   Future<void> _getPreviewPostsByAuthor(int author,
       {int limit = 20, int page = 0}) async {
     setState(() => _arePreviewPostsLoading = true);
@@ -66,6 +63,9 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool _showShowMoreButton =
+        _posts != null && _posts!.isNotEmpty && !_posts!.last.isLast;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.user),
@@ -136,10 +136,56 @@ class _UserScreenState extends State<UserScreen> {
                                         physics:
                                             const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) =>
-                                            PreviewPostTile(
-                                                post: _posts![index]),
-                                        //TODO add show more button
-                                        itemCount: (_posts ?? []).length,
+                                            _showShowMoreButton
+                                                ? CustomButton(
+                                                    onPressed:
+                                                        _isShowMoreLoading
+                                                            ? null
+                                                            : () {
+                                                                setState(() =>
+                                                                    _isShowMoreLoading =
+                                                                        true);
+                                                                getPreviewPostsByAuthor(
+                                                                        _user!
+                                                                            .id,
+                                                                        page: _posts!.length ~/
+                                                                            20)
+                                                                    .then(
+                                                                  (previewPosts) {
+                                                                    if (previewPosts ==
+                                                                        null) {
+                                                                      setState(() =>
+                                                                          _isShowMoreLoading =
+                                                                              false);
+                                                                      return;
+                                                                    }
+                                                                    _posts!.addAll(
+                                                                        previewPosts);
+                                                                    setState(() =>
+                                                                        _isShowMoreLoading =
+                                                                            false);
+                                                                  },
+                                                                );
+                                                              },
+                                                    child: _isShowMoreLoading
+                                                        ? SpinKitRing(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .primary,
+                                                            size: 20,
+                                                            lineWidth: 2,
+                                                          )
+                                                        : Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .show_more),
+                                                  )
+                                                : PreviewPostTile(
+                                                    post: _posts![index]),
+                                        itemCount: _showShowMoreButton
+                                            ? (_posts ?? []).length + 1
+                                            : (_posts ?? []).length,
                                         shrinkWrap: true,
                                       ),
                           ],

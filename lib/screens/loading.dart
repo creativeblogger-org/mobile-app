@@ -31,7 +31,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
           Navigator.pushReplacementNamed(
             context,
             HomeScreen.routeName,
-            arguments: 0,
           );
           return;
         }
@@ -39,7 +38,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
           Navigator.pushReplacementNamed(
             context,
             HomeScreen.routeName,
-            arguments: 0,
           );
           return;
         }

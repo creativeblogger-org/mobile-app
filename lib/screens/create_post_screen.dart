@@ -1,13 +1,18 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
+import 'package:creative_blogger_app/utils/post.dart';
+import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 var urlRegex = RegExp(
     r"^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$");
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+  const CreatePostScreen({super.key, this.post});
+
+  final Post? post;
 
   static const routeName = "/create/post";
 
@@ -27,6 +32,7 @@ enum Category {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   Category? _category;
+  bool _isCreatePostLoading = false;
 
   final TextEditingController _postTitle = TextEditingController();
   String? _postTitleError;
@@ -38,9 +44,54 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   String? _postContentError;
 
   @override
+  void initState() {
+    _category = widget.post?.category;
+    _postTitle.text = widget.post?.title ?? "";
+    _postImageURL.text = widget.post?.imageUrl ?? "";
+    _postDescription.text = widget.post?.description ?? "";
+    _postContent.text = widget.post?.content ?? "";
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _postTitle.dispose();
     super.dispose();
+  }
+
+  void _publishPost(
+    String title,
+    String imageUrl,
+    String description,
+    String tags,
+    String content,
+  ) {
+    setState(() => _isCreatePostLoading = true);
+    createPost(title, imageUrl, description, tags, content).then(
+      (fine) {
+        setState(() => _isCreatePostLoading = false);
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  void _updatePost(
+    int id,
+    String title,
+    String imageUrl,
+    String description,
+    String tags,
+    String content,
+  ) {
+    setState(() => _isCreatePostLoading = true);
+    updatePost(
+            id, widget.post!.slug, title, imageUrl, description, tags, content)
+        .then(
+      (fine) {
+        setState(() => _isCreatePostLoading = false);
+        Navigator.pop(context);
+      },
+    );
   }
 
   @override
@@ -50,7 +101,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         flexibleSpace: Container(
           decoration: customDecoration(),
         ),
-        title: Text(AppLocalizations.of(context)!.create_a_post),
+        title: Text(widget.post == null
+            ? AppLocalizations.of(context)!.publish_post
+            : AppLocalizations.of(context)!.update_post),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -171,18 +224,43 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
               const SizedBox(height: 16),
               CustomButton(
-                  onPressed: _postTitleError != null ||
-                          _postTitle.text.isEmpty ||
-                          _postImageURLError != null ||
-                          _postImageURL.text.isEmpty ||
-                          _postDescriptionError != null ||
-                          _postDescription.text.isEmpty ||
-                          _category == null ||
-                          _postContentError != null ||
-                          _postContent.text.isEmpty
-                      ? null
-                      : () {},
-                  child: Text(AppLocalizations.of(context)!.publish_post))
+                onPressed: _postTitleError != null ||
+                        _postTitle.text.isEmpty ||
+                        _postImageURLError != null ||
+                        _postImageURL.text.isEmpty ||
+                        _postDescriptionError != null ||
+                        _postDescription.text.isEmpty ||
+                        _category == null ||
+                        _postContentError != null ||
+                        _postContent.text.isEmpty ||
+                        _isCreatePostLoading
+                    ? null
+                    : widget.post == null
+                        ? () => _publishPost(
+                              _postTitle.text,
+                              _postImageURL.text,
+                              _postDescription.text,
+                              _category!.value,
+                              _postContent.text,
+                            )
+                        : () => _updatePost(
+                              widget.post!.id,
+                              _postTitle.text,
+                              _postImageURL.text,
+                              _postDescription.text,
+                              _category!.value,
+                              _postContent.text,
+                            ),
+                child: _isCreatePostLoading
+                    ? SpinKitRing(
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                        lineWidth: 2,
+                      )
+                    : Text(widget.post == null
+                        ? AppLocalizations.of(context)!.publish_post
+                        : AppLocalizations.of(context)!.update_post),
+              )
             ],
           ),
         ),

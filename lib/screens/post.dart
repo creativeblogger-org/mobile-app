@@ -1,7 +1,10 @@
+import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/components/comment_tile.dart';
 import 'package:creative_blogger_app/screens/components/custom_error_while_loading.dart';
 import 'package:creative_blogger_app/screens/components/post_tile.dart';
+import 'package:creative_blogger_app/screens/create_post_screen.dart';
+import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/utils/comment.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
@@ -27,7 +30,11 @@ class _PostScreenState extends State<PostScreen> {
   final TextEditingController _postCommentTextController =
       TextEditingController();
   bool _activePostCommentButton = false;
+  bool _isDeleteDialogVisible = false;
   bool _isDeletePostLoading = false;
+  bool _isShowMoreLoading = false;
+  bool _areCommentsLoading = false;
+  int? _commentCount;
 
   @override
   void initState() {
@@ -43,10 +50,11 @@ class _PostScreenState extends State<PostScreen> {
 
   void _getPost() {
     setState(() => _isPostLoading = true);
-    getPost(widget.slug).then((post) {
+    getPost(widget.slug).then((result) {
       if (mounted) {
         setState(() {
-          _post = post;
+          _post = result.$1;
+          _commentCount = result.$2;
           _isPostLoading = false;
         });
       }
@@ -54,7 +62,7 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   void _deletePost() {
-    setState(() => _isDeletePostLoading = true);
+    setState(() => _isDeleteDialogVisible = true);
     showDialog(
       context: context,
       builder: (innerContext) => AlertDialog(
@@ -72,12 +80,17 @@ class _PostScreenState extends State<PostScreen> {
             onPressed: _isDeletePostLoading
                 ? null
                 : () {
+                    setState(() => _isDeletePostLoading = true);
                     Navigator.pop(innerContext);
                     deletePost(_post!.slug).then(
                       (fine) {
                         if (fine) {
-                          Navigator.pop(context);
-                          setState(() => _isDeletePostLoading = true);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, HomeScreen.routeName, (route) => false);
+                          setState(() {
+                            _isDeleteDialogVisible = false;
+                            _isDeletePostLoading = false;
+                          });
                         }
                       },
                     );
@@ -96,20 +109,37 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
+  void _getComments() {
+    setState(() => _areCommentsLoading = true);
+    getComments(_post!.id).then((comments) {
+      if (comments == null) {
+        return;
+      }
+      setState(() {
+        _post!.comments.clear();
+        _post!.comments.addAll(comments);
+        _areCommentsLoading = false;
+      });
+    });
+  }
+
   void _postComment(String slug, String content) {
     setState(() => _isPostCommentLoading = true);
     postComment(slug, content).then((fine) {
-      //TODO reload only comments when the API will allow it
       setState(() => _isPostCommentLoading = false);
       if (fine) {
         _postCommentTextController.text = "";
-        _getPost();
+        setState(() => _activePostCommentButton = false);
+        _getComments();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    bool showShowMoreButton =
+        _post != null && _commentCount! > _post!.comments.length;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.post),
@@ -119,7 +149,20 @@ class _PostScreenState extends State<PostScreen> {
         actions: [
           if (_post != null && _post!.hasPermission) ...{
             IconButton(
-              onPressed: !_isDeletePostLoading &&
+              onPressed: !_isDeleteDialogVisible &&
+                      !_isPostCommentLoading &&
+                      !_isPostLoading
+                  ? () => Navigator.pushNamed(
+                      context, CreatePostScreen.routeName,
+                      arguments: _post)
+                  : null,
+              icon: Icon(
+                Icons.edit,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            IconButton(
+              onPressed: !_isDeleteDialogVisible &&
                       !_isPostCommentLoading &&
                       !_isPostLoading
                   ? _deletePost
@@ -138,11 +181,11 @@ class _PostScreenState extends State<PostScreen> {
             ? LayoutBuilder(
                 builder: (context, constraints) => SizedBox(
                   height: constraints.maxHeight,
-                  child: const Center(
+                  child: Center(
                     child: SpinKitSpinningLines(
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 100,
-                      duration: Duration(milliseconds: 1500),
+                      duration: const Duration(milliseconds: 1500),
                     ),
                   ),
                 ),
@@ -157,20 +200,21 @@ class _PostScreenState extends State<PostScreen> {
                     child: Column(
                       children: [
                         PostTile(post: _post!),
-                        const SizedBox(height: 16),
-                        Text(
-                          AppLocalizations.of(context)!
-                              //TODO change by an header
-                              .comments(_post!.comments.length),
-                          style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .headlineLarge!
-                                .fontSize,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "Pangolin",
+                        if (_commentCount != null) ...{
+                          const SizedBox(height: 16),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .comments(_commentCount!),
+                            style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .headlineLarge!
+                                  .fontSize,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Pangolin",
+                            ),
                           ),
-                        ),
+                        },
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -229,21 +273,66 @@ class _PostScreenState extends State<PostScreen> {
                             ],
                           ),
                         ),
-                        ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _post!.comments.length,
-                          itemBuilder: (context, index) {
-                            //TODO add show more button when implemented in API-side
-
-                            // if (index < _post!.comments.length) {
-                            return CommentTile(
-                              comment: _post!.comments[index],
-                              onReload: _getPost,
-                            );
-                            // }
-                          },
-                        ),
+                        _areCommentsLoading
+                            ? Center(
+                                child: SpinKitSpinningLines(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  size: 100,
+                                  duration: const Duration(milliseconds: 1500),
+                                ),
+                              )
+                            : ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: showShowMoreButton
+                                    ? _post!.comments.length + 1
+                                    : _post!.comments.length,
+                                itemBuilder: (context, index) {
+                                  if (index < _post!.comments.length) {
+                                    return CommentTile(
+                                      comment: _post!.comments[index],
+                                      onReload: _getComments,
+                                    );
+                                  }
+                                  return CustomButton(
+                                    onPressed: _isShowMoreLoading
+                                        ? null
+                                        : () {
+                                            setState(() =>
+                                                _isShowMoreLoading = true);
+                                            getComments(_post!.id,
+                                                    page: _post!.comments
+                                                                .length ~/
+                                                            20 +
+                                                        1)
+                                                .then(
+                                              (comments) {
+                                                if (comments == null) {
+                                                  setState(() =>
+                                                      _isShowMoreLoading =
+                                                          false);
+                                                  return;
+                                                }
+                                                _post!.comments
+                                                    .addAll(comments);
+                                                setState(() =>
+                                                    _isShowMoreLoading = false);
+                                              },
+                                            );
+                                          },
+                                    child: _isShowMoreLoading
+                                        ? SpinKitRing(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            size: 20,
+                                            lineWidth: 2,
+                                          )
+                                        : Text(AppLocalizations.of(context)!
+                                            .show_more),
+                                  );
+                                },
+                              ),
                       ],
                     ),
                   ),
