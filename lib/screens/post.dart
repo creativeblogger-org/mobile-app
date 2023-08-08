@@ -157,8 +157,10 @@ class _PostScreenState extends State<PostScreen> {
                       !_isPostCommentLoading &&
                       !_isPostLoading
                   ? () => Navigator.pushNamed(
-                      context, CreatePostScreen.routeName,
-                      arguments: _post)
+                        context,
+                        CreatePostScreen.routeName,
+                        arguments: (_post, () => _getPost()),
+                      )
                   : null,
               icon: Icon(
                 Icons.edit,

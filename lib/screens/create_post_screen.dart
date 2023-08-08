@@ -10,9 +10,10 @@ var urlRegex = RegExp(
     r"^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$");
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key, this.post});
+  const CreatePostScreen({super.key, this.post, required this.onReload});
 
   final Post? post;
+  final Function onReload;
 
   static const routeName = "/create/post";
 
@@ -235,22 +236,25 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         _postContent.text.isEmpty ||
                         _isCreatePostLoading
                     ? null
-                    : widget.post == null
-                        ? () => _publishPost(
-                              _postTitle.text,
-                              _postImageURL.text,
-                              _postDescription.text,
-                              _category!.value,
-                              _postContent.text,
-                            )
-                        : () => _updatePost(
-                              widget.post!.id,
-                              _postTitle.text,
-                              _postImageURL.text,
-                              _postDescription.text,
-                              _category!.value,
-                              _postContent.text,
-                            ),
+                    : () {
+                        widget.post == null
+                            ? _publishPost(
+                                _postTitle.text,
+                                _postImageURL.text,
+                                _postDescription.text,
+                                _category!.value,
+                                _postContent.text,
+                              )
+                            : _updatePost(
+                                widget.post!.id,
+                                _postTitle.text,
+                                _postImageURL.text,
+                                _postDescription.text,
+                                _category!.value,
+                                _postContent.text,
+                              );
+                        widget.onReload();
+                      },
                 child: _isCreatePostLoading
                     ? SpinKitRing(
                         color: Theme.of(context).colorScheme.primary,

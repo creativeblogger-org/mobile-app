@@ -20,6 +20,8 @@ class PostTile extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontFamily: "Pangolin",
           ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
         ),
         const Divider(),
         Padding(

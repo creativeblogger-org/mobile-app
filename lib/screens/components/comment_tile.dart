@@ -16,6 +16,9 @@ class CommentTile extends StatefulWidget {
 
 class _CommentTileState extends State<CommentTile> {
   bool _isDeletePostLoading = false;
+  final TextEditingController _commentContentEditingController =
+      TextEditingController();
+  bool _isEditing = false;
 
   Future<bool> _deleteComment(int commentId) async {
     setState(() => _isDeletePostLoading = true);
@@ -38,10 +41,12 @@ class _CommentTileState extends State<CommentTile> {
               backgroundColor: hasPP ? null : Colors.transparent,
               child: hasPP
                   ? const Icon(Icons.person)
-                  : Image.network(widget.comment.author.pp!,
+                  : Image.network(
+                      widget.comment.author.pp!,
                       errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.person);
-                    }),
+                        return const Icon(Icons.person);
+                      },
+                    ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -52,11 +57,22 @@ class _CommentTileState extends State<CommentTile> {
                     "@${widget.comment.author.username}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(widget.comment.content),
+                  TextField(controller: _commentContentEditingController),
                 ],
               ),
             ),
             if (widget.comment.hasPermission) ...{
+              IconButton(
+                onPressed: () {},
+                icon: _isDeletePostLoading
+                    ? SpinKitRing(
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                        lineWidth: 2,
+                      )
+                    : Icon(Icons.edit,
+                        color: Theme.of(context).colorScheme.primary),
+              ),
               IconButton(
                 onPressed: _isDeletePostLoading
                     ? null
