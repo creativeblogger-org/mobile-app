@@ -23,6 +23,23 @@ Future<bool> postComment(String postSlug, String content) async {
   return false;
 }
 
+Future<bool> updateComment(int id, String content) async {
+  var res = await customPutRequest(
+    url: "$API_URL/comments/$id",
+    body: jsonEncode(
+      {"content": content},
+    ),
+  );
+  if (res == null) {
+    return false;
+  }
+  if (res.statusCode == HttpStatus.noContent) {
+    return true;
+  }
+  await handleError(res);
+  return false;
+}
+
 Future<bool> deleteComment(int commentId) async {
   var res = await customDeleteRequest("$API_URL/comments/$commentId");
   if (res == null) {

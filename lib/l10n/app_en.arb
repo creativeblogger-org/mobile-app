@@ -130,5 +130,7 @@
     "content_too_long": "Content too long",
     "post_published_successfully": "Post published successfully",
     "post_updated_successfully": "Post updated successfully",
-    "update_post": "Update post"
+    "update_post": "Update post",
+    "comment_updated_successfully": "Comment updated successfully",
+    "edited": "edited"
 }

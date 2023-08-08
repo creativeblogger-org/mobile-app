@@ -87,5 +87,7 @@
     "content_too_long": "Contenuto troppo lungo",
     "post_published_successfully": "Post pubblicato con successo",
     "post_updated_successfully": "Post aggiornato con successo",
-    "update_post": "Aggiornare il post"
+    "update_post": "Aggiornare il post",
+    "comment_updated_successfully": "Commento aggiornato con successo",
+    "edited": "modificato"
 }
