@@ -20,24 +20,9 @@ class _PostsScreenState extends State<PostsScreen> {
   final TextEditingController _searchEditingController =
       TextEditingController();
 
-  Future<void> _getPreviewPosts({int limit = 20}) async {
+  Future<void> _getPreviewPosts({String content = "", int limit = 20}) async {
     setState(() => _arePostsLoading = true);
-    getPreviewPosts(limit: limit).then((previewPosts) {
-      if (mounted) {
-        setState(
-          () {
-            _posts = previewPosts;
-            _arePostsLoading = false;
-          },
-        );
-      }
-    });
-  }
-
-  Future<void> _searchPreviewPostsByContent(String content,
-      {int limit = 20}) async {
-    setState(() => _arePostsLoading = true);
-    searchPreviewPostsByContent(content, limit: limit).then((previewPosts) {
+    getPreviewPosts(limit: limit, query: content).then((previewPosts) {
       if (mounted) {
         setState(
           () {
@@ -109,20 +94,15 @@ class _PostsScreenState extends State<PostsScreen> {
               onEditingComplete: () {
                 var value = _searchEditingController.text.trim();
                 FocusScope.of(context).requestFocus(FocusNode());
-                if (value.isEmpty) {
-                  _getPreviewPosts();
-                  return;
-                }
-                _searchPreviewPostsByContent(value);
+                _getPreviewPosts(content: value);
               },
               textInputAction: TextInputAction.search,
             ),
           ),
           _arePostsLoading
-              ? Center(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: const SpinKitSpinningLines(
+              ? const Expanded(
+                  child: Center(
+                    child: SpinKitSpinningLines(
                       color: Colors.blue,
                       size: 100,
                       duration: Duration(milliseconds: 1500),
@@ -132,7 +112,8 @@ class _PostsScreenState extends State<PostsScreen> {
               : _posts == null || _posts!.isEmpty
                   ? Expanded(
                       child: SingleChildScrollView(
-                        child: Align(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Center(
                           child: Text(
                             _posts == null
                                 ? AppLocalizations.of(context)!
@@ -158,40 +139,23 @@ class _PostsScreenState extends State<PostsScreen> {
                             onPressed: _isShowMoreLoading
                                 ? null
                                 : () {
-                                    if (_searchEditingController.text.isEmpty) {
-                                      setState(() => _isShowMoreLoading = true);
-                                      getPreviewPosts(
-                                              page: _posts!.length ~/ 20)
-                                          .then(
-                                        (previewPosts) {
-                                          if (previewPosts == null) {
-                                            setState(() =>
-                                                _isShowMoreLoading = false);
-                                            return;
-                                          }
-                                          _posts!.addAll(previewPosts);
+                                    setState(() => _isShowMoreLoading = true);
+                                    getPreviewPosts(
+                                            query:
+                                                _searchEditingController.text,
+                                            page: _posts!.length ~/ 20)
+                                        .then(
+                                      (previewPosts) {
+                                        if (previewPosts == null) {
                                           setState(
                                               () => _isShowMoreLoading = false);
-                                        },
-                                      );
-                                    } else {
-                                      setState(() => _isShowMoreLoading = true);
-                                      searchPreviewPostsByContent(
-                                              _searchEditingController.text,
-                                              page: _posts!.length ~/ 20)
-                                          .then(
-                                        (previewPosts) {
-                                          if (previewPosts == null) {
-                                            setState(() =>
-                                                _isShowMoreLoading = false);
-                                            return;
-                                          }
-                                          _posts!.addAll(previewPosts);
-                                          setState(
-                                              () => _isShowMoreLoading = false);
-                                        },
-                                      );
-                                    }
+                                          return;
+                                        }
+                                        _posts!.addAll(previewPosts);
+                                        setState(
+                                            () => _isShowMoreLoading = false);
+                                      },
+                                    );
                                   },
                             child: _isShowMoreLoading
                                 ? SpinKitRing(

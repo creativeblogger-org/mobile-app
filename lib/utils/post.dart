@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:creative_blogger_app/main.dart';
-import 'package:creative_blogger_app/screens/create_post_screen.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
@@ -94,11 +93,10 @@ Future<bool> updatePost(
   String content,
 ) async {
   var res = await customPutRequest(
-    url: "$API_URL/posts",
+    url: "$API_URL/posts/$slug",
     body: jsonEncode(
       {
         "id": id,
-        "slug": "slug",
         "title": title,
         "image": imageUrl,
         "description": description,

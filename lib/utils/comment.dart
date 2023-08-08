@@ -35,19 +35,22 @@ Future<bool> deleteComment(int commentId) async {
   return false;
 }
 
-Future<List<Comment>?> getComments(int postId, {int page = 1}) async {
+Future<(List<Comment>?, int)> getComments(int postId, {int page = 1}) async {
   var res = await customGetRequest("$API_URL/comments/$postId?page=$page");
   if (res == null) {
-    return null;
+    return (null, 0);
   }
 
   if (res.statusCode == HttpStatus.ok) {
     //TODO remove ["data"] when the API will allow it
-    return (jsonDecode(res.body)["data"] as List)
-        .map((jsonComment) => Comment.fromJson(jsonComment))
-        .toList();
+    return (
+      (jsonDecode(res.body)["data"] as List)
+          .map((jsonComment) => Comment.fromJson(jsonComment))
+          .toList(),
+      int.parse(res.headers["nbcomments"] ?? "0")
+    );
   }
   await handleError(res);
 
-  return [];
+  return (null, 0);
 }

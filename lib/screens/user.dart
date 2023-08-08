@@ -51,10 +51,11 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  Future<void> _getPreviewPostsByAuthor(int author,
+  Future<void> _getPreviewPostsByAuthor(int authorId,
       {int limit = 20, int page = 0}) async {
     setState(() => _arePreviewPostsLoading = true);
-    var posts = await getPreviewPostsByAuthor(author, limit: limit, page: page);
+    var posts = await getPreviewPosts(
+        authorId: authorId.toString(), limit: limit, page: page);
     setState(() {
       _posts = posts;
       _arePreviewPostsLoading = false;
@@ -63,7 +64,7 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool _showShowMoreButton =
+    bool showShowMoreButton =
         _posts != null && _posts!.isNotEmpty && !_posts!.last.isLast;
 
     return Scaffold(
@@ -135,55 +136,55 @@ class _UserScreenState extends State<UserScreen> {
                                     : ListView.builder(
                                         physics:
                                             const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) =>
-                                            _showShowMoreButton
-                                                ? CustomButton(
-                                                    onPressed:
-                                                        _isShowMoreLoading
-                                                            ? null
-                                                            : () {
-                                                                setState(() =>
-                                                                    _isShowMoreLoading =
-                                                                        true);
-                                                                getPreviewPostsByAuthor(
-                                                                        _user!
-                                                                            .id,
-                                                                        page: _posts!.length ~/
-                                                                            20)
-                                                                    .then(
-                                                                  (previewPosts) {
-                                                                    if (previewPosts ==
-                                                                        null) {
-                                                                      setState(() =>
-                                                                          _isShowMoreLoading =
-                                                                              false);
-                                                                      return;
-                                                                    }
-                                                                    _posts!.addAll(
-                                                                        previewPosts);
+                                        itemBuilder:
+                                            (context, index) =>
+                                                showShowMoreButton
+                                                    ? CustomButton(
+                                                        onPressed:
+                                                            _isShowMoreLoading
+                                                                ? null
+                                                                : () {
                                                                     setState(() =>
                                                                         _isShowMoreLoading =
-                                                                            false);
+                                                                            true);
+                                                                    getPreviewPosts(
+                                                                            authorId:
+                                                                                _user!.id.toString(),
+                                                                            page: _posts!.length ~/ 20)
+                                                                        .then(
+                                                                      (previewPosts) {
+                                                                        if (previewPosts ==
+                                                                            null) {
+                                                                          setState(() =>
+                                                                              _isShowMoreLoading = false);
+                                                                          return;
+                                                                        }
+                                                                        _posts!.addAll(
+                                                                            previewPosts);
+                                                                        setState(() =>
+                                                                            _isShowMoreLoading =
+                                                                                false);
+                                                                      },
+                                                                    );
                                                                   },
-                                                                );
-                                                              },
-                                                    child: _isShowMoreLoading
-                                                        ? SpinKitRing(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .primary,
-                                                            size: 20,
-                                                            lineWidth: 2,
-                                                          )
-                                                        : Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .show_more),
-                                                  )
-                                                : PreviewPostTile(
-                                                    post: _posts![index]),
-                                        itemCount: _showShowMoreButton
+                                                        child:
+                                                            _isShowMoreLoading
+                                                                ? SpinKitRing(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .primary,
+                                                                    size: 20,
+                                                                    lineWidth:
+                                                                        2,
+                                                                  )
+                                                                : Text(AppLocalizations.of(
+                                                                        context)!
+                                                                    .show_more),
+                                                      )
+                                                    : PreviewPostTile(
+                                                        post: _posts![index]),
+                                        itemCount: showShowMoreButton
                                             ? (_posts ?? []).length + 1
                                             : (_posts ?? []).length,
                                         shrinkWrap: true,

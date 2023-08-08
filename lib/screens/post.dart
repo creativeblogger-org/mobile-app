@@ -87,10 +87,6 @@ class _PostScreenState extends State<PostScreen> {
                         if (fine) {
                           Navigator.pushNamedAndRemoveUntil(
                               context, HomeScreen.routeName, (route) => false);
-                          setState(() {
-                            _isDeleteDialogVisible = false;
-                            _isDeletePostLoading = false;
-                          });
                         }
                       },
                     );
@@ -106,18 +102,26 @@ class _PostScreenState extends State<PostScreen> {
           )
         ],
       ),
+    ).then(
+      (_) => setState(
+        () {
+          _isDeleteDialogVisible = false;
+          _isDeletePostLoading = false;
+        },
+      ),
     );
   }
 
   void _getComments() {
     setState(() => _areCommentsLoading = true);
     getComments(_post!.id).then((comments) {
-      if (comments == null) {
+      if (comments.$1 == null) {
         return;
       }
       setState(() {
         _post!.comments.clear();
-        _post!.comments.addAll(comments);
+        _post!.comments.addAll(comments.$1!);
+        _commentCount = comments.$2;
         _areCommentsLoading = false;
       });
     });
@@ -197,6 +201,7 @@ class _PostScreenState extends State<PostScreen> {
                   )
                 : SingleChildScrollView(
                     padding: const EdgeInsets.all(4.0),
+                    physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
                         PostTile(post: _post!),
@@ -307,14 +312,14 @@ class _PostScreenState extends State<PostScreen> {
                                                         1)
                                                 .then(
                                               (comments) {
-                                                if (comments == null) {
+                                                if (comments.$1 == null) {
                                                   setState(() =>
                                                       _isShowMoreLoading =
                                                           false);
                                                   return;
                                                 }
                                                 _post!.comments
-                                                    .addAll(comments);
+                                                    .addAll(comments.$1!);
                                                 setState(() =>
                                                     _isShowMoreLoading = false);
                                               },
