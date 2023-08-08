@@ -256,10 +256,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: me != null && me!.permission >= 1
           ? FloatingActionButton(
-              onPressed: () =>
-                  //TODO add function
-                  Navigator.pushNamed(context, CreatePostScreen.routeName,
-                      arguments: (
+              onPressed: () => Navigator.pushNamed(
+                  context, CreatePostScreen.routeName,
+                  arguments: (
                     null,
                     () => _getPreviewPosts(
                           content: _searchEditingController.text,
