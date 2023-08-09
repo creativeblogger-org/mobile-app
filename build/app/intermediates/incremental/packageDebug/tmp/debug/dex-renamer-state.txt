@@ -1,0 +1,4 @@
+#Wed Aug 09 09:46:16 CEST 2023
+base.0=/home/riccardo/creative_blogger_app/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
