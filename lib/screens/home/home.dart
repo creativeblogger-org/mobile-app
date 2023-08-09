@@ -43,6 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
       TextEditingController();
   int _postsCount = 0;
   CategoryWithAll? _category = CategoryWithAll.all;
+  List<CategoryWithAll> _categories = [
+    CategoryWithAll.all,
+    CategoryWithAll.fakeOrReal,
+    CategoryWithAll.tech,
+    CategoryWithAll.culture,
+    CategoryWithAll.news,
+  ];
 
   @override
   void initState() {
@@ -202,9 +209,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) => SizedBox(
-                  width: 180, // Set an appropriate width here
+                  width: 180,
                   child: RadioListTile(
-                    value: CategoryWithAll.values[index],
+                    value: _categories[index],
                     groupValue: _category,
                     onChanged: (CategoryWithAll? category) {
                       setState(() => _category = category);
@@ -212,7 +219,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           content: _searchEditingController.text,
                           tag: _category?.value ?? "");
                     },
-                    title: Text(CategoryWithAll.values[index].value),
+                    title: Text(
+                      _categories[index] == CategoryWithAll.all
+                          ? AppLocalizations.of(context)!.all
+                          : _categories[index] == CategoryWithAll.fakeOrReal
+                              ? AppLocalizations.of(context)!.investigation
+                              : _categories[index] == CategoryWithAll.tech
+                                  ? AppLocalizations.of(context)!.tech
+                                  : _categories[index] ==
+                                          CategoryWithAll.culture
+                                      ? AppLocalizations.of(context)!.culture
+                                      : AppLocalizations.of(context)!.news,
+                    ),
                   ),
                 ),
                 itemCount: CategoryWithAll.values.length,

@@ -88,5 +88,6 @@
     "post_updated_successfully": "Post mis à jour avec succès",
     "update_post": "Mettre à jour le post",
     "comment_updated_successfully": "Commentaire mis à jour avec succès",
-    "edited": "modifié"
+    "edited": "modifié",
+    "all": "Tout"
 }
