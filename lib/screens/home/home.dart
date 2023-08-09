@@ -13,6 +13,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+enum CategoryWithAll {
+  all(""),
+  fakeOrReal("fakeorreal"),
+  tech("tech"),
+  culture("culture"),
+  news("news");
+
+  const CategoryWithAll(this.value);
+  final String value;
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -31,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchEditingController =
       TextEditingController();
   int _postsCount = 0;
+  CategoryWithAll? _category = CategoryWithAll.all;
 
   @override
   void initState() {
@@ -50,9 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> _getPreviewPosts({String content = "", int limit = 20}) async {
+  Future<void> _getPreviewPosts(
+      {String content = "", int limit = 20, String tag = ""}) async {
     setState(() => _arePostsLoading = true);
-    getPreviewPosts(limit: limit, query: content).then((previewPosts) {
+    getPreviewPosts(
+      limit: limit,
+      query: content,
+      tag: tag,
+    ).then((previewPosts) {
       if (mounted) {
         setState(
           () {
@@ -133,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: () => _getPreviewPosts(
           content: _searchEditingController.text,
           limit: _posts == null || _posts!.length < 20 ? 20 : _posts!.length,
+          tag: _category?.value ?? "",
         ),
         child: Column(
           children: [
@@ -157,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             _searchEditingController.text = "";
                             FocusScope.of(context).requestFocus(FocusNode());
-                            _getPreviewPosts();
+                            _getPreviewPosts(tag: _category?.value ?? "");
                           },
                           icon: Icon(
                             Icons.close,
@@ -172,9 +190,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 onEditingComplete: () {
                   var value = _searchEditingController.text.trim();
                   FocusScope.of(context).requestFocus(FocusNode());
-                  _getPreviewPosts(content: value);
+                  _getPreviewPosts(content: value, tag: _category?.value ?? "");
                 },
                 textInputAction: TextInputAction.search,
+              ),
+            ),
+            SizedBox(
+              height: 50,
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => SizedBox(
+                  width: 180, // Set an appropriate width here
+                  child: RadioListTile(
+                    value: CategoryWithAll.values[index],
+                    groupValue: _category,
+                    onChanged: (CategoryWithAll? category) {
+                      setState(() => _category = category);
+                      _getPreviewPosts(
+                          content: _searchEditingController.text,
+                          tag: _category?.value ?? "");
+                    },
+                    title: Text(CategoryWithAll.values[index].value),
+                  ),
+                ),
+                itemCount: CategoryWithAll.values.length,
               ),
             ),
             _arePostsLoading
@@ -262,6 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     null,
                     () => _getPreviewPosts(
                           content: _searchEditingController.text,
+                          tag: _category?.value ?? "",
                         )
                   )),
               child: const Icon(Icons.add),

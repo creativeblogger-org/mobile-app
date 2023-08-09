@@ -10,9 +10,10 @@ Future<(List<PreviewPost>?, int)> getPreviewPosts(
     {int limit = 20,
     int page = 0,
     String query = "",
-    String authorId = ""}) async {
+    String authorId = "",
+    String tag = ""}) async {
   var res = await customGetRequest(
-      "$API_URL/posts?limit=$limit&page=$page&q=$query&user=$authorId");
+      "$API_URL/posts?limit=$limit&page=$page&q=$query&user=$authorId&tag=$tag");
   if (res == null) {
     return (null, 0);
   }
