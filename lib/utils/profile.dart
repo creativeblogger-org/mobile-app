@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
+import 'package:creative_blogger_app/utils/success_snackbar.dart';
 import 'package:creative_blogger_app/utils/token.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> updateProfile(
@@ -20,17 +20,8 @@ Future<void> updateProfile(
     return;
   }
   if (res.statusCode == 204) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(
-          AppLocalizations.of(navigatorKey.currentContext!)!
-              .account_updated_successfully,
-          textAlign: TextAlign.center,
-        ),
-        backgroundColor: Colors.green,
-      ),
-    );
+    showSuccessSnackbar(AppLocalizations.of(navigatorKey.currentContext!)!
+        .account_updated_successfully);
     return;
   }
 

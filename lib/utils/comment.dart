@@ -5,6 +5,8 @@ import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/comment.dart';
+import 'package:creative_blogger_app/utils/success_snackbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<bool> postComment(String postSlug, String content) async {
   var res = await customPostRequest(
@@ -23,7 +25,7 @@ Future<bool> postComment(String postSlug, String content) async {
   return false;
 }
 
-Future<bool> updateComment(int id, String content) async {
+Future<void> updateComment(int id, String content) async {
   var res = await customPutRequest(
     url: "$API_URL/comments/$id",
     body: jsonEncode(
@@ -31,13 +33,14 @@ Future<bool> updateComment(int id, String content) async {
     ),
   );
   if (res == null) {
-    return false;
+    return;
   }
   if (res.statusCode == HttpStatus.noContent) {
-    return true;
+    showSuccessSnackbar(AppLocalizations.of(navigatorKey.currentContext!)!
+        .comment_updated_successfully);
+    return;
   }
   await handleError(res);
-  return false;
 }
 
 Future<bool> deleteComment(int commentId) async {

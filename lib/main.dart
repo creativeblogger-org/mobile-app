@@ -96,10 +96,11 @@ class MyApp extends StatelessWidget {
             final (post, onReload) = settings.arguments as (Post?, Function);
 
             return MaterialPageRoute(
-                builder: (context) => CreatePostScreen(
-                      post: post,
-                      onReload: onReload,
-                    ));
+              builder: (context) => CreatePostScreen(
+                post: post,
+                onReload: onReload,
+              ),
+            );
           default:
             return null;
         }

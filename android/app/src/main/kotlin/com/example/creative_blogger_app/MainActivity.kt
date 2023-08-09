@@ -1,4 +1,4 @@
-package com.example.creative_blogger_app
+package org.creativeblogger.org
 
 import io.flutter.embedding.android.FlutterActivity
 

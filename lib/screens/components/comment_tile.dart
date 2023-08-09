@@ -1,4 +1,3 @@
-import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/comment.dart';
 import 'package:creative_blogger_app/utils/structs/comment.dart';
 import 'package:creative_blogger_app/utils/user.dart';
@@ -36,26 +35,15 @@ class _CommentTileState extends State<CommentTile> {
     return fine;
   }
 
-  Future<bool> _updateComment(int id, String content) async {
+  Future<void> _updateComment(int id, String content) async {
     setState(() => _isUpdatingCommentLoading = true);
-    var fine = await updateComment(id, content);
-    if (fine) {
-      ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-      ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(navigatorKey.currentContext!)!
-              .comment_updated_successfully),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
+    await updateComment(id, content);
     setState(() {
       _isUpdatingCommentLoading = false;
       _isEditing = false;
     });
 
     widget.onReload();
-    return fine;
   }
 
   @override

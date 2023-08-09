@@ -71,7 +71,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     createPost(title, imageUrl, description, tags, content).then(
       (fine) {
         setState(() => _isCreatePostLoading = false);
-        Navigator.pop(context);
+        if (fine) {
+          Navigator.pop(context);
+        }
       },
     );
   }
@@ -90,7 +92,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         .then(
       (fine) {
         setState(() => _isCreatePostLoading = false);
-        Navigator.pop(context);
+        if (fine) {
+          Navigator.pop(context);
+        }
       },
     );
   }

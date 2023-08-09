@@ -5,7 +5,7 @@ import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
-import 'package:flutter/material.dart';
+import 'package:creative_blogger_app/utils/success_snackbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<(Post?, int)> getPost(String slug) async {
@@ -33,13 +33,8 @@ Future<bool> deletePost(String slug) async {
     return false;
   }
   if (res.statusCode == HttpStatus.noContent) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(navigatorKey.currentContext!)!
-            .post_deleted_successfully),
-      ),
-    );
+    showSuccessSnackbar(AppLocalizations.of(navigatorKey.currentContext!)!
+        .post_deleted_successfully);
     return true;
   }
   await handleError(res);
@@ -69,14 +64,8 @@ Future<bool> createPost(
     return false;
   }
   if (res.statusCode == HttpStatus.noContent) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(navigatorKey.currentContext!)!
-            .post_published_successfully),
-        backgroundColor: Colors.green,
-      ),
-    );
+    showSuccessSnackbar(AppLocalizations.of(navigatorKey.currentContext!)!
+        .post_published_successfully);
     return true;
   }
   await handleError(res);
@@ -109,14 +98,8 @@ Future<bool> updatePost(
     return false;
   }
   if (res.statusCode == HttpStatus.noContent) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(navigatorKey.currentContext!)!
-            .post_updated_successfully),
-        backgroundColor: Colors.green,
-      ),
-    );
+    showSuccessSnackbar(AppLocalizations.of(navigatorKey.currentContext!)!
+        .post_updated_successfully);
     return true;
   }
   await handleError(res);

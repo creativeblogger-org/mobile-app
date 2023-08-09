@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       TextEditingController();
   int _postsCount = 0;
   CategoryWithAll? _category = CategoryWithAll.all;
-  List<CategoryWithAll> _categories = [
+  final List<CategoryWithAll> _categories = [
     CategoryWithAll.all,
     CategoryWithAll.fakeOrReal,
     CategoryWithAll.tech,
