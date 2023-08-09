@@ -1,0 +1,137 @@
+{
+    "loading": "Loading...",
+    "@loading": {
+        "description": "Loading text"
+    },
+    "welcome_back": "Welcome back",
+    "@welcome_back": {
+        "description": "Welcome back message"
+    },
+    "welcome": "Welcome",
+    "@welcome": {
+        "description": "Welcome message"
+    },
+    "username_or_email": "Username or email",
+    "@username_or_email": {
+        "description": "Username or email label text"
+    },
+    "password": "Password",
+    "@password": {
+        "description": "Password label text"
+    },
+    "login": "Login",
+    "@login": {
+        "description": "Login text"
+    },
+    "invalid_username": "The username must contain only letters, numbers and underscores, must begin by a letter, contain between 3 and 12 characters.",
+    "@invalid_username": {
+        "description": "Invalid username error message"
+    },
+    "password_too_short": "The password must be at least 8 characters long",
+    "@password_too_short": {
+        "description": "Password too short error message"
+    },
+    "invalid_email_address": "Invalid email address",
+    "@invalid_email_address": {
+        "description": "Invalid email address error message"
+    },
+    "error": "Error",
+    "incorrect_credentials": "Incorrect credentials",
+    "@incorrect_credentials": {
+        "description": "Incorrect credentials error message"
+    },
+    "ok": "Ok",
+    "confirm": "Confirm",
+    "do_you_really_want_to_log_out": "Do you really want to log out ?",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "log_out": "Log out",
+    "internet_error": "An error occured, please check your Internet connection",
+    "need_an_account": "Need an account ?",
+    "create_an_account": "Create an account",
+    "username": "Username",
+    "available": "Available",
+    "not_available": "Not available",
+    "checking": "Checking...",
+    "continue_text": "Continue",
+    "terms_and_conditions_title": "Terms and conditions",
+    "terms_and_conditions": "Please be respectful. You can share your view while respecting others'.\nKeep also in mind you are the only one responsible of what you post. You can modify or delete your posts which, in that case, will be deleted from the database.\nCreative Blogger Org can't be held accountable of any content posted by its members.\nKeep also in mind that, in a legal context, we store your IP address.",
+    "accept_and_continue": "Accept & continue",
+    "create_a_password": "Create a password",
+    "email_address": "Email address",
+    "show_more": "Show more",
+    "post": "Post",
+    "an_error_occured_while_loading_post": "An error occured while loading post",
+    "profile": "Profile",
+    "an_error_occured_while_loading_profile": "An error occured while loading profile",
+    "home": "Home",
+    "create": "Create",
+    "update_account": "Update account",
+    "account_updated_successfully": "Account updated successfully",
+    "change_password": "Change password",
+    "delete_my_account": "Delete my account",
+    "are_you_sure": "Are you sure ?",
+    "this_is_irreversible_all_your_posts_comments_and_shorts_will_be_deleted_forever": "This is irreversible. All your posts, comments and shorts will be deleted forever.",
+    "im_sure": "I am sure",
+    "no_post_for_the_moment": "No post for the moment...",
+    "no_short_for_the_moment": "No short for the moment...",
+    "post_deleted_successfully": "Post deleted successfully",
+    "this_post_will_be_definitely_deleted": "This post will be definitely deleted",
+    "this_short_will_be_definitely_deleted": "This short will be definitely deleted",
+    "user": "User",
+    "an_error_occured_while_loading_user": "An error occured while loading user",
+    "member": "Member",
+    "writer": "Writer",
+    "moderator": "Moderator",
+    "administrator": "Administrator",
+    "signed_up_the": "Signed up the {date}",
+    "@signed_up_the": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "comments": "Comments ({nb})",
+    "@comments": {
+        "placeholders": {
+            "nb": {
+                "type": "int"
+            }
+        }
+    },
+    "add_a_comment": "Add a comment",
+    "this_comment_will_be_definitely_deleted": "This comment will be definitely deleted",
+    "no_Internet_connection": "No Internet connection",
+    "an_error_occured_while_loading_posts": "An error occured while loading posts",
+    "an_error_occured_while_loading_shorts": "An error occured while loading shorts",
+    "search": "Search",
+    "users_posts": "User's posts :",
+    "this_user_hasnt_published_any_post_yet": "This user hasn't published any post yet.",
+    "search_posts": "Search posts",
+    "creative_blogger": "Creative Blogger",
+    "create_a_post": "Create a post",
+    "title": "Title",
+    "content": "Content",
+    "image_url": "Image URL (104x104) :",
+    "title_too_short": "Title too short",
+    "title_too_long": "Title too long",
+    "invalid_url": "Invalid URL",
+    "description": "Description",
+    "description_too_short": "Description too short",
+    "description_too_long": "Description too long",
+    "category": "Category",
+    "news": "News",
+    "tech": "Tech",
+    "culture": "Culture",
+    "investigation": "Investigation",
+    "publish_post": "Publish post",
+    "content_too_short": "Content too short",
+    "content_too_long": "Content too long",
+    "post_published_successfully": "Post published successfully",
+    "post_updated_successfully": "Post updated successfully",
+    "update_post": "Update post",
+    "comment_updated_successfully": "Comment updated successfully",
+    "edited": "edited",
+    "all": "All"
+}
