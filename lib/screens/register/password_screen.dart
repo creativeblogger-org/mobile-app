@@ -4,16 +4,21 @@ import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/auth.dart';
-import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ChoosePasswordScreen extends StatefulWidget {
-  const ChoosePasswordScreen({super.key, required this.args});
+  const ChoosePasswordScreen(
+      {super.key,
+      required this.username,
+      required this.birthdate,
+      required this.email});
   static const routeName = '/register/password';
 
-  final PasswordScreenArguments args;
+  final String username;
+  final DateTime birthdate;
+  final String email;
 
   @override
   State<ChoosePasswordScreen> createState() => _ChoosePasswordScreenState();
@@ -31,7 +36,8 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
     super.dispose();
   }
 
-  void _register(String username, String email, String password) {
+  void _register(
+      String username, String email, String password, DateTime birthdate) {
     setState(() => connecting = true);
     authRequest(
       "$API_URL/auth/register",
@@ -40,6 +46,7 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
           "username": username,
           "email": email,
           "password": password,
+          "birthdate": birthdate.millisecondsSinceEpoch / 1000,
         },
       ),
     ).then(
@@ -96,8 +103,8 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
                       _password.text.isNotEmpty &&
                       !connecting
                   ? () {
-                      _register(widget.args.username, widget.args.email,
-                          _password.text);
+                      _register(widget.username, widget.email, _password.text,
+                          widget.birthdate);
                     }
                   : null,
               child: connecting

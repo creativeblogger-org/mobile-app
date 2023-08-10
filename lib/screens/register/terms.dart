@@ -1,14 +1,17 @@
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/screens/register/email_screen.dart';
+import 'package:creative_blogger_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({super.key, required this.username});
+  const TermsScreen(
+      {super.key, required this.username, required this.birthdate});
   static const routeName = '/register/terms';
 
   final String username;
+  final DateTime birthdate;
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
@@ -40,7 +43,8 @@ class _TermsScreenState extends State<TermsScreen> {
                   Navigator.pushReplacementNamed(
                     context,
                     ChooseEmailScreen.routeName,
-                    arguments: widget.username,
+                    arguments: TermsAndEmailScreenArguments(
+                        widget.username, widget.birthdate),
                   );
                 },
                 child: Text(AppLocalizations.of(context)!.accept_and_continue),

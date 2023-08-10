@@ -133,5 +133,7 @@
     "update_post": "Update post",
     "comment_updated_successfully": "Comment updated successfully",
     "edited": "edited",
-    "all": "All"
+    "all": "All",
+    "birthdate": "Birthdate",
+    "tap_to_select_your_birthdate": "Tap to select your birthdate"
 }

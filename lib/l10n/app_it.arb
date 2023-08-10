@@ -89,5 +89,7 @@
     "update_post": "Aggiornare il post",
     "comment_updated_successfully": "Commento aggiornato con successo",
     "edited": "modificato",
-    "all": "Tutto"
+    "all": "Tutto",
+    "birthdate": "Data di nascita",
+    "tap_to_select_your_birthdate": "Tocca per selezionare la tua data di nascita"
 }

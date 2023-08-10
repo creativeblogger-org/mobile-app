@@ -1,18 +1,14 @@
 class TermsAndEmailScreenArguments {
   final String username;
+  final DateTime birthdate;
 
-  TermsAndEmailScreenArguments(this.username);
+  TermsAndEmailScreenArguments(this.username, this.birthdate);
 }
 
 class PasswordScreenArguments {
   final String username;
+  final DateTime birthdate;
   final String email;
 
-  PasswordScreenArguments(this.username, this.email);
-}
-
-class PostScreenArguments {
-  final String slug;
-
-  PostScreenArguments(this.slug);
+  PasswordScreenArguments(this.username, this.birthdate, this.email);
 }
