@@ -15,6 +15,7 @@ class Post {
   final Category category;
   final bool hasPermission;
   final List<Comment> comments;
+  final int requiredAge;
 
   const Post({
     required this.id,
@@ -29,6 +30,7 @@ class Post {
     required this.category,
     required this.hasPermission,
     required this.comments,
+    required this.requiredAge,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -50,20 +52,20 @@ class Post {
     }
 
     return Post(
-      id: json["id"],
-      title: json["title"],
-      imageUrl: json["image"],
-      description: json["description"],
-      content: json["content"],
-      slug: json["slug"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
-      author: Author.fromJson(json["author"]),
-      category: category,
-      hasPermission: json["has_permission"],
-      comments: (json["comments"] as List)
-          .map((jsonComment) => Comment.fromJson(jsonComment))
-          .toList(),
-    );
+        id: json["id"],
+        title: json["title"],
+        imageUrl: json["image"],
+        description: json["description"],
+        content: json["content"],
+        slug: json["slug"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        author: Author.fromJson(json["author"]),
+        category: category,
+        hasPermission: json["has_permission"],
+        comments: (json["comments"] as List)
+            .map((jsonComment) => Comment.fromJson(jsonComment))
+            .toList(),
+        requiredAge: json["required_age"]);
   }
 }

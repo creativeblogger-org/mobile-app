@@ -135,5 +135,14 @@
     "edited": "edited",
     "all": "All",
     "birthdate": "Birthdate",
-    "tap_to_select_your_birthdate": "Tap to select your birthdate"
+    "tap_to_select_your_birthdate": "Tap to select your birthdate",
+    "content_not_recommended_for_children_under_9_years_old": "Content not recommended for children under {nb}.",
+    "@content_not_recommended_for_children_under_9_years_old": {
+        "placeholders": {
+            "nb": {
+                "type": "int"
+            }
+        }
+    },
+    "show_anyway": "Show anyway"
 }

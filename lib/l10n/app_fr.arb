@@ -90,5 +90,7 @@
     "edited": "modifié",
     "all": "Tout",
     "birthdate": "Date de naissance",
-    "tap_to_select_your_birthdate": "Appuyez pour sélectionner votre date de naissance"
+    "tap_to_select_your_birthdate": "Appuyez pour sélectionner votre date de naissance",
+    "content_not_recommended_for_children_under_9_years_old": "Contenu déconseillé aux enfants de moins de {nb} ans",
+    "show_anyway": "Afficher quand même"
 }

@@ -91,5 +91,7 @@
     "edited": "modificato",
     "all": "Tutto",
     "birthdate": "Data di nascita",
-    "tap_to_select_your_birthdate": "Tocca per selezionare la tua data di nascita"
+    "tap_to_select_your_birthdate": "Tocca per selezionare la tua data di nascita",
+    "content_not_recommended_for_children_under_9_years_old": "Contenuto sconsigliato ai bambini sotto i {nb} anni",
+    "show_anyway": "Mostra comunque"
 }
