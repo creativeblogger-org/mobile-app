@@ -204,36 +204,42 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(
               height: 50,
-              child: ListView.builder(
+              child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => SizedBox(
-                  width: 180,
-                  child: RadioListTile(
-                    value: _categories[index],
-                    groupValue: _category,
-                    onChanged: (CategoryWithAll? category) {
-                      setState(() => _category = category);
-                      _getPreviewPosts(
-                          content: _searchEditingController.text,
-                          tag: _category?.value ?? "");
-                    },
-                    title: Text(
-                      _categories[index] == CategoryWithAll.all
-                          ? AppLocalizations.of(context)!.all
-                          : _categories[index] == CategoryWithAll.fakeOrReal
-                              ? AppLocalizations.of(context)!.investigation
-                              : _categories[index] == CategoryWithAll.tech
-                                  ? AppLocalizations.of(context)!.tech
-                                  : _categories[index] ==
-                                          CategoryWithAll.culture
-                                      ? AppLocalizations.of(context)!.culture
-                                      : AppLocalizations.of(context)!.news,
-                    ),
-                  ),
-                ),
-                itemCount: CategoryWithAll.values.length,
+                children: _categories
+                    .map(
+                      (category) => SizedBox(
+                        width: 170,
+                        child: RadioListTile(
+                          value: category,
+                          groupValue: _category,
+                          onChanged: (CategoryWithAll? category) {
+                            setState(() => _category = category);
+                            _getPreviewPosts(
+                                content: _searchEditingController.text,
+                                tag: _category?.value ?? "");
+                          },
+                          isThreeLine: false,
+                          title: Text(
+                            category == CategoryWithAll.all
+                                ? AppLocalizations.of(context)!.all
+                                : category == CategoryWithAll.fakeOrReal
+                                    ? AppLocalizations.of(context)!
+                                        .investigation
+                                    : category == CategoryWithAll.tech
+                                        ? AppLocalizations.of(context)!.tech
+                                        : category == CategoryWithAll.culture
+                                            ? AppLocalizations.of(context)!
+                                                .culture
+                                            : AppLocalizations.of(context)!
+                                                .news,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
             _arePostsLoading

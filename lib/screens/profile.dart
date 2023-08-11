@@ -6,6 +6,7 @@ import 'package:creative_blogger_app/utils/login.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/profile.dart';
 import 'package:creative_blogger_app/utils/structs/user.dart';
+import 'package:creative_blogger_app/utils/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -233,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                                "Compté créé le ${me!.createdAt.day.toString().padLeft(2, "0")}/${me!.createdAt.month.toString().padLeft(2, "0")}/${me!.createdAt.year}"),
+                                AppLocalizations.of(context)!.account_created_the(getHumanDate(me!.createdAt))),
                             const SizedBox(height: 16),
                             CustomButton(
                               onPressed: _usernameError == null &&
