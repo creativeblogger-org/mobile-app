@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/show_no_internet_connection.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:http/http.dart' as http;
@@ -50,6 +51,19 @@ Future<Response?> customPutRequest({required String url, Object? body}) async {
 Future<Response?> customDeleteRequest(String url) async {
   try {
     return await http.delete(Uri.parse(url), headers: await getJSONHeaders());
+  } catch (e) {
+    showNoInternetConnection();
+    return null;
+  }
+}
+
+Future<Response?> customUpdateProfilePictureRequest(MultipartFile image) async {
+  try {
+    var req = http.MultipartRequest("POST", Uri.parse("$API_URL/@me/upload"));
+    req.headers.addAll(await getJSONHeaders());
+    req.files.add(image);
+    var res = await req.send();
+    return await http.Response.fromStream(res);
   } catch (e) {
     showNoInternetConnection();
     return null;

@@ -94,5 +94,7 @@
     "tap_to_select_your_birthdate": "Tocca per selezionare la tua data di nascita",
     "content_not_recommended_for_children_under_9_years_old": "Contenuto sconsigliato ai bambini sotto i {nb} anni",
     "show_anyway": "Mostra comunque",
-    "account_created_the": "Account creato il {date}"
+    "account_created_the": "Account creato il {date}",
+    "do_you_really_want_to_update_your_profile_picture": "Sei sicuro che vuoi aggiornare la tua immagine del profilo ?",
+    "profile_picture_updated_successfully": "Immagine del profilo aggiornata con successo"
 }

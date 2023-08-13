@@ -152,5 +152,7 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "do_you_really_want_to_update_your_profile_picture": "Do you really want to update your profile picture ?",
+    "profile_picture_updated_successfully": "Profile picture updated successfully"
 }
