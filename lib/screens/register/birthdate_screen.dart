@@ -78,8 +78,8 @@ class _BirthdateScreenState extends State<BirthdateScreen> {
                   ? () => Navigator.pushNamed(
                         context,
                         TermsScreen.routeName,
-                        arguments: TermsAndEmailScreenArguments(
-                            widget.username, _date!),
+                        arguments: TermsAndEmailScreenArguments(widget.username,
+                            "${_date!.year}-${_date!.month}-${_date!.day}"),
                       )
                   : null,
               child: Text(AppLocalizations.of(context)!.continue_text),

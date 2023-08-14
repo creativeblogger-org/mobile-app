@@ -17,7 +17,7 @@ class ChooseEmailScreen extends StatefulWidget {
   static const routeName = '/register/email';
 
   final String username;
-  final DateTime birthdate;
+  final String birthdate;
 
   @override
   State<ChooseEmailScreen> createState() => _ChooseEmailScreenState();

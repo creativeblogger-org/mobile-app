@@ -11,7 +11,7 @@ class TermsScreen extends StatefulWidget {
   static const routeName = '/register/terms';
 
   final String username;
-  final DateTime birthdate;
+  final String birthdate;
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();

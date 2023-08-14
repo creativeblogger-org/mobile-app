@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';

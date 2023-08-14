@@ -17,7 +17,7 @@ class ChoosePasswordScreen extends StatefulWidget {
   static const routeName = '/register/password';
 
   final String username;
-  final DateTime birthdate;
+  final String birthdate;
   final String email;
 
   @override
@@ -37,7 +37,7 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
   }
 
   void _register(
-      String username, String email, String password, DateTime birthdate) {
+      String username, String email, String password, String birthdate) {
     setState(() => connecting = true);
     authRequest(
       "$API_URL/auth/register",
@@ -46,7 +46,7 @@ class _ChoosePasswordScreenState extends State<ChoosePasswordScreen> {
           "username": username,
           "email": email,
           "password": password,
-          "birthdate": birthdate.millisecondsSinceEpoch,
+          "birthdate": birthdate,
         },
       ),
     ).then(
