@@ -4,6 +4,7 @@ import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/screens/home/home.dart';
 import 'package:creative_blogger_app/screens/post.dart';
 import 'package:creative_blogger_app/screens/profile.dart';
+import 'package:creative_blogger_app/screens/register/birthdate_screen.dart';
 import 'package:creative_blogger_app/screens/register/email_screen.dart';
 import 'package:creative_blogger_app/screens/register/password_screen.dart';
 import 'package:creative_blogger_app/screens/register/terms.dart';
@@ -66,19 +67,27 @@ class MyApp extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case TermsScreen.routeName:
+          case BirthdateScreen.routeName:
             final arg = settings.arguments as String;
+
+            return MaterialPageRoute(
+                builder: (context) => BirthdateScreen(username: arg));
+
+          case TermsScreen.routeName:
+            final args = settings.arguments as TermsAndEmailScreenArguments;
 
             return MaterialPageRoute(
               builder: (context) => TermsScreen(
-                username: arg,
+                username: args.username,
+                birthdate: args.birthdate,
               ),
             );
           case ChooseEmailScreen.routeName:
-            final arg = settings.arguments as String;
+            final args = settings.arguments as TermsAndEmailScreenArguments;
 
             return MaterialPageRoute(
-              builder: (context) => ChooseEmailScreen(username: arg),
+              builder: (context) => ChooseEmailScreen(
+                  username: args.username, birthdate: args.birthdate),
             );
           case ChoosePasswordScreen.routeName:
             final args = settings.arguments as PasswordScreenArguments;
@@ -86,6 +95,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => ChoosePasswordScreen(
                 username: args.username,
+                birthdate: args.birthdate,
                 email: args.email,
               ),
             );

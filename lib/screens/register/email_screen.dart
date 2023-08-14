@@ -12,10 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChooseEmailScreen extends StatefulWidget {
-  const ChooseEmailScreen({super.key, required this.username});
+  const ChooseEmailScreen(
+      {super.key, required this.username, required this.birthdate});
   static const routeName = '/register/email';
 
   final String username;
+  final DateTime birthdate;
 
   @override
   State<ChooseEmailScreen> createState() => _ChooseEmailScreenState();
@@ -142,14 +144,13 @@ class _ChooseEmailScreenState extends State<ChooseEmailScreen> {
             ),
             const SizedBox(height: 10),
             CustomButton(
-              onPressed: _emailError == null &&
-                      !_isLoading &&
-                      _email.text.isNotEmpty
-                  ? () => Navigator.pushNamed(
-                      context, ChoosePasswordScreen.routeName,
-                      arguments:
-                          PasswordScreenArguments(widget.username, _email.text))
-                  : null,
+              onPressed:
+                  _emailError == null && !_isLoading && _email.text.isNotEmpty
+                      ? () => Navigator.pushNamed(
+                          context, ChoosePasswordScreen.routeName,
+                          arguments: PasswordScreenArguments(
+                              widget.username, widget.birthdate, _email.text))
+                      : null,
               child: Text(AppLocalizations.of(context)!.continue_text),
             )
           ],

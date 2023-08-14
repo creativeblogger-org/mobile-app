@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/main.dart';
+import 'package:creative_blogger_app/screens/register/birthdate_screen.dart';
 import 'package:creative_blogger_app/screens/register/terms.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
 import 'package:creative_blogger_app/utils/login.dart';
@@ -143,7 +144,7 @@ class _ChooseUsernameScreenState extends State<ChooseUsernameScreen> {
                       _username.text.isNotEmpty
                   ? () => Navigator.pushNamed(
                         context,
-                        TermsScreen.routeName,
+                        BirthdateScreen.routeName,
                         arguments: _username.text,
                       )
                   : null,
