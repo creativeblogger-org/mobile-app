@@ -136,8 +136,8 @@
     "all": "All",
     "birthdate": "Birthdate",
     "tap_to_select_your_birthdate": "Tap to select your birthdate",
-    "content_not_recommended_for_children_under_9_years_old": "Content not recommended for children under {nb}.",
-    "@content_not_recommended_for_children_under_9_years_old": {
+    "content_not_recommended_for_under_nb_s": "Content not recommended for under {nb}s.",
+    "@content_not_recommended_for_under_nb_s": {
         "placeholders": {
             "nb": {
                 "type": "int"
@@ -162,5 +162,8 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "minimum_age": "Minimum age",
+    "age_restriction": "Age restriction",
+    "the_required_age_must_be_between_9_and_140_years_old": "The required age must be between 9 and 140 years old."
 }

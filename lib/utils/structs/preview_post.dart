@@ -12,7 +12,6 @@ class PreviewPost {
   final String image;
   final bool hasPermission;
   final bool isLast;
-  final int requiredAge;
 
   const PreviewPost({
     required this.id,
@@ -26,7 +25,6 @@ class PreviewPost {
     required this.image,
     required this.hasPermission,
     required this.isLast,
-    required this.requiredAge,
   });
 
   factory PreviewPost.fromJson(Map<String, dynamic> json) {
@@ -42,7 +40,6 @@ class PreviewPost {
       image: json["image"],
       hasPermission: json["has_permission"],
       isLast: json["is_last"] == 0 ? false : true,
-      requiredAge: json["required_age"],
     );
   }
 }

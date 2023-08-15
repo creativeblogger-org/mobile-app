@@ -3,6 +3,7 @@ import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -43,6 +44,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   String? _postDescriptionError;
   final TextEditingController _postContent = TextEditingController();
   String? _postContentError;
+  bool _ageRestricted = false;
+  final TextEditingController _minimumAge = TextEditingController();
+  String? _minimumAgeError;
 
   @override
   void initState() {
@@ -51,12 +55,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     _postImageURL.text = widget.post?.imageUrl ?? "";
     _postDescription.text = widget.post?.description ?? "";
     _postContent.text = widget.post?.content ?? "";
+    _minimumAge.text = widget.post?.requiredAge.toString() ?? "";
     super.initState();
   }
 
   @override
   void dispose() {
     _postTitle.dispose();
+    _postImageURL.dispose();
+    _postDescription.dispose();
+    _postContent.dispose();
+    _minimumAge.dispose();
     super.dispose();
   }
 
@@ -66,9 +75,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     String description,
     String tags,
     String content,
+    int requiredAge,
   ) {
     setState(() => _isCreatePostLoading = true);
-    createPost(title, imageUrl, description, tags, content).then(
+    createPost(title, imageUrl, description, tags, content, requiredAge).then(
       (fine) {
         setState(() => _isCreatePostLoading = false);
         if (fine) {
@@ -204,6 +214,48 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               },
               const SizedBox(height: 16),
+              CheckboxListTile(
+                value: _ageRestricted,
+                onChanged: (value) =>
+                    setState(() => _ageRestricted = !_ageRestricted),
+                title: Text(AppLocalizations.of(context)!.age_restriction),
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              const SizedBox(height: 16),
+              if (_ageRestricted) ...{
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.minimum_age,
+                    border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    errorText: _minimumAgeError,
+                  ),
+                  controller: _minimumAge,
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      setState(
+                        () => _minimumAgeError = AppLocalizations.of(context)!
+                            .the_required_age_must_be_between_9_and_140_years_old,
+                      );
+                      return;
+                    }
+                    var requiredAge = int.parse(value);
+                    setState(
+                      () => _minimumAgeError = requiredAge < 9 ||
+                              requiredAge > 140
+                          ? AppLocalizations.of(context)!
+                              .the_required_age_must_be_between_9_and_140_years_old
+                          : null,
+                    );
+                  },
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                ),
+                const SizedBox(height: 16),
+              },
               TextField(
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.content,
@@ -222,7 +274,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     () => _postContentError = length < 200
                         ? AppLocalizations.of(context)!.content_too_short
                         : length > 10000
-                            ? AppLocalizations.of(context)!.description_too_long
+                            ? AppLocalizations.of(context)!.content_too_long
                             : null,
                   );
                 },
@@ -238,6 +290,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         _category == null ||
                         _postContentError != null ||
                         _postContent.text.isEmpty ||
+                        (_ageRestricted &&
+                            (_minimumAgeError != null ||
+                                _minimumAge.text.isEmpty)) ||
                         _isCreatePostLoading
                     ? null
                     : () {
@@ -248,6 +303,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 _postDescription.text,
                                 _category!.value,
                                 _postContent.text,
+                                int.tryParse(_minimumAge.text) ?? 0,
                               )
                             : _updatePost(
                                 widget.post!.id,

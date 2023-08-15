@@ -52,20 +52,21 @@ class Post {
     }
 
     return Post(
-        id: json["id"],
-        title: json["title"],
-        imageUrl: json["image"],
-        description: json["description"],
-        content: json["content"],
-        slug: json["slug"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        author: Author.fromJson(json["author"]),
-        category: category,
-        hasPermission: json["has_permission"],
-        comments: (json["comments"] as List)
-            .map((jsonComment) => Comment.fromJson(jsonComment))
-            .toList(),
-        requiredAge: json["required_age"]);
+      id: json["id"],
+      title: json["title"],
+      imageUrl: json["image"],
+      description: json["description"],
+      content: json["content"],
+      slug: json["slug"],
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
+      author: Author.fromJson(json["author"]),
+      category: category,
+      hasPermission: json["has_permission"],
+      comments: (json["comments"] as List)
+          .map((jsonComment) => Comment.fromJson(jsonComment))
+          .toList(),
+      requiredAge: json["required_age"],
+    );
   }
 }

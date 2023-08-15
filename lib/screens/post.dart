@@ -35,7 +35,6 @@ class _PostScreenState extends State<PostScreen> {
   bool _isShowMoreLoading = false;
   bool _areCommentsLoading = false;
   int? _commentCount;
-  bool? _showWarning;
 
   @override
   void initState() {
@@ -55,7 +54,6 @@ class _PostScreenState extends State<PostScreen> {
       if (mounted) {
         setState(() {
           _post = result.$1;
-          _showWarning = _post == null ? false : _post!.requiredAge > 10;
           _commentCount = result.$2;
           _isPostLoading = false;
         });
@@ -153,7 +151,7 @@ class _PostScreenState extends State<PostScreen> {
           decoration: customDecoration(),
         ),
         actions: [
-          if (_post != null && _post!.hasPermission && !_showWarning!) ...{
+          if (_post != null && _post!.hasPermission) ...{
             IconButton(
               onPressed: !_isDeleteDialogVisible &&
                       !_isPostCommentLoading &&
@@ -206,197 +204,144 @@ class _PostScreenState extends State<PostScreen> {
                 : SingleChildScrollView(
                     padding: const EdgeInsets.all(4.0),
                     physics: const AlwaysScrollableScrollPhysics(),
-                    child: _showWarning == null
-                        ? SpinKitRing(
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 20,
-                            lineWidth: 2,
-                          )
-                        : _showWarning!
-                            ? Center(
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.all(16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .content_not_recommended_for_children_under_9_years_old(
-                                            _post!.requiredAge),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .fontSize,
+                    child: Column(
+                      children: [
+                        PostTile(post: _post!),
+                        if (_commentCount != null) ...{
+                          const SizedBox(height: 16),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .comments(_commentCount!),
+                            style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .headlineLarge!
+                                  .fontSize,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Pangolin",
+                            ),
+                          ),
+                        },
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: TextField(
+                                  controller: _postCommentTextController,
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!
+                                        .add_a_comment,
+                                    hintStyle: const TextStyle(
+                                      fontWeight: FontWeight.normal,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
+                                    border: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                      ),
+                                      borderRadius: BorderRadius.zero,
+                                    ),
+                                    filled: true,
+                                    fillColor: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground
+                                        .withOpacity(0.1),
                                   ),
-                                  subtitle: ElevatedButton(
-                                    onPressed: () =>
-                                        setState(() => _showWarning = false),
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red),
-                                    child: Text(AppLocalizations.of(context)!
-                                        .show_anyway),
-                                  ),
+                                  onChanged: (value) => setState(() =>
+                                      _activePostCommentButton =
+                                          value.length >= 5),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: _activePostCommentButton &&
+                                        !_isPostCommentLoading
+                                    ? () => _postComment(_post!.slug,
+                                        _postCommentTextController.text)
+                                    : null,
+                                icon: _isPostCommentLoading
+                                    ? SpinKitRing(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        size: 20,
+                                        lineWidth: 2,
+                                      )
+                                    : Icon(
+                                        Icons.send,
+                                        color: _activePostCommentButton
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                            : Colors.grey,
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        _areCommentsLoading
+                            ? Center(
+                                child: SpinKitSpinningLines(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  size: 100,
+                                  duration: const Duration(milliseconds: 1500),
                                 ),
                               )
-                            : Column(
-                                children: [
-                                  PostTile(post: _post!),
-                                  if (_commentCount != null) ...{
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .comments(_commentCount!),
-                                      style: TextStyle(
-                                        fontSize: Theme.of(context)
-                                            .textTheme
-                                            .headlineLarge!
-                                            .fontSize,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Pangolin",
-                                      ),
-                                    ),
-                                  },
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Flexible(
-                                          child: TextField(
-                                            controller:
-                                                _postCommentTextController,
-                                            decoration: InputDecoration(
-                                              hintText:
-                                                  AppLocalizations.of(context)!
-                                                      .add_a_comment,
-                                              hintStyle: const TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              border: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onBackground,
-                                                ),
-                                                borderRadius: BorderRadius.zero,
-                                              ),
-                                              filled: true,
-                                              fillColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .onBackground
-                                                  .withOpacity(0.1),
-                                            ),
-                                            onChanged: (value) => setState(() =>
-                                                _activePostCommentButton =
-                                                    value.length >= 5),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: _activePostCommentButton &&
-                                                  !_isPostCommentLoading
-                                              ? () => _postComment(
-                                                  _post!.slug,
-                                                  _postCommentTextController
-                                                      .text)
-                                              : null,
-                                          icon: _isPostCommentLoading
-                                              ? SpinKitRing(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                  size: 20,
-                                                  lineWidth: 2,
-                                                )
-                                              : Icon(
-                                                  Icons.send,
-                                                  color:
-                                                      _activePostCommentButton
-                                                          ? Theme.of(context)
-                                                              .colorScheme
-                                                              .primary
-                                                          : Colors.grey,
-                                                ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  _areCommentsLoading
-                                      ? Center(
-                                          child: SpinKitSpinningLines(
+                            : ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: showShowMoreButton
+                                    ? _post!.comments.length + 1
+                                    : _post!.comments.length,
+                                itemBuilder: (context, index) {
+                                  if (index < _post!.comments.length) {
+                                    return CommentTile(
+                                      comment: _post!.comments[index],
+                                      onReload: _getComments,
+                                    );
+                                  }
+                                  return CustomButton(
+                                    onPressed: _isShowMoreLoading
+                                        ? null
+                                        : () {
+                                            setState(() =>
+                                                _isShowMoreLoading = true);
+                                            getComments(_post!.id,
+                                                    page: _post!.comments
+                                                                .length ~/
+                                                            20 +
+                                                        1)
+                                                .then(
+                                              (comments) {
+                                                if (comments.$1 == null) {
+                                                  setState(() =>
+                                                      _isShowMoreLoading =
+                                                          false);
+                                                  return;
+                                                }
+                                                _post!.comments
+                                                    .addAll(comments.$1!);
+                                                setState(() =>
+                                                    _isShowMoreLoading = false);
+                                              },
+                                            );
+                                          },
+                                    child: _isShowMoreLoading
+                                        ? SpinKitRing(
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .primary,
-                                            size: 100,
-                                            duration: const Duration(
-                                                milliseconds: 1500),
-                                          ),
-                                        )
-                                      : ListView.builder(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: showShowMoreButton
-                                              ? _post!.comments.length + 1
-                                              : _post!.comments.length,
-                                          itemBuilder: (context, index) {
-                                            if (index <
-                                                _post!.comments.length) {
-                                              return CommentTile(
-                                                comment: _post!.comments[index],
-                                                onReload: _getComments,
-                                              );
-                                            }
-                                            return CustomButton(
-                                              onPressed: _isShowMoreLoading
-                                                  ? null
-                                                  : () {
-                                                      setState(() =>
-                                                          _isShowMoreLoading =
-                                                              true);
-                                                      getComments(_post!.id,
-                                                              page: _post!.comments
-                                                                          .length ~/
-                                                                      20 +
-                                                                  1)
-                                                          .then(
-                                                        (comments) {
-                                                          if (comments.$1 ==
-                                                              null) {
-                                                            setState(() =>
-                                                                _isShowMoreLoading =
-                                                                    false);
-                                                            return;
-                                                          }
-                                                          _post!.comments
-                                                              .addAll(
-                                                                  comments.$1!);
-                                                          setState(() =>
-                                                              _isShowMoreLoading =
-                                                                  false);
-                                                        },
-                                                      );
-                                                    },
-                                              child: _isShowMoreLoading
-                                                  ? SpinKitRing(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                      size: 20,
-                                                      lineWidth: 2,
-                                                    )
-                                                  : Text(AppLocalizations.of(
-                                                          context)!
-                                                      .show_more),
-                                            );
-                                          },
-                                        ),
-                                ],
+                                            size: 20,
+                                            lineWidth: 2,
+                                          )
+                                        : Text(AppLocalizations.of(context)!
+                                            .show_more),
+                                  );
+                                },
                               ),
+                      ],
+                    ),
                   ),
       ),
     );

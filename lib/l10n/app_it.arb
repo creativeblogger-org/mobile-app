@@ -92,10 +92,13 @@
     "all": "Tutto",
     "birthdate": "Data di nascita",
     "tap_to_select_your_birthdate": "Tocca per selezionare la tua data di nascita",
-    "content_not_recommended_for_children_under_9_years_old": "Contenuto sconsigliato ai bambini sotto i {nb} anni",
+    "content_not_recommended_for_under_nb_s": "Contenuto non consigliato per le persone sotto i {nb} anni.",
     "show_anyway": "Mostra comunque",
     "account_created_the": "Account creato il {date}",
     "do_you_really_want_to_update_your_profile_picture": "Sei sicuro che vuoi aggiornare la tua immagine del profilo ?",
     "profile_picture_updated_successfully": "Immagine del profilo aggiornata con successo",
-    "born_the": "Nato il {date}"
+    "born_the": "Nato il {date}",
+    "minimum_age": "Età minima",
+    "age_restriction": "Restrizione di età",
+    "the_required_age_must_be_between_9_and_140_years_old": "L'età richiesta deve essere compresa tra 9 e 140 anni."
 }

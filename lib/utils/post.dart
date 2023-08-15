@@ -47,6 +47,7 @@ Future<bool> createPost(
   String description,
   String tags,
   String content,
+  int requiredAge,
 ) async {
   var res = await customPostRequest(
     url: "$API_URL/posts",
@@ -57,6 +58,7 @@ Future<bool> createPost(
         "description": description,
         "tags": tags,
         "content": content,
+        "required_age": requiredAge,
       },
     ),
   );
