@@ -361,7 +361,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 getHumanDate(me!.createdAt),
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Text(
+                                AppLocalizations.of(context)!.born_the(
+                                  getHumanDate(
+                                    me!.birthdate.toLocal(),
+                                  ),
+                                ),
+                              ),
+                            ),
                           },
                           _isEditing
                               ? CustomButton(

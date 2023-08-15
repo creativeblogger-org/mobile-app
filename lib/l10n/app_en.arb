@@ -154,5 +154,13 @@
         }
     },
     "do_you_really_want_to_update_your_profile_picture": "Do you really want to update your profile picture ?",
-    "profile_picture_updated_successfully": "Profile picture updated successfully"
+    "profile_picture_updated_successfully": "Profile picture updated successfully",
+    "born_the": "Born the {date}",
+    "@born_the": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    }
 }
