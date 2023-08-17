@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/custom_request.dart';
@@ -6,6 +7,7 @@ import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/public_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 Future<PublicUser?> getPublicUser(String username) async {
   var res = await customGetRequest("$API_URL/users/$username");
@@ -58,8 +60,9 @@ Widget getPermission(int permission) {
 }
 
 String getHumanDate(DateTime date) {
-  String day = date.day.toString().padLeft(2, "0");
-  String month = date.month.toString().padLeft(2, "0");
-  int year = date.year;
-  return "$day/$month/$year";
+  var localDate = date.toLocal();
+  var stringDate = DateFormat.yMd(Platform.localeName).format(localDate);
+  String at = AppLocalizations.of(navigatorKey.currentContext!)!.at;
+  var time = DateFormat("hh:mm").format(localDate);
+  return "$stringDate $at $time";
 }

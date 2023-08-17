@@ -276,7 +276,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               : _posts!.length,
                           itemBuilder: (context, index) {
                             if (index < _posts!.length) {
-                              return PreviewPostTile(post: _posts![index]);
+                              return PreviewPostTile(
+                                post: _posts![index],
+                                showAuthor: true,
+                              );
                             }
                             return CustomButton(
                               onPressed: _isShowMoreLoading

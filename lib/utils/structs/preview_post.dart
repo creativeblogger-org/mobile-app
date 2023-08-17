@@ -1,3 +1,4 @@
+import 'package:creative_blogger_app/screens/create_post_screen.dart';
 import 'package:creative_blogger_app/utils/structs/author.dart';
 
 class PreviewPost {
@@ -8,7 +9,7 @@ class PreviewPost {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Author author;
-  final String tags;
+  final Category category;
   final String image;
   final bool hasPermission;
   final bool isLast;
@@ -21,13 +22,30 @@ class PreviewPost {
     required this.createdAt,
     required this.updatedAt,
     required this.author,
-    required this.tags,
+    required this.category,
     required this.image,
     required this.hasPermission,
     required this.isLast,
   });
 
   factory PreviewPost.fromJson(Map<String, dynamic> json) {
+    String stringCategory = json["tags"] as String;
+    Category? category;
+    switch (stringCategory) {
+      case "fakeorreal":
+        category = Category.fakeOrReal;
+        break;
+      case "tech":
+        category = Category.tech;
+        break;
+      case "culture":
+        category = Category.culture;
+        break;
+      default:
+        category = Category.news;
+        break;
+    }
+
     return PreviewPost(
       id: json["id"],
       title: json["title"],
@@ -36,7 +54,7 @@ class PreviewPost {
       createdAt: DateTime.parse(json["created_at"]),
       updatedAt: DateTime.parse(json["updated_at"]),
       author: Author.fromJson(json["author"]),
-      tags: json["tags"],
+      category: category,
       image: json["image"],
       hasPermission: json["has_permission"],
       isLast: json["is_last"] == 0 ? false : true,

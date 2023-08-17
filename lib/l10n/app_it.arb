@@ -100,5 +100,7 @@
     "born_the": "Nato il {date}",
     "minimum_age": "Età minima",
     "age_restriction": "Restrizione di età",
-    "the_required_age_must_be_between_9_and_140_years_old": "L'età richiesta deve essere compresa tra 9 e 140 anni."
+    "the_required_age_must_be_between_9_and_140_years_old": "L'età richiesta deve essere compresa tra 9 e 140 anni.",
+    "at": "a",
+    "edited_the": "Modiifcato il {date}"
 }

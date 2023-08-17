@@ -98,14 +98,32 @@ class _UserScreenState extends State<UserScreen> {
                         width: double.infinity,
                         child: Column(
                           children: [
-                            Text(
-                              _user!.username,
-                              style: TextStyle(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .displaySmall!
-                                    .fontSize,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  // radius: 15,
+                                  backgroundColor: _user!.pp == null
+                                      ? null
+                                      : Colors.transparent,
+                                  backgroundImage: _user!.pp == null
+                                      ? null
+                                      : NetworkImage(_user!.pp!),
+                                  child: _user!.pp == null
+                                      ? const Icon(Icons.person)
+                                      : null,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  _user!.username,
+                                  style: TextStyle(
+                                    fontSize: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .fontSize,
+                                  ),
+                                )
+                              ],
                             ),
                             getPermission(_user!.permission),
                             Text(
@@ -142,7 +160,9 @@ class _UserScreenState extends State<UserScreen> {
                                         itemBuilder: (context, index) => index <
                                                 _posts!.length
                                             ? PreviewPostTile(
-                                                post: _posts![index])
+                                                post: _posts![index],
+                                                showAuthor: false,
+                                              )
                                             : CustomButton(
                                                 onPressed: _isShowMoreLoading
                                                     ? null

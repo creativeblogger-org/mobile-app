@@ -1,3 +1,4 @@
+import 'package:creative_blogger_app/screens/user.dart';
 import 'package:creative_blogger_app/utils/comment.dart';
 import 'package:creative_blogger_app/utils/structs/comment.dart';
 import 'package:creative_blogger_app/utils/user.dart';
@@ -56,16 +57,20 @@ class _CommentTileState extends State<CommentTile> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              backgroundColor: hasPP ? null : Colors.transparent,
-              child: hasPP
-                  ? const Icon(Icons.person)
-                  : Image.network(
-                      widget.comment.author.pp!,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.person);
-                      },
-                    ),
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(context, UserScreen.routeName,
+                  arguments: widget.comment.author.username),
+              child: CircleAvatar(
+                backgroundColor: hasPP ? null : Colors.transparent,
+                child: hasPP
+                    ? const Icon(Icons.person)
+                    : Image.network(
+                        widget.comment.author.pp!,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.person);
+                        },
+                      ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -78,7 +83,7 @@ class _CommentTileState extends State<CommentTile> {
                         "@${widget.comment.author.username}",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 5),
                       Text(
                         getHumanDate(widget.comment.createdAt),
                         style: const TextStyle(color: Colors.grey),
