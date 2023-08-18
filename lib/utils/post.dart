@@ -7,6 +7,7 @@ import 'package:creative_blogger_app/utils/request_error_handling.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:creative_blogger_app/utils/success_snackbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart';
 
 Future<(Post?, int)> getPost(String slug) async {
   var res = await customGetRequest("$API_URL/posts/$slug");
@@ -43,18 +44,28 @@ Future<bool> deletePost(String slug) async {
 
 Future<bool> createPost(
   String title,
-  String imageUrl,
+  MultipartFile imageFile,
   String description,
   String tags,
   String content,
   int requiredAge,
 ) async {
+  var imageRes = await customUpdateProfilePictureRequest(
+      imageFile, "$API_URL/posts/upload");
+  if (imageRes == null) {
+    return false;
+  }
+  if (imageRes.statusCode != HttpStatus.ok) {
+    return false;
+  }
+  var imagePath = "$API_URL/public/posts/${jsonDecode(imageRes.body)["path"]}";
+  print(imagePath);
   var res = await customPostRequest(
     url: "$API_URL/posts",
     body: jsonEncode(
       {
         "title": title,
-        "image": imageUrl,
+        "image": imagePath,
         "description": description,
         "tags": tags,
         "content": content,
@@ -78,18 +89,26 @@ Future<bool> updatePost(
   int id,
   String slug,
   String title,
-  String imageUrl,
+  MultipartFile imageFile,
   String description,
   String category,
   String content,
 ) async {
+  var imageRes = await customUpdateProfilePictureRequest(
+      imageFile, "$API_URL/posts/upload");
+  if (imageRes == null) {
+    return false;
+  }
+  if (imageRes.statusCode != HttpStatus.ok) {
+    return false;
+  }
   var res = await customPutRequest(
     url: "$API_URL/posts/$slug",
     body: jsonEncode(
       {
         "id": id,
         "title": title,
-        "image": imageUrl,
+        "image": jsonDecode(imageRes.body)["path"],
         "description": description,
         "tags": category,
         "content": content,

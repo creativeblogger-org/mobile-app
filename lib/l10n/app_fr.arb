@@ -102,5 +102,6 @@
     "age_restriction": "Restriction d'âge",
     "the_required_age_must_be_between_9_and_140_years_old": "L'âge requis doit être compris entre 9 et 140 ans.",
     "at": "à",
-    "edited_the": "Modifié le {date}"
+    "edited_the": "Modifié le {date}",
+    "image": "Image"
 }

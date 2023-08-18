@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:creative_blogger_app/main.dart';
 import 'package:creative_blogger_app/utils/show_no_internet_connection.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:http/http.dart' as http;
@@ -57,9 +56,10 @@ Future<Response?> customDeleteRequest(String url) async {
   }
 }
 
-Future<Response?> customUpdateProfilePictureRequest(MultipartFile image) async {
+Future<Response?> customUpdateProfilePictureRequest(
+    MultipartFile image, String url) async {
   try {
-    var req = http.MultipartRequest("POST", Uri.parse("$API_URL/@me/upload"));
+    var req = http.MultipartRequest("POST", Uri.parse(url));
     req.headers.addAll(await getJSONHeaders());
     req.files.add(image);
     var res = await req.send();

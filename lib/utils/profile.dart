@@ -46,7 +46,8 @@ Future<bool> deleteAccount() async {
 }
 
 Future<bool> updateProfilePicture(MultipartFile image) async {
-  var res = await customUpdateProfilePictureRequest(image);
+  var res =
+      await customUpdateProfilePictureRequest(image, "$API_URL/@me/upload");
 
   if (res == null) {
     return false;

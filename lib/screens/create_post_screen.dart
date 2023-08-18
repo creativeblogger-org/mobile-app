@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 
 var urlRegex = RegExp(
     r"^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$");
@@ -38,8 +43,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   final TextEditingController _postTitle = TextEditingController();
   String? _postTitleError;
-  final TextEditingController _postImageURL = TextEditingController();
-  String? _postImageURLError;
   final TextEditingController _postDescription = TextEditingController();
   String? _postDescriptionError;
   final TextEditingController _postContent = TextEditingController();
@@ -47,12 +50,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool _ageRestricted = false;
   final TextEditingController _minimumAge = TextEditingController();
   String? _minimumAgeError;
+  MultipartFile? _postImageFile;
+  ImageProvider? _postImage;
 
   @override
   void initState() {
     _category = widget.post?.category;
     _postTitle.text = widget.post?.title ?? "";
-    _postImageURL.text = widget.post?.imageUrl ?? "";
     _postDescription.text = widget.post?.description ?? "";
     _postContent.text = widget.post?.content ?? "";
     _minimumAge.text = widget.post?.requiredAge.toString() ?? "";
@@ -62,7 +66,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void dispose() {
     _postTitle.dispose();
-    _postImageURL.dispose();
     _postDescription.dispose();
     _postContent.dispose();
     _minimumAge.dispose();
@@ -71,18 +74,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   void _publishPost(
     String title,
-    String imageUrl,
+    MultipartFile imageFile,
     String description,
     String tags,
     String content,
     int requiredAge,
   ) {
     setState(() => _isCreatePostLoading = true);
-    createPost(title, imageUrl, description, tags, content, requiredAge).then(
+    createPost(title, imageFile, description, tags, content, requiredAge).then(
       (fine) {
         setState(() => _isCreatePostLoading = false);
         if (fine) {
           Navigator.pop(context);
+          widget.onReload();
         }
       },
     );
@@ -91,22 +95,43 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   void _updatePost(
     int id,
     String title,
-    String imageUrl,
+    MultipartFile imageFile,
     String description,
     String tags,
     String content,
   ) {
     setState(() => _isCreatePostLoading = true);
     updatePost(
-            id, widget.post!.slug, title, imageUrl, description, tags, content)
+            id, widget.post!.slug, title, imageFile, description, tags, content)
         .then(
       (fine) {
         setState(() => _isCreatePostLoading = false);
         if (fine) {
           Navigator.pop(context);
+          widget.onReload();
         }
       },
     );
+  }
+
+  Future<void> _selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowedExtensions: ["png", "jpg", "jpeg"], type: FileType.custom);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      List<int> bytes = file.readAsBytesSync();
+      var imageFile = MultipartFile.fromBytes(
+        'image',
+        bytes,
+        filename: result.files.single.name,
+        contentType: MediaType('image', result.files.single.extension!),
+      );
+      setState(() {
+        _postImageFile = imageFile;
+        _postImage = FileImage(file);
+      });
+    }
   }
 
   @override
@@ -149,21 +174,32 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.image_url,
-                  border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor),
-                    borderRadius: BorderRadius.circular(12),
+              Text(
+                AppLocalizations.of(context)!.image,
+                style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headlineSmall!.fontSize),
+              ),
+              const SizedBox(height: 16),
+              CircleAvatar(
+                backgroundColor: _postImage == null
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.transparent,
+                backgroundImage: _postImage,
+                radius: 50,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.background.withOpacity(0.2),
+                  child: IconButton(
+                    onPressed: _isCreatePostLoading ? null : _selectFile,
+                    icon: Icon(
+                      Icons.upload,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    iconSize: 50,
                   ),
-                  errorText: _postImageURLError,
                 ),
-                controller: _postImageURL,
-                onChanged: (value) => setState(() => _postImageURLError =
-                    urlRegex.hasMatch(value.trim())
-                        ? null
-                        : AppLocalizations.of(context)!.invalid_url),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -283,8 +319,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               CustomButton(
                 onPressed: _postTitleError != null ||
                         _postTitle.text.isEmpty ||
-                        _postImageURLError != null ||
-                        _postImageURL.text.isEmpty ||
+                        _postImageFile == null ||
                         _postDescriptionError != null ||
                         _postDescription.text.isEmpty ||
                         _category == null ||
@@ -299,7 +334,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         widget.post == null
                             ? _publishPost(
                                 _postTitle.text,
-                                _postImageURL.text,
+                                _postImageFile!,
                                 _postDescription.text,
                                 _category!.value,
                                 _postContent.text,
@@ -308,7 +343,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             : _updatePost(
                                 widget.post!.id,
                                 _postTitle.text,
-                                _postImageURL.text,
+                                _postImageFile!,
                                 _postDescription.text,
                                 _category!.value,
                                 _postContent.text,
