@@ -275,6 +275,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               ? _posts!.length + 1
                               : _posts!.length,
                           itemBuilder: (context, index) {
+                            if (index < _posts!.length - 1) {
+                              return Column(
+                                children: [
+                                  PreviewPostTile(
+                                      post: _posts![index], showAuthor: true),
+                                  const Divider(
+                                    color: Colors.grey,
+                                  )
+                                ],
+                              );
+                            }
                             if (index < _posts!.length) {
                               return PreviewPostTile(
                                 post: _posts![index],
