@@ -89,22 +89,16 @@ class _PreviewPostTileState extends State<PreviewPostTile> {
             ),
           ),
           const SizedBox(height: 5),
-          const Row(
+          Row(
             children: [
-              IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.thumb_up,
-                  color: Colors.blue,
-                ),
+              const Icon(
+                Icons.thumb_up_outlined,
+                color: Colors.blue,
               ),
-              IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.thumb_down,
-                  color: Colors.red,
-                ),
-              )
+              const SizedBox(
+                width: 5,
+              ),
+              Text(widget.post.likes.toString())
             ],
           )
         ],

@@ -102,7 +102,7 @@ class _UserScreenState extends State<UserScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CircleAvatar(
-                                  // radius: 15,
+                                  radius: 20,
                                   backgroundColor: _user!.pp == null
                                       ? null
                                       : Colors.transparent,
@@ -157,61 +157,71 @@ class _UserScreenState extends State<UserScreen> {
                                     : ListView.builder(
                                         physics:
                                             const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) => index <
-                                                _posts!.length
-                                            ? PreviewPostTile(
-                                                post: _posts![index],
-                                                showAuthor: false,
-                                              )
-                                            : CustomButton(
-                                                onPressed: _isShowMoreLoading
-                                                    ? null
-                                                    : () {
-                                                        setState(() =>
-                                                            _isShowMoreLoading =
-                                                                true);
-                                                        getPreviewPosts(
-                                                                authorId: _user!
-                                                                    .id
-                                                                    .toString(),
-                                                                page: _posts!
-                                                                        .length ~/
-                                                                    20)
-                                                            .then(
-                                                          (previewPosts) {
-                                                            if (previewPosts
-                                                                    .$1 ==
-                                                                null) {
-                                                              setState(() =>
-                                                                  _isShowMoreLoading =
-                                                                      false);
-                                                              return;
-                                                            }
-                                                            _posts!.addAll(
-                                                                previewPosts
-                                                                    .$1!);
-                                                            setState(() {
-                                                              _isShowMoreLoading =
-                                                                  false;
-                                                              _postsCount =
-                                                                  previewPosts
-                                                                      .$2;
-                                                            });
-                                                          },
-                                                        );
-                                                      },
-                                                child: _isShowMoreLoading
-                                                    ? SpinKitRing(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary,
-                                                        size: 20,
-                                                        lineWidth: 2,
+                                        itemBuilder: (context, index) =>
+                                            index < _posts!.length - 1
+                                                ? Column(
+                                                    children: [
+                                                      PreviewPostTile(
+                                                          post: _posts![index],
+                                                          showAuthor: false),
+                                                      const Divider(
+                                                        height: 1,
+                                                        color: Colors.grey,
                                                       )
-                                                    : Text(AppLocalizations.of(
-                                                            context)!
-                                                        .show_more),
-                                              ),
+                                                    ],
+                                                  )
+                                                : index < _posts!.length
+                                                    ? PreviewPostTile(
+                                                        post: _posts![index],
+                                                        showAuthor: false,
+                                                      )
+                                                    : CustomButton(
+                                                        onPressed:
+                                                            _isShowMoreLoading
+                                                                ? null
+                                                                : () {
+                                                                    setState(() =>
+                                                                        _isShowMoreLoading =
+                                                                            true);
+                                                                    getPreviewPosts(
+                                                                            authorId:
+                                                                                _user!.id.toString(),
+                                                                            page: _posts!.length ~/ 20)
+                                                                        .then(
+                                                                      (previewPosts) {
+                                                                        if (previewPosts.$1 ==
+                                                                            null) {
+                                                                          setState(() =>
+                                                                              _isShowMoreLoading = false);
+                                                                          return;
+                                                                        }
+                                                                        _posts!.addAll(
+                                                                            previewPosts.$1!);
+                                                                        setState(
+                                                                            () {
+                                                                          _isShowMoreLoading =
+                                                                              false;
+                                                                          _postsCount =
+                                                                              previewPosts.$2;
+                                                                        });
+                                                                      },
+                                                                    );
+                                                                  },
+                                                        child:
+                                                            _isShowMoreLoading
+                                                                ? SpinKitRing(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .primary,
+                                                                    size: 20,
+                                                                    lineWidth:
+                                                                        2,
+                                                                  )
+                                                                : Text(AppLocalizations.of(
+                                                                        context)!
+                                                                    .show_more),
+                                                      ),
                                         itemCount: showShowMoreButton
                                             ? (_posts ?? []).length + 1
                                             : (_posts ?? []).length,

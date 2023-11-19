@@ -16,6 +16,7 @@ class Post {
   final bool hasPermission;
   final List<Comment> comments;
   final int requiredAge;
+  final int likes;
 
   const Post({
     required this.id,
@@ -31,6 +32,7 @@ class Post {
     required this.hasPermission,
     required this.comments,
     required this.requiredAge,
+    required this.likes,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,7 @@ class Post {
           .map((jsonComment) => Comment.fromJson(jsonComment))
           .toList(),
       requiredAge: json["required_age"],
+      likes: json["likes"] ?? 0,
     );
   }
 }

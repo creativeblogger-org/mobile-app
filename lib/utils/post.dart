@@ -126,3 +126,18 @@ Future<bool> updatePost(
   await handleError(res);
   return false;
 }
+
+Future<bool> likePost(int id) async {
+  var res = await customPostRequest(url: "$API_URL/posts/like/$id");
+
+  if (res == null) {
+    return false;
+  }
+
+  if (res.statusCode == HttpStatus.ok) {
+    return true;
+  }
+
+  await handleError(res);
+  return false;
+}

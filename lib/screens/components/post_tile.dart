@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/screens/components/user_tile.dart';
+import 'package:creative_blogger_app/utils/post.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:creative_blogger_app/utils/user.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ class PostTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 16),
         Text(
           post.title,
           style: TextStyle(
@@ -42,6 +42,16 @@ class PostTile extends StatelessWidget {
           author: post.author,
           alignment: MainAxisAlignment.center,
         ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Icon(
+            Icons.thumb_up_outlined,
+            color: Colors.blue,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(post.likes.toString())
+        ]),
         const Divider(),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -54,6 +64,33 @@ class PostTile extends StatelessWidget {
               );
             },
           ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    var _ = await likePost(post.id);
+                    //TODO handle that, when the API will return has_liked for posts
+                  },
+                  icon: const Icon(
+                    Icons.thumb_up_outlined,
+                    color: Colors.blue,
+                  ),
+                ),
+                Text(post.likes.toString()),
+              ],
+            ),
+            const IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.thumb_down_outlined,
+                color: Colors.red,
+              ),
+            )
+          ],
         ),
         const Divider(),
       ],
