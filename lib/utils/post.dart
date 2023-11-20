@@ -141,3 +141,18 @@ Future<bool> likePost(int id) async {
   await handleError(res);
   return false;
 }
+
+Future<bool> dislikePost(int id) async {
+  var res = await customPostRequest(url: "$API_URL/posts/dislike/$id");
+
+  if (res == null) {
+    return false;
+  }
+
+  if (res.statusCode == HttpStatus.ok) {
+    return true;
+  }
+
+  await handleError(res);
+  return false;
+}

@@ -72,8 +72,10 @@ class PostTile extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () async {
-                    var _ = await likePost(post.id);
-                    //TODO handle that, when the API will return has_liked for posts
+                    var success = await likePost(post.id);
+                    if (success) {
+                      //Change has liked to true
+                    }
                   },
                   icon: const Icon(
                     Icons.thumb_up_outlined,
@@ -83,9 +85,14 @@ class PostTile extends StatelessWidget {
                 Text(post.likes.toString()),
               ],
             ),
-            const IconButton(
-              onPressed: null,
-              icon: Icon(
+            IconButton(
+              onPressed: () async {
+                var success = await dislikePost(post.id);
+                if (success) {
+                  //Change has_disliked to true
+                }
+              },
+              icon: const Icon(
                 Icons.thumb_down_outlined,
                 color: Colors.red,
               ),
