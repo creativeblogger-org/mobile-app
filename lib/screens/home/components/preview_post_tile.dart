@@ -103,7 +103,6 @@ class _PreviewPostTileState extends State<PreviewPostTile> {
           )
         ],
       ),
-      tileColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
     );
   }
 }
