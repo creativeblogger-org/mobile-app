@@ -92,8 +92,8 @@ class _PreviewPostTileState extends State<PreviewPostTile> {
           Row(
             children: [
               const Icon(
-                Icons.thumb_up_outlined,
-                color: Colors.blue,
+                Icons.favorite,
+                color: Colors.red,
               ),
               const SizedBox(
                 width: 5,

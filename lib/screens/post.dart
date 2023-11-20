@@ -34,6 +34,7 @@ class _PostScreenState extends State<PostScreen> {
   bool _isDeletePostLoading = false;
   bool _isShowMoreLoading = false;
   bool _areCommentsLoading = false;
+  bool _hasLiked = false;
   int? _commentCount;
 
   @override
@@ -55,6 +56,7 @@ class _PostScreenState extends State<PostScreen> {
         setState(() {
           _post = result.$1;
           _commentCount = result.$2;
+          _hasLiked = result.$3;
           _isPostLoading = false;
         });
       }
@@ -206,7 +208,13 @@ class _PostScreenState extends State<PostScreen> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
-                        PostTile(post: _post!),
+                        PostTile(
+                          post: _post!,
+                          hasLiked: _hasLiked,
+                          setHasLiked: (value) => setState(
+                            () => _hasLiked = value,
+                          ),
+                        ),
                         if (_commentCount != null) ...{
                           const SizedBox(height: 16),
                           Text(

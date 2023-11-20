@@ -7,7 +7,7 @@ import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/utils/login.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/profile.dart';
-import 'package:creative_blogger_app/utils/structs/user.dart';
+import 'package:creative_blogger_app/utils/structs/me.dart';
 import 'package:creative_blogger_app/utils/user.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User? me;
+  Me? me;
   bool _isLoading = true;
   final TextEditingController _usernameEditingController =
       TextEditingController();

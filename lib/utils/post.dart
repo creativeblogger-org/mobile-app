@@ -9,23 +9,23 @@ import 'package:creative_blogger_app/utils/success_snackbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart';
 
-Future<(Post?, int)> getPost(String slug) async {
+Future<(Post?, int, bool)> getPost(String slug) async {
   var res = await customGetRequest("$API_URL/posts/$slug");
 
   if (res == null) {
-    return (null, 0);
+    return (null, 0, false);
   }
 
   if (res.statusCode == HttpStatus.ok) {
     var decoded = jsonDecode(res.body);
-    // return (Post.fromJson(decoded), decoded["commentCount"] as int);
     return (
       Post.fromJson(decoded),
-      int.parse(res.headers["nbcomments"] ?? "0")
+      int.parse(res.headers["nbcomments"] ?? "0"),
+      bool.parse(res.headers["has_liked"] ?? "false")
     );
   }
   await handleError(res);
-  return (null, 0);
+  return (null, 0, false);
 }
 
 Future<bool> deletePost(String slug) async {
@@ -59,7 +59,6 @@ Future<bool> createPost(
     return false;
   }
   var imagePath = "$API_URL/public/posts/${jsonDecode(imageRes.body)["path"]}";
-  print(imagePath);
   var res = await customPostRequest(
     url: "$API_URL/posts",
     body: jsonEncode(
@@ -142,8 +141,8 @@ Future<bool> likePost(int id) async {
   return false;
 }
 
-Future<bool> dislikePost(int id) async {
-  var res = await customPostRequest(url: "$API_URL/posts/dislike/$id");
+Future<bool> unlikePost(int id) async {
+  var res = await customDeleteRequest("$API_URL/posts/unlike/$id");
 
   if (res == null) {
     return false;

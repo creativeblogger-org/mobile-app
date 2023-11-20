@@ -6,8 +6,8 @@ import 'package:creative_blogger_app/screens/login.dart';
 import 'package:creative_blogger_app/screens/profile.dart';
 import 'package:creative_blogger_app/utils/me_route.dart';
 import 'package:creative_blogger_app/utils/posts.dart';
+import 'package:creative_blogger_app/utils/structs/me.dart';
 import 'package:creative_blogger_app/utils/structs/preview_post.dart';
-import 'package:creative_blogger_app/utils/structs/user.dart';
 import 'package:creative_blogger_app/utils/token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,7 +34,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  User? me;
+  Me? me;
   bool isGetMeLoading = true;
   List<PreviewPost>? _posts = [];
   bool _arePostsLoading = true;

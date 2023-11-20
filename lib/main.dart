@@ -25,6 +25,8 @@ void main() {
 
 // ignore: constant_identifier_names
 const API_URL = "https://api.creativeblogger.org";
+// ignore: constant_identifier_names
+const FRONT_URL = "https://creativeblogger.org";
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
