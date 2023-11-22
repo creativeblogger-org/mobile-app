@@ -62,13 +62,13 @@ class _PostTileState extends State<PostTile> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              widget.hasLiked ? Icons.favorite : Icons.favorite_border,
-              color: widget.hasLiked ? Colors.red : Colors.grey,
+              widget.hasLiked || _isLikeLoading ? Icons.favorite : Icons.favorite_border,
+              color: !widget.hasLiked || _isLikeLoading ? Colors.grey : Colors.red,
             ),
             const SizedBox(
               width: 5,
             ),
-            Text(widget.post.likes.toString())
+            Text((widget.post.likes + _addLike).toString())
           ],
         ),
         const Divider(),

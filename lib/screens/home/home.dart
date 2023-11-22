@@ -18,7 +18,10 @@ enum CategoryWithAll {
   fakeOrReal("fakeorreal"),
   tech("tech"),
   culture("culture"),
-  news("news");
+  news("news"),
+  sport("sport"),
+  cinema("cinema"),
+  litterature("litterature");
 
   const CategoryWithAll(this.value);
   final String value;
@@ -49,6 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
     CategoryWithAll.tech,
     CategoryWithAll.culture,
     CategoryWithAll.news,
+    CategoryWithAll.sport,
+    CategoryWithAll.cinema,
+    CategoryWithAll.litterature,
   ];
 
   @override
@@ -211,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: _categories
                     .map(
                       (category) => SizedBox(
-                        width: 170,
+                        width: 190,
                         child: RadioListTile(
                           value: category,
                           groupValue: _category,
@@ -233,8 +239,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : category == CategoryWithAll.culture
                                             ? AppLocalizations.of(context)!
                                                 .culture
-                                            : AppLocalizations.of(context)!
-                                                .news,
+                                            : category == CategoryWithAll.news
+                                ? AppLocalizations.of(context)!.news
+                                : category == CategoryWithAll.sport
+                                ? AppLocalizations.of(context)!.sport
+                                : category == CategoryWithAll.cinema
+                                ? AppLocalizations.of(context)!.cinema
+                                : AppLocalizations.of(context)!
+                                                .literature,
                           ),
                         ),
                       ),

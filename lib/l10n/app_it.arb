@@ -103,5 +103,8 @@
     "the_required_age_must_be_between_9_and_140_years_old": "L'età richiesta deve essere compresa tra 9 e 140 anni.",
     "at": "a",
     "edited_the": "Modiifcato il {date}",
-    "image": "Immagine"
+    "image": "Immagine",
+    "sport": "Sport",
+    "cinema": "Cinema",
+    "literature": "Letteratura"
 }

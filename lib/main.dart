@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.blue.shade800,
           ),
         ),
+        appBarTheme: const AppBarTheme(foregroundColor: Colors.white, iconTheme: IconThemeData(color: Colors.white)),
         colorScheme: ColorScheme.light(primary: Colors.blue.shade800),
       ),
       darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
