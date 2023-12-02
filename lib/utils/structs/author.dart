@@ -1,5 +1,4 @@
 class Author {
-  final DateTime createdAt;
   final int id;
   final String username;
   final int permission;
@@ -7,7 +6,6 @@ class Author {
   final String? buyMeACoffee;
 
   const Author({
-    required this.createdAt,
     required this.id,
     required this.username,
     required this.permission,
@@ -17,7 +15,6 @@ class Author {
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
-      createdAt: DateTime.parse(json["created_at"]),
       id: json["id"],
       username: json["username"],
       permission: json["permission"],
