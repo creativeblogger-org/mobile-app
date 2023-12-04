@@ -31,7 +31,10 @@ enum Category {
   fakeOrReal("fakeorreal"),
   tech("tech"),
   culture("culture"),
-  news("news");
+  news("news"),
+  sport("sport"),
+  cinema("cinema"),
+  litterature("litterature");
 
   const Category(this.value);
   final String value;
@@ -232,18 +235,26 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     fontSize:
                         Theme.of(context).textTheme.headlineSmall!.fontSize),
               ),
-              for (var i in Category.values) ...{
+              for (var category in Category.values) ...{
                 RadioListTile(
                   title: Text(
-                    i == Category.fakeOrReal
+                    category == Category.fakeOrReal
                         ? AppLocalizations.of(context)!.investigation
-                        : i == Category.tech
+                        : category == Category.tech
                             ? AppLocalizations.of(context)!.tech
-                            : i == Category.culture
+                            : category == Category.culture
                                 ? AppLocalizations.of(context)!.culture
-                                : AppLocalizations.of(context)!.news,
+                                : category == Category.news
+                                    ? AppLocalizations.of(context)!.news
+                                    : category == Category.sport
+                                        ? AppLocalizations.of(context)!.sport
+                                        : category == Category.cinema
+                                            ? AppLocalizations.of(context)!
+                                                .cinema
+                                            : AppLocalizations.of(context)!
+                                                .literature,
                   ),
-                  value: i,
+                  value: category,
                   groupValue: _category,
                   onChanged: (Category? category) {
                     setState(() => _category = category);

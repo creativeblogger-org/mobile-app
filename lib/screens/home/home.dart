@@ -46,16 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
       TextEditingController();
   int _postsCount = 0;
   CategoryWithAll? _category = CategoryWithAll.all;
-  final List<CategoryWithAll> _categories = [
-    CategoryWithAll.all,
-    CategoryWithAll.fakeOrReal,
-    CategoryWithAll.tech,
-    CategoryWithAll.culture,
-    CategoryWithAll.news,
-    CategoryWithAll.sport,
-    CategoryWithAll.cinema,
-    CategoryWithAll.litterature,
-  ];
 
   @override
   void initState() {
@@ -214,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                children: _categories
+                children: CategoryWithAll.values
                     .map(
                       (category) => SizedBox(
                         width: 190,
@@ -240,13 +230,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ? AppLocalizations.of(context)!
                                                 .culture
                                             : category == CategoryWithAll.news
-                                ? AppLocalizations.of(context)!.news
-                                : category == CategoryWithAll.sport
-                                ? AppLocalizations.of(context)!.sport
-                                : category == CategoryWithAll.cinema
-                                ? AppLocalizations.of(context)!.cinema
-                                : AppLocalizations.of(context)!
-                                                .literature,
+                                                ? AppLocalizations.of(context)!
+                                                    .news
+                                                : category ==
+                                                        CategoryWithAll.sport
+                                                    ? AppLocalizations.of(
+                                                            context)!
+                                                        .sport
+                                                    : category ==
+                                                            CategoryWithAll
+                                                                .cinema
+                                                        ? AppLocalizations.of(
+                                                                context)!
+                                                            .cinema
+                                                        : AppLocalizations.of(
+                                                                context)!
+                                                            .literature,
                           ),
                         ),
                       ),
