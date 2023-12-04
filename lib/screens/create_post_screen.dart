@@ -95,15 +95,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   void _updatePost(
     int id,
     String title,
-    MultipartFile imageFile,
     String description,
     String tags,
     String content,
   ) {
     setState(() => _isCreatePostLoading = true);
-    updatePost(
-            id, widget.post!.slug, title, imageFile, description, tags, content)
-        .then(
+    updatePost(id, widget.post!.slug, title, description, tags, content).then(
       (fine) {
         setState(() => _isCreatePostLoading = false);
         if (fine) {
@@ -180,27 +177,31 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     fontSize:
                         Theme.of(context).textTheme.headlineSmall!.fontSize),
               ),
-              const SizedBox(height: 16),
-              CircleAvatar(
-                backgroundColor: _postImage == null
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.transparent,
-                backgroundImage: _postImage,
-                radius: 50,
-                child: CircleAvatar(
+              if (widget.post == null) ...[
+                const SizedBox(height: 16),
+                CircleAvatar(
+                  backgroundColor: _postImage == null
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.transparent,
+                  backgroundImage: _postImage,
                   radius: 50,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.background.withOpacity(0.2),
-                  child: IconButton(
-                    onPressed: _isCreatePostLoading ? null : _selectFile,
-                    icon: Icon(
-                      Icons.upload,
-                      color: Theme.of(context).colorScheme.onBackground,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .background
+                        .withOpacity(0.2),
+                    child: IconButton(
+                      onPressed: _isCreatePostLoading ? null : _selectFile,
+                      icon: Icon(
+                        Icons.upload,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                      iconSize: 50,
                     ),
-                    iconSize: 50,
                   ),
-                ),
-              ),
+                )
+              ],
               const SizedBox(height: 16),
               TextField(
                 decoration: InputDecoration(
@@ -343,7 +344,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             : _updatePost(
                                 widget.post!.id,
                                 _postTitle.text,
-                                _postImageFile!,
                                 _postDescription.text,
                                 _category!.value,
                                 _postContent.text,

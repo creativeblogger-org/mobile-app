@@ -88,26 +88,16 @@ Future<bool> updatePost(
   int id,
   String slug,
   String title,
-  MultipartFile imageFile,
   String description,
   String category,
   String content,
 ) async {
-  var imageRes = await customUpdateProfilePictureRequest(
-      imageFile, "$API_URL/posts/upload");
-  if (imageRes == null) {
-    return false;
-  }
-  if (imageRes.statusCode != HttpStatus.ok) {
-    return false;
-  }
   var res = await customPutRequest(
     url: "$API_URL/posts/$slug",
     body: jsonEncode(
       {
         "id": id,
         "title": title,
-        "image": jsonDecode(imageRes.body)["path"],
         "description": description,
         "tags": category,
         "content": content,
