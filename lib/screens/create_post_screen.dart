@@ -173,14 +173,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 16),
-              Text(
-                AppLocalizations.of(context)!.image,
-                style: TextStyle(
-                    fontSize:
-                        Theme.of(context).textTheme.headlineSmall!.fontSize),
-              ),
               if (widget.post == null) ...[
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.image,
+                  style: TextStyle(
+                      fontSize:
+                          Theme.of(context).textTheme.headlineSmall!.fontSize),
+                ),
                 const SizedBox(height: 16),
                 CircleAvatar(
                   backgroundColor: _postImage == null
@@ -331,7 +331,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               CustomButton(
                 onPressed: _postTitleError != null ||
                         _postTitle.text.isEmpty ||
-                        _postImageFile == null ||
+                        (_postImageFile == null && widget.post == null) ||
                         _postDescriptionError != null ||
                         _postDescription.text.isEmpty ||
                         _category == null ||
