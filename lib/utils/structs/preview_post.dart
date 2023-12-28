@@ -12,7 +12,6 @@ class PreviewPost {
   final Category category;
   final String image;
   final bool hasPermission;
-  final bool isLast;
   final int likes;
   final bool isVerified;
 
@@ -27,7 +26,6 @@ class PreviewPost {
     required this.category,
     required this.image,
     required this.hasPermission,
-    required this.isLast,
     required this.likes,
     required this.isVerified,
   });
@@ -61,7 +59,6 @@ class PreviewPost {
       category: category,
       image: json["image"],
       hasPermission: json["has_permission"],
-      isLast: json["is_last"] == 0 ? false : true,
       likes: json["likes"] ?? 0,
       isVerified: json["is_verified"] == 0 ? false : true,
     );

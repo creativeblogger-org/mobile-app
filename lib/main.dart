@@ -31,12 +31,9 @@ const FRONT_URL = "https://creativeblogger.org";
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return /*ConnectionNotifier(
-      child: */
-        MaterialApp(
+    return MaterialApp(
       title: 'Creative Blogger',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true).copyWith(
@@ -46,7 +43,9 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.blue.shade800,
           ),
         ),
-        appBarTheme: const AppBarTheme(foregroundColor: Colors.white, iconTheme: IconThemeData(color: Colors.white)),
+        appBarTheme: const AppBarTheme(
+            foregroundColor: Colors.white,
+            iconTheme: IconThemeData(color: Colors.white)),
         colorScheme: ColorScheme.light(primary: Colors.blue.shade800),
       ),
       darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
@@ -137,7 +136,6 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      // ),
     );
   }
 }
