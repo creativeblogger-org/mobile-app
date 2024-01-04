@@ -1,12 +1,12 @@
+import 'package:creative_blogger_app/utils/structs/public_user.dart';
+
 class Author {
-  final int id;
   final String username;
-  final int permission;
+  final Permission permission;
   final String? pp;
   final String? buyMeACoffee;
 
   const Author({
-    required this.id,
     required this.username,
     required this.permission,
     required this.pp,
@@ -15,9 +15,8 @@ class Author {
 
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
-      id: json["id"],
       username: json["username"],
-      permission: json["permission"],
+      permission: getPermission(json["permission"]),
       pp: json["pp"],
       buyMeACoffee: json["buymeacoffee"],
     );

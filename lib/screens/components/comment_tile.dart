@@ -81,7 +81,12 @@ class _CommentTileState extends State<CommentTile> {
                     children: [
                       Text(
                         "@${widget.comment.author.username}",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: getPermissionColor(
+                            widget.comment.author.permission,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 5),
                       Text(

@@ -23,14 +23,27 @@ Future<PublicUser?> getPublicUser(String username) async {
   return null;
 }
 
-Widget getPermission(int permission) {
+Color getPermissionColor(Permission permission) {
   switch (permission) {
-    case 0:
+    case Permission.member:
+      return Colors.white;
+    case Permission.redactor:
+      return Theme.of(navigatorKey.currentContext!).colorScheme.primary;
+    case Permission.moderator:
+      return Colors.red;
+    case Permission.administrator:
+      return Colors.red.shade900;
+  }
+}
+
+Widget getPermissionWidget(Permission permission) {
+  switch (permission) {
+    case Permission.member:
       return Text(
         AppLocalizations.of(navigatorKey.currentContext!)!.member,
         style: const TextStyle(fontWeight: FontWeight.bold),
       );
-    case 1:
+    case Permission.redactor:
       return Text(
         AppLocalizations.of(navigatorKey.currentContext!)!.writer,
         style: TextStyle(
@@ -38,7 +51,7 @@ Widget getPermission(int permission) {
           fontWeight: FontWeight.bold,
         ),
       );
-    case 2:
+    case Permission.moderator:
       return Text(
         AppLocalizations.of(navigatorKey.currentContext!)!.moderator,
         style: const TextStyle(
@@ -46,7 +59,7 @@ Widget getPermission(int permission) {
           fontWeight: FontWeight.bold,
         ),
       );
-    case 3:
+    case Permission.administrator:
       return Text(
         AppLocalizations.of(navigatorKey.currentContext!)!.administrator,
         style: TextStyle(
@@ -54,9 +67,17 @@ Widget getPermission(int permission) {
           fontWeight: FontWeight.bold,
         ),
       );
-    default:
-      return Text(AppLocalizations.of(navigatorKey.currentContext!)!.error);
   }
+}
+
+Widget colorUsernameWithPermission(String username, Permission permission) {
+  return Text(
+    username,
+    style: TextStyle(
+      color: getPermissionColor(permission),
+      fontWeight: FontWeight.bold,
+    ),
+  );
 }
 
 String getHumanDate(DateTime date) {

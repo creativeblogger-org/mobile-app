@@ -9,6 +9,7 @@ import 'package:creative_blogger_app/utils/structs/public_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key, required this.username});
@@ -125,11 +126,25 @@ class _UserScreenState extends State<UserScreen> {
                                 )
                               ],
                             ),
-                            getPermission(_user!.permission),
+                            if (_user!.bio != null) ...{
+                              const Divider(color: Colors.grey),
+                              Text(_user!.bio!),
+                              const Divider(color: Colors.grey),
+                            },
+                            getPermissionWidget(_user!.permission),
                             Text(
                               AppLocalizations.of(context)!.signed_up_the(
                                   getHumanDate(_user!.createdAt)),
                             ),
+                            if (_user!.buymeacoffee != null) ...{
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () =>
+                                    launchUrlString(_user!.buymeacoffee!),
+                                child:
+                                    Text(AppLocalizations.of(context)!.support),
+                              ),
+                            },
                             const SizedBox(height: 16),
                             Text(
                               AppLocalizations.of(context)!.users_posts,
