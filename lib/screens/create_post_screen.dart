@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:creative_blogger_app/components/custom_button.dart';
 import 'package:creative_blogger_app/components/custom_decoration.dart';
 import 'package:creative_blogger_app/utils/post.dart';
+import 'package:creative_blogger_app/utils/posts.dart';
 import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,8 @@ enum Category {
   news("news"),
   sport("sport"),
   cinema("cinema"),
-  litterature("litterature");
+  litterature("litterature"),
+  musique("musique");
 
   const Category(this.value);
   final String value;
@@ -237,23 +239,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
               for (var category in Category.values) ...{
                 RadioListTile(
-                  title: Text(
-                    category == Category.fakeOrReal
-                        ? AppLocalizations.of(context)!.investigation
-                        : category == Category.tech
-                            ? AppLocalizations.of(context)!.tech
-                            : category == Category.culture
-                                ? AppLocalizations.of(context)!.culture
-                                : category == Category.news
-                                    ? AppLocalizations.of(context)!.news
-                                    : category == Category.sport
-                                        ? AppLocalizations.of(context)!.sport
-                                        : category == Category.cinema
-                                            ? AppLocalizations.of(context)!
-                                                .cinema
-                                            : AppLocalizations.of(context)!
-                                                .literature,
-                  ),
+                  title: Text(getCategoryName(category, context)),
                   value: category,
                   groupValue: _category,
                   onChanged: (Category? category) {

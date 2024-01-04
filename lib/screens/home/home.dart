@@ -21,7 +21,8 @@ enum CategoryWithAll {
   news("news"),
   sport("sport"),
   cinema("cinema"),
-  litterature("litterature");
+  litterature("litterature"),
+  musique("musique");
 
   const CategoryWithAll(this.value);
   final String value;
@@ -218,35 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 tag: _category?.value ?? "");
                           },
                           isThreeLine: false,
-                          title: Text(
-                            category == CategoryWithAll.all
-                                ? AppLocalizations.of(context)!.all
-                                : category == CategoryWithAll.fakeOrReal
-                                    ? AppLocalizations.of(context)!
-                                        .investigation
-                                    : category == CategoryWithAll.tech
-                                        ? AppLocalizations.of(context)!.tech
-                                        : category == CategoryWithAll.culture
-                                            ? AppLocalizations.of(context)!
-                                                .culture
-                                            : category == CategoryWithAll.news
-                                                ? AppLocalizations.of(context)!
-                                                    .news
-                                                : category ==
-                                                        CategoryWithAll.sport
-                                                    ? AppLocalizations.of(
-                                                            context)!
-                                                        .sport
-                                                    : category ==
-                                                            CategoryWithAll
-                                                                .cinema
-                                                        ? AppLocalizations.of(
-                                                                context)!
-                                                            .cinema
-                                                        : AppLocalizations.of(
-                                                                context)!
-                                                            .literature,
-                          ),
+                          title:
+                              Text(getCategoryWithAllName(category, context)),
                         ),
                       ),
                     )

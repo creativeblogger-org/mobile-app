@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/screens/create_post_screen.dart';
+import 'package:creative_blogger_app/utils/posts.dart';
 import 'package:creative_blogger_app/utils/structs/author.dart';
 import 'package:creative_blogger_app/utils/structs/comment.dart';
 
@@ -12,11 +13,13 @@ class Post {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Author author;
-  final Category category;
+  final Category? category;
   final bool hasPermission;
   final List<Comment> comments;
   final int requiredAge;
   final int likes;
+  final bool isVerified;
+  final int views;
 
   const Post({
     required this.id,
@@ -33,25 +36,13 @@ class Post {
     required this.comments,
     required this.requiredAge,
     required this.likes,
+    required this.isVerified,
+    required this.views,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
     String stringCategory = json["tags"] as String;
-    Category? category;
-    switch (stringCategory) {
-      case "fakeorreal":
-        category = Category.fakeOrReal;
-        break;
-      case "tech":
-        category = Category.tech;
-        break;
-      case "culture":
-        category = Category.culture;
-        break;
-      default:
-        category = Category.news;
-        break;
-    }
+    Category? category = getCategory(stringCategory);
 
     return Post(
       id: json["id"],
@@ -70,6 +61,8 @@ class Post {
           .toList(),
       requiredAge: json["required_age"],
       likes: json["likes"] ?? 0,
+      isVerified: json["is_verified"] == 0 ? false : true,
+      views: json["views"],
     );
   }
 }

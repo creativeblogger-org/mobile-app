@@ -178,5 +178,7 @@
     "image": "Image",
     "sport": "Sport",
     "cinema": "Cinema",
-    "literature": "Literature"
+    "literature": "Literature",
+    "enjoyed_the_reading_support_the_author": "Enjoyed the reading ? Support the author",
+    "music": "Music"
 }

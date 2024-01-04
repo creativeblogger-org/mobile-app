@@ -11,6 +11,8 @@ import 'package:creative_blogger_app/utils/structs/post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key, required this.slug});
@@ -215,6 +217,15 @@ class _PostScreenState extends State<PostScreen> {
                             () => _hasLiked = value,
                           ),
                         ),
+                        if (_post?.author.buyMeACoffee != null) ...{
+                          ElevatedButton(
+                              onPressed: () async {
+                                await launchUrlString(
+                                    _post!.author.buyMeACoffee!);
+                              },
+                              child: Text(AppLocalizations.of(context)!
+                                  .enjoyed_the_reading_support_the_author)),
+                        },
                         if (_commentCount != null) ...{
                           const SizedBox(height: 16),
                           Text(

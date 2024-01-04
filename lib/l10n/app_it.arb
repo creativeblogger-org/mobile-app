@@ -106,5 +106,7 @@
     "image": "Immagine",
     "sport": "Sport",
     "cinema": "Cinema",
-    "literature": "Letteratura"
+    "literature": "Letteratura",
+    "enjoyed_the_reading_support_the_author": "Ti ha piaciuto ? Sostieni il redattore",
+    "music": "Musica"
 }

@@ -1,6 +1,7 @@
 import 'package:creative_blogger_app/screens/components/user_tile.dart';
 import 'package:creative_blogger_app/screens/create_post_screen.dart';
 import 'package:creative_blogger_app/screens/post.dart';
+import 'package:creative_blogger_app/utils/posts.dart';
 import 'package:creative_blogger_app/utils/structs/preview_post.dart';
 import 'package:creative_blogger_app/utils/user.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,6 @@ class PreviewPostTile extends StatefulWidget {
 }
 
 class _PreviewPostTileState extends State<PreviewPostTile> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -72,22 +68,17 @@ class _PreviewPostTileState extends State<PreviewPostTile> {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 5),
-          Card(
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.15),
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Text(
-                widget.post.category == Category.fakeOrReal
-                    ? AppLocalizations.of(context)!.investigation
-                    : widget.post.category == Category.tech
-                        ? AppLocalizations.of(context)!.tech
-                        : widget.post.category == Category.culture
-                            ? AppLocalizations.of(context)!.culture
-                            : AppLocalizations.of(context)!.news,
+          if (widget.post.category != null) ...{
+            const SizedBox(height: 5),
+            Card(
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.15),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(getCategoryName(widget.post.category!, context)),
               ),
             ),
-          ),
+          },
           const SizedBox(height: 5),
           Row(
             children: [

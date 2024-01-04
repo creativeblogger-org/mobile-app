@@ -1,4 +1,5 @@
 import 'package:creative_blogger_app/screens/create_post_screen.dart';
+import 'package:creative_blogger_app/utils/posts.dart';
 import 'package:creative_blogger_app/utils/structs/author.dart';
 
 class PreviewPost {
@@ -9,7 +10,7 @@ class PreviewPost {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Author author;
-  final Category category;
+  final Category? category;
   final String image;
   final bool hasPermission;
   final int likes;
@@ -32,21 +33,7 @@ class PreviewPost {
 
   factory PreviewPost.fromJson(Map<String, dynamic> json) {
     String stringCategory = json["tags"] as String;
-    Category? category;
-    switch (stringCategory) {
-      case "fakeorreal":
-        category = Category.fakeOrReal;
-        break;
-      case "tech":
-        category = Category.tech;
-        break;
-      case "culture":
-        category = Category.culture;
-        break;
-      default:
-        category = Category.news;
-        break;
-    }
+    Category? category = getCategory(stringCategory);
 
     return PreviewPost(
       id: json["id"],
